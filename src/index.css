@@ -2,141 +2,336 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/**
+ * ============================================
+ * DESIGN SYSTEM - SPIDER-VERSE INSPIRED
+ * ============================================
+ * 
+ * COLOR PHILOSOPHY:
+ * - THINK side = Daytime, warm, academic, intellectual
+ * - CREATIVE side = Nighttime, bold, cinematic, expressive
+ * - No purple/magenta tones
+ * - Cinematic, urban, human-designed aesthetic
+ * 
+ * HOW TO CUSTOMIZE:
+ * 1. Edit HSL values below to change color scheme
+ * 2. All colors use HSL format for consistency
+ * 3. Think = warm daylight palette, Creative = moody night palette
+ */
 
 @layer base {
   :root {
-    /* Portfolio Design System */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* ============================================
+     * THINK SIDE (LEFT) - DAYLIGHT PALETTE
+     * Represents: intellect, academics, analysis, technical depth
+     * Inspired by: Peter Parker / Bruce Wayne civilian energy
+     * ============================================ */
     
-    /* Creative Section (Dark) - Enhanced vibrancy */
-    /* EDIT COLORS: Adjust these HSL values for creative side theme */
-    --creative-bg: 240 60% 12%;  /* Deep navy-blue for dramatic effect */
-    --creative-fg: 48 96% 89%;   /* Warm light text for contrast */
-    --creative-accent: 330 85% 55%; /* Vibrant magenta accent */
+    /* THINK Backgrounds - Warm paper textures */
+    --think-bg: 40 33% 97%;           /* Warm paper white #FAF8F4 */
+    --think-bg-alt: 36 26% 93%;       /* Soft sand #F1EDE6 */
     
-    /* Digital Section (Light) - Enhanced vibrancy */
-    /* EDIT COLORS: Adjust these HSL values for digital side theme */
-    --digital-bg: 200 25% 97%;    /* Clean light background */
-    --digital-fg: 240 60% 12%;    /* Dark text for readability */
-    --digital-accent: 210 100% 50%; /* Bright blue accent */
+    /* THINK Text Colors */
+    --think-fg: 0 0% 12%;             /* Deep charcoal #1F1F1F */
+    --think-fg-muted: 210 14% 40%;    /* Slate blue-gray #4A5D73 */
     
-    /* Character Colors */
-    --skin-tone: 30 100% 86%;     /* Warmer skin tone */
-    --hair-dark: 220 26% 14%;
-    --suit-gray: 215 25% 27%;
-    --shirt-light: 210 20% 94%;
-    --tie-red: 0 69% 48%;
+    /* THINK Accent Colors - Warm amber tones */
+    --think-accent: 36 76% 56%;       /* Burnt amber #E39A3B */
+    --think-accent-alt: 30 65% 48%;   /* Muted ochre #C97C2D */
     
-    /* Software Logo Colors */
-    --premiere: 267 55% 53%;
-    --after-effects: 266 44% 47%;
-    --photoshop: 206 100% 50%;
+    /* THINK Interaction States */
+    --think-glow: 42 100% 86%;        /* Sunlit cream glow #FFE6B7 */
+    --think-border: 36 20% 85%;       /* Subtle warm border */
     
-    /* Hover & Interactive States */
-    /* EDIT THESE: Customize hover effects for tiles */
-    --tile-hover-bg: 330 85% 65%;
-    --tile-hover-shadow: 330 85% 55%;
+    /* ============================================
+     * CREATIVE SIDE (RIGHT) - NIGHTTIME PALETTE  
+     * Represents: expression, storytelling, filmmaking, emotion
+     * Inspired by: Spider-Man / Batman alter-ego energy
+     * ============================================ */
+    
+    /* CREATIVE Backgrounds - Inky urban night */
+    --creative-bg: 240 10% 5%;        /* Inky black #0E0E11 */
+    --creative-bg-alt: 228 9% 10%;    /* Charcoal night #17181C */
+    
+    /* CREATIVE Text Colors */
+    --creative-fg: 0 0% 93%;          /* Cold screen white #EDEDED */
+    --creative-fg-muted: 220 5% 59%;  /* Steel gray #8A8F98 */
+    
+    /* CREATIVE Accent Colors - Electric lime & signal orange */
+    --creative-accent: 82 100% 50%;   /* Electric lime #9EFF00 */
+    --creative-accent-alt: 30 100% 55%; /* Signal orange #FF8C1A */
+    
+    /* CREATIVE Interaction States */
+    --creative-glow: 82 100% 62%;     /* Acid green glow #B7FF3C */
+    --creative-glow-warm: 36 100% 64%; /* Streetlight orange glow #FFB347 */
+    
+    /* ============================================
+     * CONTACT PAGE - FUSION ZONE
+     * Bridge between THINK and CREATIVE worlds
+     * ============================================ */
+    --fusion-bg: 225 8% 11%;          /* Neutral charcoal #1B1C20 */
+    --fusion-fg: 0 0% 90%;            /* Light neutral text */
+    
+    /* ============================================
+     * CHARACTER COLORS
+     * Used for animated SVG characters
+     * ============================================ */
+    --skin-tone: 30 100% 86%;         /* Warmer skin tone */
+    --hair-dark: 220 26% 14%;         /* Dark hair */
+    --suit-gray: 215 25% 27%;         /* Professional suit */
+    --shirt-light: 210 20% 94%;       /* Light shirt */
+    --tie-red: 0 69% 48%;             /* Classic red tie */
+    
+    /* ============================================
+     * SOFTWARE/TOOL LOGO COLORS
+     * For floating icons in hero section
+     * ============================================ */
+    --premiere: 267 55% 53%;          /* Adobe Premiere */
+    --after-effects: 266 44% 47%;     /* Adobe After Effects */
+    --photoshop: 206 100% 50%;        /* Adobe Photoshop */
+
+    /* ============================================
+     * SLIDER DIVIDER - GRADIENT BLEND
+     * Connects THINK (amber) to CREATIVE (lime)
+     * ============================================ */
+    --divider-think: 36 76% 56%;      /* Amber start */
+    --divider-creative: 82 100% 50%;  /* Lime end */
+
+    /* ============================================
+     * SHADCN UI TOKENS
+     * Default UI component colors
+     * ============================================ */
+    --background: 40 33% 97%;
+    --foreground: 0 0% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 12%;
 
-    --primary: 222 47% 11%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 36 76% 56%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 36 26% 93%;
+    --secondary-foreground: 0 0% 12%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 36 20% 90%;
+    --muted-foreground: 210 14% 40%;
 
-    --accent: 330 85% 55%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 82 100% 50%;
+    --accent-foreground: 0 0% 5%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 36 20% 85%;
+    --input: 36 20% 85%;
+    --ring: 36 76% 56%;
 
     --radius: 0.5rem;
   }
 }
 
-/* Portfolio-specific animations */
+/* ============================================
+ * ANIMATIONS - SPIDER-VERSE INSPIRED MOTION
+ * ============================================ */
 
-/* Character blink animation - Makes characters feel alive */
-/* EDIT TIMING: Adjust duration (currently 4s) to change blink frequency */
-/* EDIT EFFECT: Modify opacity values to change blink intensity */
+/**
+ * CHARACTER BLINK ANIMATION
+ * Makes characters feel alive and natural
+ * 
+ * HOW TO ADJUST:
+ * - Duration: Change animation duration in keyframes (currently 4s)
+ * - Frequency: Modify the percentage values for blink timing
+ * - Intensity: Adjust opacity values (0 = fully closed, 1 = fully open)
+ */
 @keyframes blink {
   0%, 90%, 100% { opacity: 1; }  /* Eyes open most of the time */
-  93%, 97% { opacity: 0; }       /* Quick blink */
+  93%, 97% { opacity: 0; }       /* Quick natural blink */
 }
 
-/* Float animation for characters */
+/**
+ * FLOAT ANIMATION - Characters
+ * Gentle up-down bobbing motion for characters
+ * 
+ * HOW TO ADJUST:
+ * - Amplitude: Change translateY values (currently -3%)
+ * - Speed: Modify animation duration (currently 6s)
+ */
 @keyframes float {
   0%, 100% { transform: translate(-50%, -50%); }
-  50% { transform: translate(-50%, -47%); }
+  50% { transform: translate(-50%, -53%); }
 }
 
-/* Floating icon animation */
+/**
+ * FLOAT-ICON ANIMATION
+ * More dynamic floating for tool/software icons
+ * 
+ * HOW TO ADJUST:
+ * - Height: Change translateY values (currently -25px)
+ * - Rotation: Modify rotate values (currently 15deg)
+ * - Speed: Change animation duration (currently 8s)
+ */
 @keyframes float-icon {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-25px) rotate(15deg); }
 }
 
+/**
+ * WIGGLE ANIMATION
+ * Subtle playful movement
+ */
 @keyframes wiggle {
   0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
   25% { transform: translate(-51%, -49%) rotate(-2deg); }
   75% { transform: translate(-49%, -51%) rotate(2deg); }
 }
 
+/**
+ * FADE IN ANIMATION
+ * Standard entrance effect
+ */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* Slider divider pulse animation - Makes divider more noticeable */
-/* EDIT GLOW: Change shadow size/color for different glow effects */
+/**
+ * DIVIDER PULSE ANIMATION
+ * Glowing effect for the slider divider
+ * Uses both THINK (amber) and CREATIVE (lime) colors
+ * 
+ * HOW TO ADJUST:
+ * - Glow intensity: Change shadow blur values
+ * - Colors: Modify HSL values below
+ * - Speed: Change animation duration (currently 2s)
+ */
 @keyframes divider-pulse {
   0%, 100% { 
-    box-shadow: 0 0 20px hsl(var(--creative-accent)), 0 0 40px hsl(var(--creative-accent) / 0.5);
+    box-shadow: 
+      0 0 20px hsl(var(--think-accent)), 
+      0 0 40px hsl(var(--think-accent) / 0.4),
+      0 0 20px hsl(var(--creative-accent) / 0.3);
   }
   50% { 
-    box-shadow: 0 0 30px hsl(var(--creative-accent)), 0 0 60px hsl(var(--creative-accent) / 0.7);
+    box-shadow: 
+      0 0 30px hsl(var(--creative-accent)), 
+      0 0 60px hsl(var(--creative-accent) / 0.5),
+      0 0 30px hsl(var(--think-accent) / 0.3);
   }
 }
 
-/* Carousel slide animation */
-@keyframes slide-in {
+/**
+ * PAGE TRANSITION ANIMATIONS
+ * Spider-Verse inspired panel/frame movements
+ * 
+ * THINK transitions: Slower (0.5-0.7s), calmer, precise
+ * CREATIVE transitions: Faster (0.3-0.4s), bolder, expressive
+ */
+
+/* Panel shift left - Think side entrance */
+@keyframes panel-shift-left {
   from { 
+    transform: translateX(-100%) skewX(-5deg);
     opacity: 0;
-    transform: translateX(100%);
   }
   to { 
+    transform: translateX(0) skewX(0deg);
     opacity: 1;
-    transform: translateX(0);
   }
 }
 
-@keyframes slide-out {
+/* Panel shift right - Creative side entrance */
+@keyframes panel-shift-right {
   from { 
-    opacity: 1;
-    transform: translateX(0);
+    transform: translateX(100%) skewX(5deg);
+    opacity: 0;
   }
   to { 
-    opacity: 0;
-    transform: translateX(-100%);
+    transform: translateX(0) skewX(0deg);
+    opacity: 1;
   }
 }
 
+/* Frame snap - Comic panel effect */
+@keyframes frame-snap {
+  0% { 
+    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  }
+  100% { 
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+/* Parallax reveal with depth */
+@keyframes parallax-reveal {
+  from {
+    transform: translateY(50px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Slide up entrance */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Scale and fade entrance */
+@keyframes scale-fade-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Lightbox animations */
+@keyframes lightbox-open {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes lightbox-close {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Overlay fade */
+@keyframes overlay-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============================================
+ * BASE STYLES
+ * ============================================ */
 @layer base {
   * {
     @apply border-border;
@@ -144,7 +339,74 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    /* 
+     * TYPOGRAPHY
+     * Using Montserrat for clean, modern look
+     * Change font-family here to use different fonts
+     */
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     overscroll-behavior: none;
   }
 }
+
+/* ============================================
+ * TEXTURE OVERLAYS
+ * Subtle paper/grain textures for cinematic feel
+ * ============================================ */
+
+/**
+ * PAPER GRAIN TEXTURE - Think Side
+ * Adds subtle warm paper texture
+ * 
+ * HOW TO ADJUST:
+ * - Opacity: Change the rgba alpha value
+ * - Grain size: Modify noise pattern
+ */
+.texture-paper {
+  position: relative;
+}
+
+.texture-paper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+/**
+ * CINEMATIC GRAIN TEXTURE - Creative Side
+ * Film grain effect for moody atmosphere
+ * 
+ * HOW TO ADJUST:
+ * - Opacity: Increase for more visible grain
+ * - Mix-blend-mode: Try 'overlay' for different effect
+ */
+.texture-grain {
+  position: relative;
+}
+
+.texture-grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.08;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* ============================================
+ * RESPONSIVE BREAKPOINTS REFERENCE
+ * ============================================
+ * 
+ * sm: 640px   - Small devices (phones landscape)
+ * md: 768px   - Medium devices (tablets)
+ * lg: 1024px  - Large devices (laptops)
+ * xl: 1280px  - Extra large devices (desktops)
+ * 2xl: 1536px - 2X large devices (large desktops)
+ * 
+ * HOW TO ADJUST BREAKPOINTS:
+ * Edit tailwind.config.ts -> theme.screens
+ */
