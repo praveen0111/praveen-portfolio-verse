@@ -1,118 +1,139 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
 @layer base {
   :root {
-    /* Nothing-inspired monochrome palette */
-    --background: 209 40% 96%;
-    --foreground: 222 47% 11%;
+    /* Portfolio Design System */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    
+    /* Creative Section (Dark) - Enhanced vibrancy */
+    /* EDIT COLORS: Adjust these HSL values for creative side theme */
+    --creative-bg: 240 60% 12%;  /* Deep navy-blue for dramatic effect */
+    --creative-fg: 48 96% 89%;   /* Warm light text for contrast */
+    --creative-accent: 330 85% 55%; /* Vibrant magenta accent */
+    
+    /* Digital Section (Light) - Enhanced vibrancy */
+    /* EDIT COLORS: Adjust these HSL values for digital side theme */
+    --digital-bg: 200 25% 97%;    /* Clean light background */
+    --digital-fg: 240 60% 12%;    /* Dark text for readability */
+    --digital-accent: 210 100% 50%; /* Bright blue accent */
+    
+    /* Character Colors */
+    --skin-tone: 30 100% 86%;     /* Warmer skin tone */
+    --hair-dark: 220 26% 14%;
+    --suit-gray: 215 25% 27%;
+    --shirt-light: 210 20% 94%;
+    --tie-red: 0 69% 48%;
+    
+    /* Software Logo Colors */
+    --premiere: 267 55% 53%;
+    --after-effects: 266 44% 47%;
+    --photoshop: 206 100% 50%;
+    
+    /* Hover & Interactive States */
+    /* EDIT THESE: Customize hover effects for tiles */
+    --tile-hover-bg: 330 85% 65%;
+    --tile-hover-shadow: 330 85% 55%;
 
-    --card: 210 40% 98%;
-    --card-foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 214 31% 91%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 216 19% 26%;
-    --primary-foreground: 210 19% 98%;
+    --primary: 222 47% 11%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 215 19% 34%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 215 20% 65%;
-    --muted-foreground: 222 47% 11%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 98%;
-    --accent-foreground: 215 16% 46%;
+    --accent: 330 85% 55%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 0 85% 97%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 212 26% 83%;
-    --input: 212 26% 83%;
-    --ring: 216 19% 26%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
 
-    --radius: 0rem;
-
-    /* Dot matrix */
-    --dot-size: 1px;
-    --dot-gap: 20px;
-    --dot-color: 0 0% 20%;
-
-    /* Grid */
-    --grid-color: 0 0% 12%;
-    --grid-size: 48px;
-    --chart-1: 217 10% 64%;
-    --chart-2: 215 20% 65%;
-    --chart-3: 215 16% 46%;
-    --chart-4: 219 8% 46%;
-    --chart-5: 215 19% 34%;
-    --sidebar: 210 40% 98%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 216 19% 26%;
-    --sidebar-primary-foreground: 210 19% 98%;
-    --sidebar-accent: 215 19% 34%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 212 26% 83%;
-    --sidebar-ring: 216 19% 26%;
-    --font-sans: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-    --font-serif: 'Crimson Pro', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-    --font-mono: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
-    --tracking-normal: 0em;
-    --spacing: 0.25rem;
+    --radius: 0.5rem;
   }
-  .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 217 32% 17%;
-    --card-foreground: 210 40% 98%;
-    --popover: 215 24% 26%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 212 26% 83%;
-    --primary-foreground: 228 84% 4%;
-    --secondary: 215 19% 34%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 215 16% 46%;
-    --muted-foreground: 210 40% 98%;
-    --accent: 228 84% 4%;
-    --accent-foreground: 215 20% 65%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 85% 97%;
-    --border: 215 19% 34%;
-    --input: 215 19% 34%;
-    --ring: 212 26% 83%;
-    --chart-1: 215 12% 83%;
-    --chart-2: 212 26% 83%;
-    --chart-3: 215 20% 65%;
-    --chart-4: 217 10% 64%;
-    --chart-5: 215 16% 46%;
-    --sidebar: 217 32% 17%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 212 26% 83%;
-    --sidebar-primary-foreground: 228 84% 4%;
-    --sidebar-accent: 215 20% 65%;
-    --sidebar-accent-foreground: 228 84% 4%;
-    --sidebar-border: 215 19% 34%;
-    --sidebar-ring: 212 26% 83%;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+}
+
+/* Portfolio-specific animations */
+
+/* Character blink animation - Makes characters feel alive */
+/* EDIT TIMING: Adjust duration (currently 4s) to change blink frequency */
+/* EDIT EFFECT: Modify opacity values to change blink intensity */
+@keyframes blink {
+  0%, 90%, 100% { opacity: 1; }  /* Eyes open most of the time */
+  93%, 97% { opacity: 0; }       /* Quick blink */
+}
+
+/* Float animation for characters */
+@keyframes float {
+  0%, 100% { transform: translate(-50%, -50%); }
+  50% { transform: translate(-50%, -47%); }
+}
+
+/* Floating icon animation */
+@keyframes float-icon {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-25px) rotate(15deg); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+  25% { transform: translate(-51%, -49%) rotate(-2deg); }
+  75% { transform: translate(-49%, -51%) rotate(2deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Slider divider pulse animation - Makes divider more noticeable */
+/* EDIT GLOW: Change shadow size/color for different glow effects */
+@keyframes divider-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px hsl(var(--creative-accent)), 0 0 40px hsl(var(--creative-accent) / 0.5);
+  }
+  50% { 
+    box-shadow: 0 0 30px hsl(var(--creative-accent)), 0 0 60px hsl(var(--creative-accent) / 0.7);
+  }
+}
+
+/* Carousel slide animation */
+@keyframes slide-in {
+  from { 
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to { 
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out {
+  from { 
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to { 
+    opacity: 0;
+    transform: translateX(-100%);
   }
 }
 
@@ -122,191 +143,8 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Space Mono', monospace;
+    @apply bg-background text-foreground;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     overscroll-behavior: none;
-  }
-
-  ::-webkit-scrollbar {
-    width: 2px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: hsl(var(--background));
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted));
-  }
-}
-
-@layer components {
-  .dot-matrix {
-    background-image: radial-gradient(
-      circle,
-      hsl(var(--dot-color)) var(--dot-size),
-      transparent var(--dot-size)
-    );
-    background-size: var(--dot-gap) var(--dot-gap);
-  }
-
-  .grid-bg {
-    background-image: 
-      linear-gradient(hsl(var(--grid-color)) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--grid-color)) 1px, transparent 1px);
-    background-size: var(--grid-size) var(--grid-size);
-  }
-
-  .mono-card {
-    @apply bg-card border border-border transition-all duration-300;
-  }
-
-  .mono-card:hover {
-    @apply border-foreground;
-    box-shadow: 0 0 30px hsla(0, 0%, 100%, 0.05);
-  }
-
-  .btn-mono {
-    @apply px-6 py-3 bg-foreground text-background font-mono text-xs uppercase tracking-[0.2em];
-    @apply transition-all duration-300 border border-foreground;
-  }
-
-  .btn-mono:hover {
-    @apply bg-transparent text-foreground;
-  }
-
-  .btn-outline {
-    @apply px-6 py-3 bg-transparent text-foreground font-mono text-xs uppercase tracking-[0.2em];
-    @apply border border-foreground transition-all duration-300;
-  }
-
-  .btn-outline:hover {
-    @apply bg-foreground text-background;
-  }
-
-  .text-glitch {
-    position: relative;
-  }
-
-  .text-glitch::before,
-  .text-glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-  }
-
-  .text-glitch:hover::before {
-    animation: glitch-1 0.2s linear;
-    opacity: 0.8;
-    color: hsl(var(--foreground));
-    z-index: -1;
-  }
-
-  .text-glitch:hover::after {
-    animation: glitch-2 0.2s linear;
-    opacity: 0.8;
-    color: hsl(var(--foreground));
-    z-index: -1;
-  }
-
-  .scanlines {
-    position: relative;
-  }
-
-  .scanlines::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      hsla(0, 0%, 0%, 0.03) 2px,
-      hsla(0, 0%, 0%, 0.03) 4px
-    );
-    pointer-events: none;
-  }
-}
-
-/* Keyframes */
-@keyframes glitch-1 {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-  100% { transform: translate(0); }
-}
-
-@keyframes glitch-2 {
-  0% { transform: translate(0); }
-  20% { transform: translate(2px, -2px); }
-  40% { transform: translate(2px, 2px); }
-  60% { transform: translate(-2px, -2px); }
-  80% { transform: translate(-2px, 2px); }
-  100% { transform: translate(0); }
-}
-
-@keyframes blink {
-  0%, 90%, 100% { transform: scaleY(1); }
-  95% { transform: scaleY(0.1); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.2); }
-}
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slide-in {
-  from { opacity: 0; transform: translateX(20px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-.animate-blink {
-  animation: blink 4s ease-in-out infinite;
-  transform-origin: center;
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-.animate-pulse-dot {
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-
-.animate-fade-up {
-  animation: fade-up 0.6s ease-out forwards;
-}
-
-.animate-slide-in {
-  animation: slide-in 0.4s ease-out forwards;
-}
-
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
-
-/* Responsive */
-@media (max-width: 768px) {
-  :root {
-    --dot-gap: 16px;
-    --grid-size: 32px;
   }
 }
