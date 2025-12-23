@@ -35,7 +35,6 @@ const Index = () => {
         <CreativePage
           onGoHome={() => handleNavigate("home")}
           onSwitchToDigital={() => handleNavigate("digital")}
-          onNavigateToContact={() => handleNavigate("contact")}
         />
       )}
 
@@ -43,7 +42,6 @@ const Index = () => {
         <DigitalPage
           onGoHome={() => handleNavigate("home")}
           onSwitchToCreative={() => handleNavigate("creative")}
-          onNavigateToContact={() => handleNavigate("contact")}
         />
       )}
 

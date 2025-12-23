@@ -179,7 +179,7 @@ const HeroSection = ({ onNavigateCreative, onNavigateDigital }: HeroSectionProps
           className="absolute"
           style={{
             bottom: alignment.character.digital.bottom,
-            right: isMobile ? "auto" : alignment.character.digital.right,
+            right: isMobile ? "auto" : (alignment.character.digital as { right?: string }).right,
             left: isMobile ? "50%" : "auto",
             transform: isMobile ? "translateX(-50%)" : "none",
             maxWidth: alignment.character.digital.maxWidth,
