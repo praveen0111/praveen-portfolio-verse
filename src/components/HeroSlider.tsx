@@ -92,7 +92,7 @@ const HeroSlider = ({
               Intellect
             </span>
             
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black uppercase tracking-tight text-[#1F1F1F] leading-none mb-6">
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black uppercase tracking-wider text-[#1F1F1F] leading-none mb-6">
               Think
             </h1>
             
@@ -139,7 +139,7 @@ const HeroSlider = ({
               Expression
             </span>
             
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl uppercase tracking-widest text-white leading-none mb-6 font-bold">CREATIVE</h1>
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl uppercase tracking-widest text-white leading-none mb-6 font-black">CREATIVE</h1>
             
             <p className="text-lg text-[#8A8F98] leading-relaxed mb-8 max-w-sm mx-auto text-right">
               Filmmaker crafting visual stories through editing and post-production mastery.
