@@ -139,7 +139,7 @@ const HeroSlider = ({
               Expression
             </span>
             
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl uppercase tracking-tight text-white leading-none mb-6 font-bold">CREATIVE</h1>
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl uppercase tracking-widest text-white leading-none mb-6 font-bold">CREATIVE</h1>
             
             <p className="text-lg text-[#8A8F98] leading-relaxed mb-8 max-w-sm mx-auto">
               Filmmaker crafting visual stories through editing and post-production mastery.
