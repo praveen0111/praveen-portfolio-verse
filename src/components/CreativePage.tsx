@@ -368,3 +368,4 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
 };
 
 export default CreativePage;
+
