@@ -4,22 +4,6 @@ import CreativePage from "@/components/CreativePage";
 import ThinkPage from "@/components/ThinkPage";
 import ContactPage from "@/components/ContactPage";
 import PageTransition from "@/components/PageTransition";
-import ComicParticles from "@/components/ComicParticles";
-import ComicCursor from "@/components/ComicCursor";
-
-/**
- * ============================================
- * MAIN INDEX PAGE - GRAPHIC NOVEL PORTFOLIO
- * ============================================
- * 
- * This is a LIVING COMIC BOOK, not a standard website.
- * 
- * Features:
- * - Dynamic halftone/ink particles on all pages
- * - Custom comic cursor with ink effects
- * - Panel-based transitions
- * - Think vs Creative visual contrast
- */
 
 type PageView = "home" | "creative" | "think" | "contact";
 
@@ -46,26 +30,8 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Get particle variant based on current view
-  const getParticleVariant = () => {
-    switch (currentView) {
-      case "think":
-        return "think";
-      case "creative":
-        return "creative";
-      default:
-        return "fusion";
-    }
-  };
-
   return (
     <main className="min-h-screen overflow-x-hidden">
-      {/* Custom Comic Cursor */}
-      <ComicCursor />
-      
-      {/* Dynamic Comic Particles - Always active */}
-      <ComicParticles variant={getParticleVariant()} />
-
       {/* Home Page - Split Screen Slider */}
       <PageTransition type="home" isVisible={currentView === "home"}>
         <HeroSlider
