@@ -1,29 +1,33 @@
+@import "@fontsource/bangers";
+@import "@fontsource/oswald";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /**
  * ============================================
- * DESIGN SYSTEM - SPIDER-VERSE INSPIRED
+ * DESIGN SYSTEM - SPIDER-VERSE GRAPHIC NOVEL
  * ============================================
+ * 
+ * This site is a LIVING COMIC BOOK, not a standard website.
  * 
  * COLOR PHILOSOPHY:
  * - THINK side = Daytime, warm, academic, intellectual
  * - CREATIVE side = Nighttime, bold, cinematic, expressive
  * - No purple/magenta tones
- * - Cinematic, urban, human-designed aesthetic
  * 
- * HOW TO CUSTOMIZE:
- * 1. Edit HSL values below to change color scheme
- * 2. All colors use HSL format for consistency
- * 3. Think = warm daylight palette, Creative = moody night palette
+ * TYPOGRAPHY:
+ * - Headlines: Bangers (bold comic style)
+ * - Subheads: Oswald (strong, condensed)
+ * - Body: System fonts for readability
  */
 
 @layer base {
   :root {
     /* ============================================
      * THINK SIDE (LEFT) - DAYLIGHT PALETTE
-     * Represents: intellect, academics, analysis, technical depth
+     * Represents: intellect, academics, analysis
      * Inspired by: Peter Parker / Bruce Wayne civilian energy
      * ============================================ */
     
@@ -45,7 +49,7 @@
     
     /* ============================================
      * CREATIVE SIDE (RIGHT) - NIGHTTIME PALETTE  
-     * Represents: expression, storytelling, filmmaking, emotion
+     * Represents: expression, storytelling, filmmaking
      * Inspired by: Spider-Man / Batman alter-ego energy
      * ============================================ */
     
@@ -74,32 +78,28 @@
     
     /* ============================================
      * CHARACTER COLORS
-     * Used for animated SVG characters
      * ============================================ */
-    --skin-tone: 30 100% 86%;         /* Warmer skin tone */
-    --hair-dark: 220 26% 14%;         /* Dark hair */
-    --suit-gray: 215 25% 27%;         /* Professional suit */
-    --shirt-light: 210 20% 94%;       /* Light shirt */
-    --tie-red: 0 69% 48%;             /* Classic red tie */
+    --skin-tone: 30 100% 86%;
+    --hair-dark: 220 26% 14%;
+    --suit-gray: 215 25% 27%;
+    --shirt-light: 210 20% 94%;
+    --tie-red: 0 69% 48%;
     
     /* ============================================
      * SOFTWARE/TOOL LOGO COLORS
-     * For floating icons in hero section
      * ============================================ */
-    --premiere: 267 55% 53%;          /* Adobe Premiere */
-    --after-effects: 266 44% 47%;     /* Adobe After Effects */
-    --photoshop: 206 100% 50%;        /* Adobe Photoshop */
+    --premiere: 267 55% 53%;
+    --after-effects: 266 44% 47%;
+    --photoshop: 206 100% 50%;
 
     /* ============================================
-     * SLIDER DIVIDER - GRADIENT BLEND
-     * Connects THINK (amber) to CREATIVE (lime)
+     * SLIDER DIVIDER
      * ============================================ */
-    --divider-think: 36 76% 56%;      /* Amber start */
-    --divider-creative: 82 100% 50%;  /* Lime end */
+    --divider-think: 36 76% 56%;
+    --divider-creative: 82 100% 50%;
 
     /* ============================================
      * SHADCN UI TOKENS
-     * Default UI component colors
      * ============================================ */
     --background: 40 33% 97%;
     --foreground: 0 0% 12%;
@@ -134,79 +134,53 @@
 }
 
 /* ============================================
+ * COMIC TYPOGRAPHY SYSTEM
+ * ============================================ */
+
+/* Headline font - Bold comic impact */
+.font-comic {
+  font-family: 'Bangers', cursive;
+  letter-spacing: 0.05em;
+}
+
+/* Strong subheading font */
+.font-comic-secondary {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================
  * ANIMATIONS - SPIDER-VERSE INSPIRED MOTION
  * ============================================ */
 
-/**
- * CHARACTER BLINK ANIMATION
- * Makes characters feel alive and natural
- * 
- * HOW TO ADJUST:
- * - Duration: Change animation duration in keyframes (currently 4s)
- * - Frequency: Modify the percentage values for blink timing
- * - Intensity: Adjust opacity values (0 = fully closed, 1 = fully open)
- */
 @keyframes blink {
-  0%, 90%, 100% { opacity: 1; }  /* Eyes open most of the time */
-  93%, 97% { opacity: 0; }       /* Quick natural blink */
+  0%, 90%, 100% { opacity: 1; }
+  93%, 97% { opacity: 0; }
 }
 
-/**
- * FLOAT ANIMATION - Characters
- * Gentle up-down bobbing motion for characters
- * 
- * HOW TO ADJUST:
- * - Amplitude: Change translateY values (currently -3%)
- * - Speed: Modify animation duration (currently 6s)
- */
 @keyframes float {
   0%, 100% { transform: translate(-50%, -50%); }
   50% { transform: translate(-50%, -53%); }
 }
 
-/**
- * FLOAT-ICON ANIMATION
- * More dynamic floating for tool/software icons
- * 
- * HOW TO ADJUST:
- * - Height: Change translateY values (currently -25px)
- * - Rotation: Modify rotate values (currently 15deg)
- * - Speed: Change animation duration (currently 8s)
- */
 @keyframes float-icon {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-25px) rotate(15deg); }
 }
 
-/**
- * WIGGLE ANIMATION
- * Subtle playful movement
- */
 @keyframes wiggle {
   0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
   25% { transform: translate(-51%, -49%) rotate(-2deg); }
   75% { transform: translate(-49%, -51%) rotate(2deg); }
 }
 
-/**
- * FADE IN ANIMATION
- * Standard entrance effect
- */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/**
- * DIVIDER PULSE ANIMATION
- * Glowing effect for the slider divider
- * Uses both THINK (amber) and CREATIVE (lime) colors
- * 
- * HOW TO ADJUST:
- * - Glow intensity: Change shadow blur values
- * - Colors: Modify HSL values below
- * - Speed: Change animation duration (currently 2s)
- */
 @keyframes divider-pulse {
   0%, 100% { 
     box-shadow: 
@@ -222,15 +196,7 @@
   }
 }
 
-/**
- * PAGE TRANSITION ANIMATIONS
- * Spider-Verse inspired panel/frame movements
- * 
- * THINK transitions: Slower (0.5-0.7s), calmer, precise
- * CREATIVE transitions: Faster (0.3-0.4s), bolder, expressive
- */
-
-/* Panel shift left - Think side entrance */
+/* PAGE TRANSITION ANIMATIONS */
 @keyframes panel-shift-left {
   from { 
     transform: translateX(-100%) skewX(-5deg);
@@ -242,7 +208,6 @@
   }
 }
 
-/* Panel shift right - Creative side entrance */
 @keyframes panel-shift-right {
   from { 
     transform: translateX(100%) skewX(5deg);
@@ -254,17 +219,11 @@
   }
 }
 
-/* Frame snap - Comic panel effect */
 @keyframes frame-snap {
-  0% { 
-    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  }
-  100% { 
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
+  0% { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
 }
 
-/* Parallax reveal with depth */
 @keyframes parallax-reveal {
   from {
     transform: translateY(50px) scale(0.95);
@@ -276,7 +235,6 @@
   }
 }
 
-/* Slide up entrance */
 @keyframes slide-up {
   from {
     transform: translateY(100%);
@@ -288,7 +246,6 @@
   }
 }
 
-/* Scale and fade entrance */
 @keyframes scale-fade-in {
   from {
     transform: scale(0.9);
@@ -300,7 +257,7 @@
   }
 }
 
-/* Lightbox animations */
+/* LIGHTBOX ANIMATIONS */
 @keyframes lightbox-open {
   from {
     transform: scale(0.8);
@@ -323,10 +280,89 @@
   }
 }
 
-/* Overlay fade */
 @keyframes overlay-fade {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* INK CURSOR ANIMATIONS */
+@keyframes ink-ripple {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+  }
+  100% {
+    width: 80px;
+    height: 80px;
+    opacity: 0;
+  }
+}
+
+@keyframes ink-ripple-delayed {
+  0% {
+    width: 10px;
+    height: 10px;
+    opacity: 0.8;
+  }
+  100% {
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+  }
+}
+
+@keyframes ink-splatter {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(-50% + var(--splatter-x, 0px)),
+      calc(-50% + var(--splatter-y, 0px))
+    ) scale(0);
+    opacity: 0;
+  }
+}
+
+/* COMIC PANEL ANIMATIONS */
+@keyframes panel-reveal-left {
+  from {
+    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+    transform: translateX(-20px);
+  }
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: translateX(0);
+  }
+}
+
+@keyframes panel-reveal-right {
+  from {
+    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+    transform: translateX(20px);
+  }
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: translateX(0);
+  }
+}
+
+@keyframes comic-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes halftone-pulse {
+  0%, 100% { 
+    background-size: 8px 8px;
+    opacity: 0.3;
+  }
+  50% { 
+    background-size: 12px 12px;
+    opacity: 0.5;
+  }
 }
 
 /* ============================================
@@ -339,29 +375,28 @@
 
   body {
     @apply bg-background text-foreground;
-    /* 
-     * TYPOGRAPHY
-     * Using Montserrat for clean, modern look
-     * Change font-family here to use different fonts
-     */
-    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Oswald', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     overscroll-behavior: none;
+  }
+
+  /* Bold comic headings */
+  h1, h2, h3 {
+    font-family: 'Bangers', cursive;
+    letter-spacing: 0.04em;
+  }
+
+  h4, h5, h6 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
   }
 }
 
 /* ============================================
- * TEXTURE OVERLAYS
- * Subtle paper/grain textures for cinematic feel
+ * TEXTURE OVERLAYS - COMIC BOOK FEEL
  * ============================================ */
 
-/**
- * PAPER GRAIN TEXTURE - Think Side
- * Adds subtle warm paper texture
- * 
- * HOW TO ADJUST:
- * - Opacity: Change the rgba alpha value
- * - Grain size: Modify noise pattern
- */
+/* Paper grain texture - Think Side */
 .texture-paper {
   position: relative;
 }
@@ -371,18 +406,12 @@
   position: absolute;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.03;
+  opacity: 0.04;
   pointer-events: none;
+  z-index: 0;
 }
 
-/**
- * CINEMATIC GRAIN TEXTURE - Creative Side
- * Film grain effect for moody atmosphere
- * 
- * HOW TO ADJUST:
- * - Opacity: Increase for more visible grain
- * - Mix-blend-mode: Try 'overlay' for different effect
- */
+/* Film grain texture - Creative Side */
 .texture-grain {
   position: relative;
 }
@@ -392,21 +421,165 @@
   position: absolute;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.08;
+  opacity: 0.1;
   mix-blend-mode: soft-light;
   pointer-events: none;
+  z-index: 0;
+}
+
+/* Halftone dot pattern overlay */
+.texture-halftone {
+  position: relative;
+}
+
+.texture-halftone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+  background-size: 6px 6px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ink stroke border effect */
+.border-ink {
+  border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cpath d='M0 0 Q5 2 10 0 T20 0 L20 20 Q15 18 10 20 T0 20 Z' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") 10 stretch;
 }
 
 /* ============================================
- * RESPONSIVE BREAKPOINTS REFERENCE
- * ============================================
- * 
- * sm: 640px   - Small devices (phones landscape)
- * md: 768px   - Medium devices (tablets)
- * lg: 1024px  - Large devices (laptops)
- * xl: 1280px  - Extra large devices (desktops)
- * 2xl: 1536px - 2X large devices (large desktops)
- * 
- * HOW TO ADJUST BREAKPOINTS:
- * Edit tailwind.config.ts -> theme.screens
- */
+ * COMIC PANEL FRAMES
+ * ============================================ */
+
+.comic-panel {
+  position: relative;
+  background: var(--panel-bg, hsl(var(--background)));
+  border: 4px solid hsl(var(--foreground));
+  box-shadow: 8px 8px 0 hsl(var(--foreground) / 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.comic-panel:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 12px 12px 0 hsl(var(--foreground) / 0.25);
+}
+
+.comic-panel-think {
+  border-color: hsl(var(--think-accent));
+  box-shadow: 8px 8px 0 hsl(var(--think-accent) / 0.2);
+}
+
+.comic-panel-creative {
+  border-color: hsl(var(--creative-accent));
+  box-shadow: 8px 8px 0 hsl(var(--creative-accent) / 0.2);
+}
+
+/* Diagonal action panel */
+.comic-panel-diagonal {
+  clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
+}
+
+/* ============================================
+ * SCROLL-DRIVEN COMIC FRAME ANIMATIONS
+ * ============================================ */
+
+.scroll-frame {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-frame.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-frame-left {
+  opacity: 0;
+  transform: translateX(-60px) skewX(3deg);
+  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-frame-left.visible {
+  opacity: 1;
+  transform: translateX(0) skewX(0);
+}
+
+.scroll-frame-right {
+  opacity: 0;
+  transform: translateX(60px) skewX(-3deg);
+  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-frame-right.visible {
+  opacity: 1;
+  transform: translateX(0) skewX(0);
+}
+
+/* ============================================
+ * INK CURSOR UTILITY CLASSES
+ * ============================================ */
+
+.animate-ink-ripple {
+  animation: ink-ripple 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-ink-ripple-delayed {
+  animation: ink-ripple-delayed 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+
+.animate-ink-splatter {
+  animation: ink-splatter 0.4s ease-out forwards;
+}
+
+/* ============================================
+ * UTILITY CLASSES
+ * ============================================ */
+
+/* Action text style */
+.text-action {
+  font-family: 'Bangers', cursive;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 3px 3px 0 hsl(var(--foreground) / 0.2);
+}
+
+/* Comic speech bubble effect */
+.speech-bubble {
+  position: relative;
+  background: white;
+  border: 3px solid hsl(var(--foreground));
+  border-radius: 20px;
+  padding: 1rem 1.5rem;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 30px;
+  border-width: 15px 10px 0;
+  border-style: solid;
+  border-color: hsl(var(--foreground)) transparent transparent;
+}
+
+/* Speed lines effect */
+.speed-lines {
+  position: relative;
+  overflow: hidden;
+}
+
+.speed-lines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 8px,
+    hsl(var(--foreground) / 0.05) 8px,
+    hsl(var(--foreground) / 0.05) 10px
+  );
+  pointer-events: none;
+}
