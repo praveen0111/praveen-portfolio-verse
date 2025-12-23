@@ -1,14 +1,18 @@
+import { CSSProperties } from "react";
+
 interface CharacterProps {
   type: "creative" | "digital";
   className?: string;
+  style?: CSSProperties;
 }
 
-const Character = ({ type, className = "" }: CharacterProps) => {
+const Character = ({ type, className = "", style }: CharacterProps) => {
   if (type === "creative") {
     return (
       <svg
         viewBox="0 0 200 300"
         className={className}
+        style={style}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -70,6 +74,7 @@ const Character = ({ type, className = "" }: CharacterProps) => {
     <svg
       viewBox="0 0 200 300"
       className={className}
+      style={style}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
