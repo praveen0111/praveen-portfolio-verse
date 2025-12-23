@@ -4,29 +4,21 @@ import CreativePage from "@/components/CreativePage";
 import ThinkPage from "@/components/ThinkPage";
 import ContactPage from "@/components/ContactPage";
 import PageTransition from "@/components/PageTransition";
+import ComicParticles from "@/components/ComicParticles";
+import ComicCursor from "@/components/ComicCursor";
 
 /**
  * ============================================
- * MAIN INDEX PAGE - PAGE ROUTER
+ * MAIN INDEX PAGE - GRAPHIC NOVEL PORTFOLIO
  * ============================================
  * 
- * Manages navigation between:
- * - Home (HeroSlider with Think/Creative split)
- * - Think (Academic/Professional profile)
- * - Creative (Film project showcase)
- * - Contact (Social links & contact info)
+ * This is a LIVING COMIC BOOK, not a standard website.
  * 
- * PAGE TRANSITIONS:
- * - Each page type has distinct animation style
- * - Think: Slower, calmer motion (0.6-0.7s)
- * - Creative: Faster, bolder motion (0.3-0.4s)
- * - Contact: Subtle slide-up
- * - Home: Scale-fade
- * 
- * HOW TO CUSTOMIZE:
- * 1. Edit transition types in PageTransition component
- * 2. Modify animation durations in tailwind.config.ts
- * 3. Add new pages by extending PageView type
+ * Features:
+ * - Dynamic halftone/ink particles on all pages
+ * - Custom comic cursor with ink effects
+ * - Panel-based transitions
+ * - Think vs Creative visual contrast
  */
 
 type PageView = "home" | "creative" | "think" | "contact";
@@ -54,28 +46,26 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  /**
-   * Get transition type based on page
-   * - think: Slower, calmer animation
-   * - creative: Faster, bolder animation
-   * - fusion: Contact page blend
-   * - home: Default scale-fade
-   */
-  const getTransitionType = (view: PageView) => {
-    switch (view) {
+  // Get particle variant based on current view
+  const getParticleVariant = () => {
+    switch (currentView) {
       case "think":
         return "think";
       case "creative":
         return "creative";
-      case "contact":
-        return "fusion";
       default:
-        return "home";
+        return "fusion";
     }
   };
 
   return (
     <main className="min-h-screen overflow-x-hidden">
+      {/* Custom Comic Cursor */}
+      <ComicCursor />
+      
+      {/* Dynamic Comic Particles - Always active */}
+      <ComicParticles variant={getParticleVariant()} />
+
       {/* Home Page - Split Screen Slider */}
       <PageTransition type="home" isVisible={currentView === "home"}>
         <HeroSlider
