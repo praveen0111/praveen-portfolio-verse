@@ -1,24 +1,9 @@
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { ChevronLeft, ChevronRight, Play, Award } from "lucide-react";
-import ImageLightbox from "./ImageLightbox";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-/**
- * ============================================
- * CREATIVE PAGE COMPONENT
- * ============================================
- * 
- * Cinematic project showcase with:
- * - Dark, moody, high-contrast theme
- * - Scroll-driven project reveal
- * - Image carousel with lightbox
- * - Comic-inspired motion and framing
- * 
- * HOW TO CUSTOMIZE:
- * 1. Edit projects in 'projects' array
- * 2. Replace placeholder image URLs
- * 3. Update streaming/project links
- */
+import { Button } from "./ui/button";
+import { Dialog, DialogClose, DialogContent } from "./ui/dialog";
+import ComicParticles from "./ComicParticles";
 
 interface CreativePageProps {
   onGoHome: () => void;
@@ -26,343 +11,882 @@ interface CreativePageProps {
   onNavigateToContact: () => void;
 }
 
-const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: CreativePageProps) => {
-  const [currentImageIndices, setCurrentImageIndices] = useState<Record<number, number>>({});
-  const [lightbox, setLightbox] = useState<{
-    isOpen: boolean;
-    projectId: number;
-    imageIndex: number;
-  }>({ isOpen: false, projectId: 0, imageIndex: 0 });
+type CreativeProject = {
+  title: string;
+  genre: string;
+  typeLabel: string;
+  year: string;
+  runtime: string;
+  link: string;
+  filters: string[];
+  role: string;
+  description: string;
+  experience: string;
+  awards: string[];
+};
 
-  const projects = [
-    {
-      id: 1,
-      title: "GR3Y",
-      year: "2023",
-      genre: "Thriller",
-      role: "Director & Editor",
-      description: "An archaeologist unearths a treasure box, which leads to a turn of unexpected events.",
-      awards: ["Best Direction - Malda Int'l Film Festival", "Best Film - Malda Int'l Film Festival"],
-      link: "#",
-      images: [
-        "https://placehold.co/1200x800/0E0E11/9EFF00?text=GR3Y+Poster",
-        "https://placehold.co/1200x800/17181C/9EFF00?text=GR3Y+Scene+1",
-        "https://placehold.co/1200x800/0E0E11/FF8C1A?text=GR3Y+Scene+2",
-      ],
-    },
-    {
-      id: 2,
-      title: "STRANGERS",
-      year: "2023",
-      genre: "Drama",
-      role: "Writer & Director",
-      description: "A conversation between a stranger and a bystander unfolds as past and present collide.",
-      awards: ["Best Film - ENGENIA 2024", "Best Editing - ENGENIA 2024", "Best Director - ENGENIA 2024"],
-      link: "#",
-      images: [
-        "https://placehold.co/1200x800/0E0E11/9EFF00?text=STRANGERS+Poster",
-        "https://placehold.co/1200x800/17181C/FF8C1A?text=STRANGERS+Scene+1",
-        "https://placehold.co/1200x800/0E0E11/9EFF00?text=STRANGERS+Scene+2",
-      ],
-    },
-    {
-      id: 3,
-      title: "Project Three",
-      year: "2024",
-      genre: "Documentary",
-      role: "Director of Photography",
-      description: "A compelling exploration of human connection and creativity in the modern world.",
-      awards: ["Official Selection - Multiple Film Festivals"],
-      link: "#",
-      images: [
-        "https://placehold.co/1200x800/0E0E11/9EFF00?text=Project+3+Image+1",
-        "https://placehold.co/1200x800/17181C/FF8C1A?text=Project+3+Image+2",
-        "https://placehold.co/1200x800/0E0E11/9EFF00?text=Project+3+Image+3",
-      ],
-    },
-    {
-      id: 4,
-      title: "Project Four",
-      year: "2024",
-      genre: "Short Film",
-      role: "Editor",
-      description: "An experimental piece exploring the boundaries of visual storytelling.",
-      awards: ["Audience Choice Award"],
-      link: "#",
-      images: [
-        "https://placehold.co/1200x800/0E0E11/FF8C1A?text=Project+4+Image+1",
-        "https://placehold.co/1200x800/17181C/9EFF00?text=Project+4+Image+2",
-        "https://placehold.co/1200x800/0E0E11/FF8C1A?text=Project+4+Image+3",
-      ],
-    },
-    {
-      id: 5,
-      title: "Project Five",
-      year: "2025",
-      genre: "Music Video",
-      role: "Director & Colorist",
-      description: "A vibrant visual journey through sound and emotion.",
-      awards: ["Best Cinematography"],
-      link: "#",
-      images: [
-        "https://placehold.co/1200x800/0E0E11/9EFF00?text=Project+5+Image+1",
-        "https://placehold.co/1200x800/17181C/FF8C1A?text=Project+5+Image+2",
-        "https://placehold.co/1200x800/0E0E11/9EFF00?text=Project+5+Image+3",
-      ],
-    },
-    {
-      id: 6,
-      title: "Project Six",
-      year: "2025",
-      genre: "Commercial",
-      role: "Creative Director",
-      description: "Creative commercial work showcasing brand storytelling excellence.",
-      awards: ["Industry Recognition Award"],
-      link: "#",
-      images: [
-        "https://placehold.co/1200x800/0E0E11/FF8C1A?text=Project+6+Image+1",
-        "https://placehold.co/1200x800/17181C/9EFF00?text=Project+6+Image+2",
-        "https://placehold.co/1200x800/0E0E11/FF8C1A?text=Project+6+Image+3",
-      ],
-    },
-  ];
+const projects: CreativeProject[] = [
+  {
+    title: "Penance",
+    genre: "Short film",
+    typeLabel: "Short Film · Horror",
+    year: "2025",
+    runtime: "16 Minutes",
+    link: "https://filmfreeway.com/projects/3961431",
+    filters: ["shortfilm", "writer", "director", "editor", "vfx", "sounddesign"],
+    role: "Writer · Director · Editor · VFX · Sound Design",
+    description:
+      "Eleven years after a childhood tragedy, Joseph returns to his old home, carrying a silence that never left him. Over the course of a single night, unsettling occurrences begin to surface. Shadows linger. Whistles echo. As the past seeps into the present, Joseph is forced to confront the truth he has long buried.",
+    experience:
+      "Written and directed in collaboration with my long-time creative collaborator Nishanth, Penance was executed under intense constraints, completed in a continuous 22-hour shoot with minimal resources.\n\nThe project pushed both technical and creative boundaries, incorporating VFX workflows and selectively leveraging AI tools to achieve complex visual sequences, followed by a detailed post-production process.",
+    awards: [
+      "Best Film · FILMFLIX Film Festival · XLRI Jamshedpur",
+      "Best Cinematographer · Centerstage '26 · MCC Chennai",
+      "Best Film · Lens Flare '25 · IIIT Bengaluru",
+      "Best Film (Runner-Up) · Shorts24 2026 · HCC Trichy",
+      "Best Cinematographer · Kalam '26 · SIET Coimbatore",
+    ],
+  },
+  {
+    title: "GR3Y",
+    genre: "Short film",
+    typeLabel: "Short Film · Thriller / Noir",
+    year: "2023",
+    runtime: "33 Minutes",
+    link: "https://youtu.be/s5pPz_CYvmc?si=KbP9BfULiNgo1Wif",
+    filters: ["shortfilm", "writer", "director", "editor", "vfx"],
+    role: "Writer · Director · Editor · VFX",
+    description: "A murder. A trial. A treasure hunt.\nThree narratives, bound by a thin, unsettling thread of grey.",
+    experience:
+      "Written and directed alongside my long-time collaborator Nishanth, GR3Y explored a layered, non-linear screenplay structure that interweaves multiple narratives.\nThe film draws subtle influence from classical Tamil literature, adding a mystic undertone to its noir atmosphere. Produced on a minimal budget of ₹3000, it became a turning point in pushing creative ambition under constraints.\nThe project involved complex VFX workflows and early experimentation with AI-generated visuals using Stable Diffusion during its nascent stage, followed by a detailed post-production process.",
+    awards: [
+      "Best Short Film (2nd Runner-Up) · Kaolin National Level Short Film Festival 2024 · Nehru College, Coimbatore",
+      "Best Short Film (2nd Runner-Up) & Best Cinematography · Pathivugal 2024 · PSG College of Arts & Science, Coimbatore",
+      "Best Director, Best Short Film, Best Editor, Best Thriller, Best Production · Malda International Film Festival",
+      "Official Selection · Pillar4 · MCC, Chennai",
+      "Official Selection · Bollywood USA International Film Festival",
+      "Official Selection · Amader International Short Film Festival",
+    ],
+  },
+  {
+    title: "STRANGERS",
+    genre: "Short film",
+    typeLabel: "Short Film · Drama",
+    year: "2024",
+    runtime: "8 Minutes",
+    link: "https://youtu.be/vIg_xE6YwXw?si=ppPXXu-qfI6dtKWo",
+    filters: ["shortfilm", "editor", "director", "cinematographer"],
+    role: "Editor · Director · Cinematographer",
+    description:
+      "A conversation between a stranger and a bystander unfolds, past and present collide, revealing the enduring impact of one act of courage and kindness, where small gestures ripple through lives, leaving lasting impressions.",
+    experience:
+      "STRANGERS was conceived and executed at an intense pace, planned within 48 hours, shot in a single day, and completed in under a week including editing and post-production.\nFilmed in live railway stations across Chennai, the project demanded real-time adaptability, working amidst unpredictable environments and uncontrolled public spaces.\nThis film marked a deliberate shift into drama, focusing on performance, subtle emotion, and grounded storytelling. Managing a crew of 15-20 members along with multiple junior artists required tight coordination and on-the-spot decision-making.\nShot entirely on an iPhone 13, the choice of equipment enabled agility, intimacy in framing, and seamless filming in crowded public locations, reinforcing the film's raw and realistic tone.",
+    awards: [
+      "Winner · Mobile Cinema Category · Pillar4 Film Festival 2024 · MCC, Chennai",
+      "Official Selection · Pillar4 Film Festival 2024 · MCC, Chennai",
+      "Official Selection · Duemila30 2024 · Milan, Italy",
+      "Official Selection · Cineaste International Film Festival of India (CIFFI) 2023/2024",
+      "Jury Mention · Cineaste International Film Festival of India (CIFFI) 2023/2024",
+      "Official Selection · RECharge Short Film Competition 2024 · REC, Chennai",
+      "Second Runner-Up · Best Film · RECharge Short Film Competition 2024 · REC, Chennai",
+      "Winner · Best Film · Engenia 2023",
+      "Best Director · Engenia 2023",
+    ],
+  },
+  {
+    title: "Thiruttu Dhum",
+    genre: "Short film",
+    typeLabel: "Short Film · Drama",
+    year: "2025",
+    runtime: "1 Minute",
+    link: "https://youtu.be/HuUq15D1RLI?si=42FetzWo8Y44Jiiy",
+    filters: ["shortfilm", "cinematographer", "creativepro"],
+    role: "Cinematographer · Creative Producer",
+    description:
+      "A boy sneaks into the bathroom for a forbidden smoke while his strict father sleeps outside. When a sudden knock breaks the silence, panic takes over. He tries to dispose of the cigarette, but it refuses to sink. What follows is a frantic attempt to hide the evidence.",
+    experience:
+      "Created for the International Toilet Festival 3.0 Short Film Competition under the theme 'Once Upon a Loo,' Thiruttu Dhum was an exercise in speed, constraint, and spontaneity.\n\nThe film was conceptualized, shot, and completed within 24 hours, with the shoot itself taking place over a focused 3-hour midnight schedule.\n\nFilmed entirely on an iPhone 15, the project embraced a guerrilla filmmaking approach, using practical lighting and adapting to the tight, irregular geometry of a small bathroom space. The constraints shaped both the visual style and staging, resulting in a compact, tension-driven narrative.",
+    awards: [],
+  },
+  {
+    title: "Policy Bazaar × Sathyeah",
+    genre: "AD",
+    typeLabel: "Advertisement",
+    year: "2025",
+    runtime: "2 Minutes",
+    link: "https://www.instagram.com/p/DL-CIsaRQVD/",
+    filters: ["ad", "cinematographer", "creativepro"],
+    role: "Cinematographer · Creative Producer",
+    description: "",
+    experience:
+      "Contributed to the creative production of an influencer-led advertisement for Policy Bazaar, produced in collaboration with the Tamil YouTube creator Sathyeah.\n\nThe visual approach was designed to align seamlessly with Sathyeah's established content style, incorporating dynamic shot choices, whip pans, and high-energy transitions to retain his signature tone while integrating the brand narrative organically.\n\nFocused on maintaining creator authenticity alongside brand communication, the film achieved strong audience engagement and received positive reception across his viewer base.",
+    awards: [],
+  },
+  {
+    title: "English Partner × Sathyeah",
+    genre: "AD",
+    typeLabel: "Advertisement",
+    year: "2025",
+    runtime: "2 Minutes",
+    link: "https://www.instagram.com/p/DPWUX42EWrc/",
+    filters: ["ad", "cinematographer", "creativepro"],
+    role: "Cinematographer · Creative Producer",
+    description: "",
+    experience:
+      "Contributed to the creative production of an influencer-led advertisement for English Partner, in collaboration with Tamil YouTube creator Sathyeah.\n\nThe film balanced a more serious, awareness-driven narrative with Sathyeah's signature humour and delivery style. It focused on highlighting how language barriers, particularly in English communication, can limit opportunities for capable individuals.\n\nThe challenge was to maintain emotional weight without losing audience engagement, achieved by blending informative messaging with familiar tonal elements from Sathyeah's content. This ensured both relatability and effective brand communication.\n\nThe final piece resonated well with the audience, receiving strong engagement and positive feedback.",
+    awards: [],
+  },
+  {
+    title: "Eggsistence",
+    genre: "Short film",
+    typeLabel: "Short Film · Drama / Satire",
+    year: "2022",
+    runtime: "2 Minutes",
+    link: "https://youtu.be/VzBBPgxui_I?si=Mh_UoBh_5wtpgUus",
+    filters: ["shortfilm", "writer", "director", "editor", "cinematographer"],
+    role: "Writer · Director · Editor · Cinematographer",
+    description: "A tale of an egg and a nation, where the ordinary becomes a mirror to something far more political, personal, and absurd.",
+    experience:
+      "Eggsistence was conceived, shot, and completed within an intense 3-day timeframe for a competition. Although it was not selected in its initial submission, the film went on to find recognition across multiple film festivals nationwide.\n\nShot entirely on a OnePlus 8 smartphone, the project embraced minimalism and resourcefulness, using satire as a lens to explore layered themes with simplicity and impact. The experience reinforced the idea that constraints can often sharpen storytelling rather than limit it.",
+    awards: [
+      "Winner · Best Short Film · Breaking Barriers: Short Film Contest · LSR, Delhi University",
+      "Honorable Mention · Student World Impact Film Festival",
+      "Finalist · Clapperboard Film Festival · PEFTI Film Festival",
+      "Official Selection · Kalakari Film Fest · Urbanite Arts & Film Festival",
+    ],
+  },
+  {
+    title: "Nisadya 1-DTG",
+    genre: "Promo Video",
+    typeLabel: "Promo Video",
+    year: "2026",
+    runtime: "2 Minutes",
+    link: "https://www.instagram.com/reel/DVOW9jNCcfw/",
+    filters: ["promo", "director", "cinematographer", "editor"],
+    role: "Director · Cinematographer · Editor",
+    description: "",
+    experience:
+      "Executed within a 24-hour turnaround for a college event, Nisadya 1-DTG was an exercise in rapid production under extreme constraints.\n\nThe project explored a horror and mystery-driven visual tone using minimal resources. Low-light cinematography played a central role, with innovative use of thermocol sheets as reflectors and mobile phone torchlights as primary light sources.\n\nShot entirely on an iPhone, the production relied on improvisation, spatial awareness, and quick decision-making to achieve a stylized atmosphere despite limited equipment and time.",
+    awards: [],
+  },
+  {
+    title: "Nisadya Date Reveal",
+    genre: "Promo Video",
+    typeLabel: "Promo Video",
+    year: "2026",
+    runtime: "1 Minute",
+    link: "https://www.instagram.com/reel/DT-FYzDjENr/",
+    filters: ["promo", "director", "cinematographer", "editor"],
+    role: "Director · Cinematographer · Editor",
+    description: "",
+    experience:
+      "Conceptualized, shot, edited, and released within an intense 4-hour window as part of a promotional campaign for a college event.\n\nThe video embraced a Western cinematic tone, leveraging golden hour lighting to create a warm, atmospheric visual identity. Shot entirely on an iPhone, the project balanced speed with strong visual intent.\n\nRotoscopy and AI-assisted tools were used to enhance select frames, adding stylization and depth while maintaining a fast turnaround.",
+    awards: [],
+  },
+  {
+    title: "LICET's FABLAB",
+    genre: "Promo Video",
+    typeLabel: "Promo Video",
+    year: "2022",
+    runtime: "1 Minute",
+    link: "https://www.youtube.com/watch?v=fz-wXQDsNsI&t=23s",
+    filters: ["promo", "director", "cinematographer", "editor"],
+    role: "Director · Cinematographer · Editor",
+    description: "",
+    experience:
+      "Shot on an iPhone, this promo video was designed to cinematically showcase the facilities and equipment within LICET's FABLAB.\n\nThe visual narrative focused on dynamic framing and rhythmic editing, with cuts precisely aligned to music beats to create an engaging and immersive viewing experience.\n\nThe final video continues to be featured on LICET's main public display.",
+    awards: [],
+  },
+  {
+    title: "ATOM – Campus Partner",
+    genre: "AD",
+    typeLabel: "Advertisement / Assignment",
+    year: "2024",
+    runtime: "1 Minute",
+    link: "https://drive.google.com/file/d/1tzTkK2a5WI41MQMi0UHb2RSgZulGsGOW/view",
+    filters: ["ad", "director", "cinematographer", "editor"],
+    role: "Director · Cinematographer · Editor",
+    description: "",
+    experience:
+      "Created as part of a Design Thinking coursework, this video highlights the entrepreneurial ecosystem at NIT Trichy and the institutional support available for student-led innovation.\n\nThe project was developed under a strict sub-1-minute constraint, requiring concise storytelling and clear visual communication.\n\nFocused on presenting a culture of ideation, incubation, and execution, the video balances informational clarity with engaging visuals.",
+    awards: [],
+  },
+  {
+    title: "Dumb, Dumber & Dumbest",
+    genre: "Short film",
+    typeLabel: "Short Film · Dark Humor",
+    year: "2025",
+    runtime: "8 Minutes",
+    link: "https://youtu.be/trQzgJ3--Vw",
+    filters: ["shortfilm", "vfx"],
+    role: "VFX",
+    description:
+      "Three eccentric criminals. One unexpected betrayal. A spiral into chaos where things go hilariously, and violently, out of control.",
+    experience:
+      "Contributed as a VFX artist for this project, directed by Somesh. Brought in to execute specific shots requiring raw, gritty blood effects and subtle visual enhancements.\n\nThe work was completed within a tight one-day turnaround, demanding precision and speed under time constraints.\n\nThis project marked a shift from directing and writing into a focused technical role, collaborating on a film outside my usual creative circle and contributing purely through post-production and VFX execution.",
+    awards: [],
+  },
+  {
+    title: "TAMIZH Product Concept",
+    genre: "AD",
+    typeLabel: "Advertisement",
+    year: "2026",
+    runtime: "1 Minute",
+    link: "https://drive.google.com/file/d/1KLaJTFdDQAvU_Z1VVd01-cLYaJGAoIWW/view?usp=sharing",
+    filters: ["promo", "ad", "editor", "creativepro"],
+    role: "Editor · Concept · AI Prompt Engineer",
+    description: "",
+    experience:
+      "Developed a concept video for XR smart glasses using a fully AI-driven production pipeline, intended for stakeholder presentation and early-stage product visualization.\n\nLeveraged the Higgsfield platform to generate the entire video from scratch, establishing a structured workflow that integrated prompt design, image generation, and video synthesis.\n\nThe project focused on clearly communicating product use cases and vision without traditional production resources, demonstrating the ability to translate abstract ideas into compelling visual narratives using emerging AI tools.",
+    awards: [],
+  },
+];
 
-  const getCurrentIndex = (projectId: number) => currentImageIndices[projectId] || 0;
+const FILTER_BAR = [
+  { label: "writer", token: "writer" },
+  { label: "director", token: "director" },
+  { label: "editor", token: "editor" },
+  { label: "cinematographer", token: "cinematographer" },
+  { label: "ad", token: "ad" },
+  { label: "shortfilm", token: "shortfilm" },
+  { label: "promo videos", token: "promo" },
+  { label: "VFX", token: "vfx" },
+  { label: "Sound Design", token: "sounddesign" },
+  { label: "Creative Producer", token: "creativepro" },
+] as const;
 
-  const nextImage = (projectId: number, totalImages: number, e?: React.MouseEvent) => {
-    e?.preventDefault();
-    e?.stopPropagation();
-    setCurrentImageIndices((prev) => ({
-      ...prev,
-      [projectId]: ((prev[projectId] || 0) + 1) % totalImages,
-    }));
-  };
+const DEFAULT_IMAGES = ["/Create/atom/poster.png", "/Create/atom/scene1.png", "/Create/atom/scene2.png"];
 
-  const prevImage = (projectId: number, totalImages: number, e?: React.MouseEvent) => {
-    e?.preventDefault();
-    e?.stopPropagation();
-    setCurrentImageIndices((prev) => ({
-      ...prev,
-      [projectId]: ((prev[projectId] || 0) - 1 + totalImages) % totalImages,
-    }));
-  };
+const projectImages: Record<string, string[]> = {
+  Penance: ["/Create/penance/poster.png", "/Create/penance/scene1.png", "/Create/penance/scene2.png"],
+  GR3Y: ["/Create/gr3y/poster.png", "/Create/gr3y/scene1.jpg", "/Create/gr3y/scene2.png"],
+  STRANGERS: ["/Create/strangers/poster.png", "/Create/strangers/scene1.png", "/Create/strangers/scene2.png"],
+  "Thiruttu Dhum": ["/Create/thiruttu/poster.png", "/Create/thiruttu/scene1.png", "/Create/thiruttu/scene2.png"],
+  "Policy Bazaar × Sathyeah": ["/Create/policy/poster.png", "/Create/policy/scene1.png", "/Create/policy/scene2.png"],
+  "English Partner × Sathyeah": ["/Create/english/poster.png", "/Create/english/scene1.png", "/Create/english/scene2.png"],
+  Eggsistence: ["/Create/egg/poster.jpg", "/Create/egg/scene1.png", "/Create/egg/scene2.png"],
+  "Nisadya 1-DTG": [
+    "/Create/nisadya1dtg/poster.png",
+    "/Create/nisadya1dtg/scene1.png",
+    "/Create/nisadya1dtg/scene2.png",
+  ],
+  "Nisadya Date Reveal": [
+    "/Create/nisadyadatereveal/poster.png",
+    "/Create/nisadyadatereveal/scene1.png",
+    "/Create/nisadyadatereveal/scene2.png",
+  ],
+  "LICET's FABLAB": ["/Create/fablab/poster.png", "/Create/fablab/scene1.png", "/Create/fablab/scene2.png"],
+  "ATOM – Campus Partner": ["/Create/atom/poster.png", "/Create/atom/scene1.png", "/Create/atom/scene2.png"],
+  "Dumb, Dumber & Dumbest": [
+    "/Create/dumbdumber/poster.jpg",
+    "/Create/dumbdumber/scene1.png",
+    "/Create/dumbdumber/scene2.png",
+  ],
+  "TAMIZH Product Concept": ["/Create/Tamizh/Poster.png", "/Create/Tamizh/Scene1.png", "/Create/Tamizh/Scene2.png"],
+};
 
-  const openLightbox = (projectId: number, imageIndex: number, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setLightbox({ isOpen: true, projectId, imageIndex });
-  };
+function PosterCarousel({
+  images,
+  runtime,
+  paused,
+  onIndexChange,
+  onDotClickStopPropagation,
+}: {
+  images: string[];
+  runtime: string;
+  paused: boolean;
+  onIndexChange: (index: number) => void;
+  onDotClickStopPropagation?: (e: React.MouseEvent) => void;
+}) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const closeLightbox = () => {
-    setLightbox({ isOpen: false, projectId: 0, imageIndex: 0 });
-  };
+  useEffect(() => {
+    onIndexChange(selectedIndex);
+  }, [selectedIndex, onIndexChange]);
 
-  const currentProject = projects.find((p) => p.id === lightbox.projectId);
+  useEffect(() => {
+    if (paused) return;
+    if (images.length < 2) return;
+
+    const intervalId = window.setInterval(() => {
+      setSelectedIndex((prev) => (prev + 1) % images.length);
+    }, 3400);
+
+    return () => window.clearInterval(intervalId);
+  }, [images.length, paused]);
 
   return (
-    <div className="min-h-screen bg-creative-bg texture-grain animate-creative-enter">
-      {/* Moody night gradient overlay */}
-      <div
-        className="fixed inset-0 pointer-events-none z-0"
-        style={{
-          background: `
-            radial-gradient(ellipse at 80% 20%, hsl(var(--creative-glow) / 0.08) 0%, transparent 40%),
-            radial-gradient(ellipse at 20% 80%, hsl(var(--creative-glow-warm) / 0.06) 0%, transparent 30%)
-          `,
-        }}
-      />
+    <div className="relative w-full aspect-video">
+      <div className="absolute inset-0 overflow-hidden">
+        {images.map((src, i) => {
+          const isActive = i === selectedIndex;
+          return (
+            <img
+              key={`${src}-${i}`}
+              src={src}
+              alt=""
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out will-change-transform will-change-filter ${
+                isActive ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-[1.04] blur-[8px] pointer-events-none"
+              }`}
+            />
+          );
+        })}
+      </div>
 
-      {/* Navigation */}
-      <nav className="relative z-20 py-6 md:py-8 border-b border-white/10">
+      {/* YouTube-style runtime badge */}
+      <div
+        className="absolute bottom-2 right-2 z-10 px-2 py-1 text-[16px] md:text-[18px] bg-black/70 text-white border-2 border-white/15 font-comic font-extrabold"
+        style={{ fontWeight: 800 }}
+      >
+        {runtime}
+      </div>
+
+      {/* Carousel dots */}
+      {images.length > 1 && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-2 items-center">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={(e) => {
+                onDotClickStopPropagation?.(e);
+                e.preventDefault();
+                setSelectedIndex(i);
+              }}
+              className={`min-h-[12px] min-w-[12px] rounded-full border-2 ${
+                i === selectedIndex
+                  ? "bg-[hsl(var(--creative-accent))] border-[hsl(var(--creative-accent))]"
+                  : "bg-white/15 border-white/15 hover:bg-white/25 hover:border-white/25"
+              }`}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PopupImageCarousel({
+  images,
+  initialIndex,
+}: {
+  images: string[];
+  initialIndex: number;
+}) {
+  const [selectedIndex, setSelectedIndex] = useState(initialIndex);
+
+  useEffect(() => {
+    setSelectedIndex(initialIndex);
+  }, [initialIndex]);
+
+  // Endless loop auto-slideshow in popup.
+  useEffect(() => {
+    if (images.length < 2) return;
+
+    const intervalId = window.setInterval(() => {
+      setSelectedIndex((prev) => (prev + 1) % images.length);
+    }, 3400);
+
+    return () => window.clearInterval(intervalId);
+  }, [images.length]);
+
+  const goPrev = () => {
+    if (images.length < 2) return;
+    setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const goNext = () => {
+    if (images.length < 2) return;
+    setSelectedIndex((prev) => (prev + 1) % images.length);
+  };
+
+  return (
+    <div className="relative w-full h-full">
+      <div className="absolute inset-0 overflow-hidden">
+        {images.map((src, i) => {
+          const isActive = i === selectedIndex;
+          return (
+            <img
+              key={`${src}-${i}`}
+              src={src}
+              alt=""
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out will-change-transform will-change-filter ${
+                isActive ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-[1.04] blur-[8px] pointer-events-none"
+              }`}
+            />
+          );
+        })}
+      </div>
+
+      {images.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              goPrev();
+            }}
+            className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-20 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg-alt))] shadow-[3px_3px_0_hsl(var(--creative-accent))] opacity-90"
+            aria-label="Previous"
+          >
+            <ChevronLeft className="w-6 h-6 text-[hsl(var(--creative-accent))]" strokeWidth={3} />
+          </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              goNext();
+            }}
+            className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-20 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg-alt))] shadow-[3px_3px_0_hsl(var(--creative-accent))] opacity-90"
+            aria-label="Next"
+          >
+            <ChevronRight className="w-6 h-6 text-[hsl(var(--creative-accent))]" strokeWidth={3} />
+          </button>
+
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2 items-center">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSelectedIndex(i);
+                }}
+                className={`min-h-[12px] min-w-[12px] rounded-full border-2 ${
+                  i === selectedIndex
+                    ? "bg-[hsl(var(--creative-accent))] border-[hsl(var(--creative-accent))]"
+                    : "bg-white/15 border-white/15 hover:bg-white/25 hover:border-white/25"
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: CreativePageProps) => {
+  const [selectedFilterToken, setSelectedFilterToken] = useState<string | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupProjectTitle, setPopupProjectTitle] = useState<string | null>(null);
+  const [popupInitialIndex, setPopupInitialIndex] = useState(0);
+
+  const [cardCarouselIndices, setCardCarouselIndices] = useState<Record<string, number>>({});
+
+  // Prevent background page scrolling while popup is open.
+  useEffect(() => {
+    if (!isPopupOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isPopupOpen]);
+
+  const filteredProjects = useMemo(() => {
+    if (!selectedFilterToken) return projects;
+    return projects.filter((p) => p.filters.includes(selectedFilterToken));
+  }, [selectedFilterToken]);
+
+  const selectedFilterLabel =
+    selectedFilterToken === null ? "" : FILTER_BAR.find((f) => f.token === selectedFilterToken)?.label ?? "";
+
+  const handleOpenPopup = useCallback(
+    (project: CreativeProject) => {
+      const title = project.title;
+      setPopupProjectTitle(title);
+      setPopupInitialIndex(cardCarouselIndices[title] ?? 0);
+      setIsPopupOpen(true);
+    },
+    [cardCarouselIndices]
+  );
+
+  const handleOpenChange = useCallback((open: boolean) => {
+    setIsPopupOpen(open);
+    if (!open) {
+      setPopupProjectTitle(null);
+    }
+  }, []);
+
+  const popupProject = useMemo(() => {
+    if (!popupProjectTitle) return null;
+    return projects.find((p) => p.title === popupProjectTitle) ?? null;
+  }, [popupProjectTitle]);
+
+  const popupImages = popupProject ? projectImages[popupProject.title] ?? DEFAULT_IMAGES : DEFAULT_IMAGES;
+  const popupXp = popupProject
+    ? popupProject.experience?.trim() ? popupProject.experience : popupProject.description
+    : "";
+
+  return (
+    <div className="min-h-screen bg-energy-creative texture-grain" style={{ backgroundColor: "hsl(var(--creative-bg))" }}>
+      {/* Comic Particles */}
+      <ComicParticles mode="creative" />
+
+      {/* Navigation - flat text-based, dark overlay, hover glow */}
+      <nav
+        className="relative z-20 py-4 md:py-6 border-b-4"
+        style={{ backgroundColor: "hsl(var(--creative-bg-alt))", borderColor: "hsl(var(--creative-accent))" }}
+      >
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-3 md:gap-4">
             <Button
               onClick={onGoHome}
-              variant="ghost"
-              className="w-full sm:w-auto text-creative-fg-muted hover:text-creative-fg hover:bg-white/10 transition-all font-semibold"
+              className="w-full sm:w-auto border-4 px-6 py-3 font-comic text-lg font-bold"
+              style={{
+                backgroundColor: "hsl(var(--creative-bg-alt))",
+                color: "hsl(var(--creative-fg))",
+                borderColor: "hsl(var(--creative-accent))",
+                boxShadow: "0 0 16px hsl(var(--creative-accent) / 0.3), 4px 4px 0 hsl(var(--creative-accent) / 0.4)",
+              }}
             >
-              Home
+              HOME
             </Button>
             <Button
               onClick={onSwitchToThink}
-              className="w-full sm:w-auto bg-think-accent text-white font-semibold px-6 py-3 rounded-lg hover:bg-think-accent-alt transition-all shadow-md hover:shadow-lg"
+              className="w-full sm:w-auto border-4 px-6 py-3 font-comic text-lg font-bold"
+              style={{
+                backgroundColor: "hsl(var(--primary))",
+                color: "hsl(var(--primary-foreground))",
+                borderColor: "hsl(var(--primary))",
+                boxShadow: "0 0 16px hsl(var(--primary) / 0.5), 4px 4px 0 hsl(var(--primary) / 0.5)",
+              }}
             >
-              View Think Profile
+              VIEW THINK.
             </Button>
             <Button
               onClick={onNavigateToContact}
-              className="w-full sm:w-auto bg-creative-accent text-creative-bg font-semibold px-6 py-3 rounded-lg hover:bg-creative-glow transition-all shadow-md hover:shadow-lg"
+              className="w-full sm:w-auto border-4 px-6 py-3 font-comic text-lg font-bold"
+              style={{
+                backgroundColor: "hsl(var(--accent))",
+                color: "hsl(var(--accent-foreground))",
+                borderColor: "hsl(var(--accent))",
+                boxShadow: "0 0 16px hsl(var(--accent) / 0.5), 4px 4px 0 hsl(var(--accent) / 0.5)",
+              }}
             >
-              Contact
+              CONTACT
             </Button>
           </div>
         </div>
       </nav>
 
-      {/* Header */}
-      <header className="relative z-10 py-12 md:py-16 text-center">
+      {/* Header Panel */}
+      <header
+        className="relative z-10 py-8 md:py-12 text-center border-b-4"
+        style={{ backgroundColor: "hsl(var(--creative-bg-alt))", borderColor: "hsl(var(--creative-accent))" }}
+      >
         <div className="container mx-auto px-4 md:px-6">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-creative-fg animate-creative-reveal">
-            Creative <span className="text-creative-accent">Film</span> Projects
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-comic font-bold mb-4" style={{ color: "hsl(var(--creative-fg))" }}>
+            I Create <span style={{ color: "hsl(var(--creative-accent))" }}>Cinematic</span> PROJECTS
           </h1>
-          <p className="mt-4 text-lg text-creative-fg-muted max-w-2xl mx-auto">
-            Visual storytelling through film, editing, and post-production excellence
-          </p>
         </div>
       </header>
 
-      {/* Project Grid */}
-      <main className="relative z-10 py-8 md:py-12">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
-            {projects.map((project, index) => {
-              const currentIndex = getCurrentIndex(project.id);
+      {/* Filter + Grid */}
+      <main className="relative z-10">
+        <section className="container mx-auto px-4 md:px-6 py-8 md:py-10">
+          {/* FILTER BAR */}
+          <div className="flex flex-col gap-4">
+            {/* FILTER HEADER LAYOUT (I WORKED AS/IN + selected title) */}
+            <div className="flex items-center justify-center gap-4">
+              <p className="text-base md:text-2xl font-comic-secondary font-bold" style={{ color: "hsl(var(--creative-fg))" }}>
+                I WORKED AS/IN
+              </p>
+              {selectedFilterToken !== null && (
+                <h2
+                  className="text-lg md:text-xl px-5 py-3 inline-block border-4 font-bold"
+                  style={{
+                    backgroundColor: "hsl(var(--creative-accent))",
+                    color: "hsl(var(--creative-bg))",
+                    borderColor: "hsl(var(--creative-glow))",
+                    boxShadow:
+                      "0 0 20px hsl(var(--creative-accent) / 0.4), 12px 12px 0 hsl(var(--creative-accent) / 0.25)",
+                  }}
+                >
+                  {selectedFilterLabel}
+                </h2>
+              )}
+            </div>
+
+            <div className="flex flex-col items-center gap-3">
+              <div className="flex flex-wrap justify-center gap-2">
+                {FILTER_BAR.map((f) => {
+                  const isActive = selectedFilterToken === f.token;
+                  return (
+                    <button
+                      key={f.token}
+                      type="button"
+                      onClick={() => setSelectedFilterToken(f.token)}
+                      className="border-4 font-comic text-sm md:text-base font-bold px-4 py-2 transition-transform duration-200 hover:scale-[1.06] hover:brightness-110"
+                      style={{
+                        backgroundColor: isActive ? "hsl(var(--creative-accent))" : "hsl(var(--creative-bg-alt))",
+                        color: isActive ? "hsl(var(--creative-bg))" : "hsl(var(--creative-fg-muted))",
+                        borderColor: isActive ? "hsl(var(--creative-glow))" : "hsl(var(--creative-accent))",
+                        boxShadow: isActive
+                          ? "0 0 16px hsl(var(--creative-accent) / 0.45), 4px 4px 0 hsl(var(--creative-accent) / 0.25)"
+                          : "0 0 12px hsl(var(--creative-accent) / 0.15), 2px 2px 0 hsl(var(--creative-accent) / 0.2)",
+                      }}
+                      aria-pressed={isActive}
+                    >
+                      {f.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <Button
+                type="button"
+                onClick={() => setSelectedFilterToken(null)}
+                className="border-4 font-comic text-sm md:text-base font-bold px-4 py-2"
+                style={{
+                  backgroundColor: "hsl(var(--accent))",
+                  color: "hsl(var(--accent-foreground))",
+                  borderColor: "hsl(var(--accent))",
+                  boxShadow: "0 0 16px hsl(var(--accent) / 0.5), 4px 4px 0 hsl(var(--accent) / 0.5)",
+                }}
+              >
+                CLEAR
+              </Button>
+            </div>
+          </div>
+
+          {/* YouTube-style Grid Layout for Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 auto-rows-fr mt-8">
+            {filteredProjects.map((project) => {
+              const images = projectImages[project.title] ?? DEFAULT_IMAGES;
 
               return (
-                <a
-                  key={project.id}
-                  href={project.link}
-                  className="group block animate-creative-reveal"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  aria-label={`View ${project.title} project`}
-                >
+                <div key={project.title} className="h-full">
+                  {/* Clicking a card opens full-screen popup */}
                   <div
-                    className="
-                      bg-creative-bg-alt rounded-xl overflow-hidden
-                      border-2 border-white/10
-                      transition-all duration-300 ease-out
-                      hover:scale-[1.03] hover:border-creative-accent
-                      hover:shadow-2xl hover:shadow-creative-accent/30
-                      cursor-pointer h-full flex flex-col
-                    "
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => handleOpenPopup(project)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") handleOpenPopup(project);
+                    }}
+                    aria-label={`Open ${project.title}`}
+                    className="h-full"
                   >
-                    {/* Image Carousel */}
-                    <div className="relative h-56 md:h-64 bg-creative-bg overflow-hidden">
-                      {project.images.map((image, imgIndex) => (
-                        <img
-                          key={imgIndex}
-                          src={image}
-                          alt={`${project.title} - Image ${imgIndex + 1}`}
-                          onClick={(e) => openLightbox(project.id, imgIndex, e)}
-                          className={`
-                            absolute inset-0 w-full h-full object-cover cursor-zoom-in
-                            transition-all duration-500
-                            ${imgIndex === currentIndex ? "opacity-100 scale-100" : "opacity-0 scale-105"}
-                          `}
-                        />
-                      ))}
-
-                      {/* Play overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-creative-bg via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="w-16 h-16 rounded-full bg-creative-accent/90 flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300">
-                          <Play className="w-8 h-8 text-creative-bg ml-1" fill="currentColor" />
+                    {/* Card wrapper - always highlighted */}
+                    <div
+                      className="relative h-full border-4 flex flex-col scale-100 opacity-100 transition-transform duration-200 hover:scale-[1.02] hover:brightness-110"
+                      style={{
+                        backgroundColor: "hsl(var(--creative-bg-alt))",
+                        borderColor: "hsl(var(--creative-accent))",
+                        boxShadow:
+                          "0 0 20px hsl(var(--creative-accent) / 0.4), 12px 12px 0 hsl(var(--creative-accent) / 0.3)",
+                      }}
+                    >
+                      <div className="flex flex-col h-full">
+                        {/* Poster carousel */}
+                        <div style={{ borderColor: "hsl(var(--creative-accent))" }} className="border-b-4">
+                          <PosterCarousel
+                            images={images}
+                            runtime={project.runtime}
+                            paused={isPopupOpen}
+                            onIndexChange={(idx) => {
+                              setCardCarouselIndices((prev) => ({ ...prev, [project.title]: idx }));
+                            }}
+                            onDotClickStopPropagation={(e) => {
+                              e.stopPropagation();
+                            }}
+                          />
                         </div>
-                      </div>
 
-                      {/* Carousel Navigation */}
-                      {project.images.length > 1 && (
-                        <>
-                          <button
-                            onClick={(e) => prevImage(project.id, project.images.length, e)}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 hover:bg-creative-accent text-white transition-all z-10 opacity-0 group-hover:opacity-100"
-                            aria-label="Previous image"
-                          >
-                            <ChevronLeft className="w-5 h-5" />
-                          </button>
-                          <button
-                            onClick={(e) => nextImage(project.id, project.images.length, e)}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/60 hover:bg-creative-accent text-white transition-all z-10 opacity-0 group-hover:opacity-100"
-                            aria-label="Next image"
-                          >
-                            <ChevronRight className="w-5 h-5" />
-                          </button>
-
-                          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                            {project.images.map((_, imgIndex) => (
-                              <button
-                                key={imgIndex}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setCurrentImageIndices((prev) => ({ ...prev, [project.id]: imgIndex }));
-                                }}
-                                className={`h-1.5 rounded-full transition-all ${
-                                  imgIndex === currentIndex ? "w-6 bg-creative-accent" : "w-1.5 bg-white/50"
-                                }`}
-                                aria-label={`Go to image ${imgIndex + 1}`}
-                              />
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    {/* Project Info */}
-                    <div className="p-5 md:p-6 flex-1 flex flex-col">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-xl md:text-2xl font-bold text-creative-fg group-hover:text-creative-accent transition-colors">
-                          {project.title}
-                        </h3>
-                        <span className="text-sm font-mono text-creative-fg-muted">{project.year}</span>
-                      </div>
-
-                      <div className="flex gap-2 mb-3">
-                        <span className="px-2 py-1 bg-creative-accent/20 text-creative-accent text-xs font-semibold rounded">
-                          {project.genre}
-                        </span>
-                        <span className="px-2 py-1 bg-creative-accent-alt/20 text-creative-accent-alt text-xs font-semibold rounded">
-                          {project.role}
-                        </span>
-                      </div>
-
-                      <p className="text-sm text-creative-fg-muted mb-4 flex-1 line-clamp-2">{project.description}</p>
-
-                      {project.awards.length > 0 && (
-                        <div className="pt-3 border-t border-white/10">
-                          <div className="flex items-start gap-2">
-                            <Award className="w-4 h-4 text-creative-accent mt-0.5 flex-shrink-0" />
-                            <p className="text-xs text-creative-fg-muted line-clamp-2">{project.awards.join(" • ")}</p>
+                        {/* Title + Type pill (same line) */}
+                        <div className="p-4 sm:p-5 flex-1 flex flex-col justify-end">
+                          <div className="flex items-center gap-3">
+                            <h3
+                              className="flex-1 min-w-0 truncate whitespace-nowrap text-lg md:text-2xl font-comic font-bold"
+                              style={{ color: "hsl(var(--creative-fg))" }}
+                            >
+                              {project.title}
+                            </h3>
+                            <span
+                              className="ml-auto px-4 py-2 border-4 font-comic text-sm font-bold whitespace-nowrap"
+                              style={{
+                                backgroundColor: "hsl(var(--creative-accent))",
+                                color: "hsl(var(--creative-bg))",
+                                borderColor: "hsl(var(--creative-glow))",
+                              }}
+                            >
+                              {project.genre === "Short film"
+                                ? "short film"
+                                : project.genre === "AD"
+                                  ? "Advertisement"
+                                  : project.genre}
+                            </span>
                           </div>
                         </div>
-                      )}
+                      </div>
                     </div>
                   </div>
-                </a>
+                </div>
               );
             })}
           </div>
-        </div>
+        </section>
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 bg-black/30 backdrop-blur-sm py-6 mt-12 border-t border-white/10">
-        <div className="container mx-auto px-4 md:px-6 text-center text-creative-fg-muted">
-          <p className="text-sm md:text-base">&copy; 2025 Praveen Elanchezhian. All Rights Reserved.</p>
+      <footer
+        className="relative z-10 py-6 border-t-4 text-center"
+        style={{ backgroundColor: "hsl(var(--creative-bg-alt))", borderColor: "hsl(var(--creative-accent))" }}
+      >
+        <div className="container mx-auto px-4 md:px-6">
+          <p className="text-sm md:text-base font-content font-content-medium" style={{ color: "hsl(var(--creative-fg-muted))" }}>
+            &copy; 2026 PRAVEEN ELANCHEZHIAN. ALL RIGHTS RESERVED.
+          </p>
         </div>
       </footer>
 
-      {/* Lightbox Modal */}
-      {currentProject && (
-        <ImageLightbox
-          images={currentProject.images}
-          currentIndex={lightbox.imageIndex}
-          isOpen={lightbox.isOpen}
-          onClose={closeLightbox}
-          onNext={() =>
-            setLightbox((prev) => ({
-              ...prev,
-              imageIndex: (prev.imageIndex + 1) % currentProject.images.length,
-            }))
-          }
-          onPrev={() =>
-            setLightbox((prev) => ({
-              ...prev,
-              imageIndex: (prev.imageIndex - 1 + currentProject.images.length) % currentProject.images.length,
-            }))
-          }
-          projectTitle={currentProject.title}
-        />
-      )}
+      {/* Full-Screen Popup */}
+      <Dialog open={isPopupOpen} onOpenChange={handleOpenChange}>
+        {popupProject && (
+          <DialogContent
+            showClose={false}
+            className="fixed inset-0 z-[100] w-screen h-screen max-w-none translate-x-0 translate-y-0 left-0 top-0 gap-0 border-0 bg-transparent p-0 shadow-none sm:rounded-none overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            style={{ backgroundColor: "hsl(var(--creative-bg-alt))" }}
+          >
+            <div className="relative w-full h-full flex flex-col">
+              <DialogClose asChild>
+                <button
+                  type="button"
+                  className="absolute top-4 right-4 z-[200] w-7 h-7 md:w-8 md:h-8 border-4 border-black bg-[hsl(var(--creative-bg))] text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] flex items-center justify-center font-comic text-xl md:text-2xl leading-none"
+                  aria-label="Close"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  ×
+                </button>
+              </DialogClose>
+
+              {/* Title + WATCH NOW */}
+              <div className="flex-none px-4 md:px-6 pt-10 md:pt-12">
+                <div className="flex flex-wrap items-start gap-4">
+                  <h2 className="font-comic font-bold text-3xl md:text-4xl text-[hsl(var(--creative-fg))] break-words leading-tight">
+                    {popupProject.title}
+                  </h2>
+
+                  {popupProject.link !== "#" && (
+                    <Button
+                      type="button"
+                      className="border-4 font-comic text-sm md:text-base font-bold px-5 py-2"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open(popupProject.link, "_blank", "noopener,noreferrer");
+                      }}
+                      style={{
+                        backgroundColor: "hsl(var(--creative-accent))",
+                        color: "hsl(var(--creative-bg))",
+                        borderColor: "hsl(var(--creative-glow))",
+                        boxShadow: "0 0 16px hsl(var(--creative-accent) / 0.45), 4px 4px 0 hsl(var(--creative-accent) / 0.25)",
+                      }}
+                    >
+                      WATCH NOW
+                    </Button>
+                  )}
+                </div>
+
+                {/* Synopsis below title */}
+                <p className="mt-2 text-base md:text-lg leading-relaxed font-content font-content-medium whitespace-pre-line" style={{ color: "hsl(var(--creative-fg-muted))" }}>
+                  {popupProject.description}
+                </p>
+              </div>
+
+              {/* Image carousel */}
+              <div className="flex-none px-4 md:px-6 pt-5 md:pt-6 pb-4">
+                <div className="w-full h-[42vh] md:h-[48vh] border-4" style={{ borderColor: "hsl(var(--creative-accent))" }}>
+                  <PopupImageCarousel images={popupImages} initialIndex={popupInitialIndex} />
+                </div>
+              </div>
+
+              {/* Info blocks + XP + Accolades */}
+              <div className="flex-1 px-4 md:px-6 pb-8 min-h-0">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div
+                    className="border-4 p-4 h-full"
+                    style={{
+                      borderColor: "hsl(var(--creative-accent))",
+                      backgroundColor: "hsl(var(--creative-bg-alt))",
+                      boxShadow: "0 0 16px hsl(var(--creative-accent) / 0.25)",
+                    }}
+                  >
+                    <div className="text-2xl font-comic font-bold text-[hsl(var(--creative-fg-muted))]">TYPE</div>
+                    <div className="text-base md:text-lg font-content font-content-medium mt-2" style={{ color: "hsl(var(--creative-fg))" }}>
+                      {popupProject.genre === "AD" ? "Advertisement" : popupProject.genre === "Short film" ? "short film" : popupProject.genre}
+                    </div>
+                  </div>
+
+                  <div
+                    className="border-4 p-4 h-full"
+                    style={{
+                      borderColor: "hsl(var(--creative-accent))",
+                      backgroundColor: "hsl(var(--creative-bg-alt))",
+                      boxShadow: "0 0 16px hsl(var(--creative-accent) / 0.25)",
+                    }}
+                  >
+                    <div className="text-2xl font-comic font-bold text-[hsl(var(--creative-fg-muted))]">ROLE</div>
+                    <div className="text-base md:text-lg font-content font-content-medium mt-2" style={{ color: "hsl(var(--creative-fg))" }}>
+                      {popupProject.role}
+                    </div>
+                  </div>
+
+                  <div
+                    className="border-4 p-4 h-full"
+                    style={{
+                      borderColor: "hsl(var(--creative-accent))",
+                      backgroundColor: "hsl(var(--creative-bg-alt))",
+                      boxShadow: "0 0 16px hsl(var(--creative-accent) / 0.25)",
+                    }}
+                  >
+                    <div className="text-2xl font-comic font-bold text-[hsl(var(--creative-fg-muted))]">YEAR</div>
+                    <div className="text-base md:text-lg font-content font-content-medium mt-2" style={{ color: "hsl(var(--creative-fg))" }}>
+                      {popupProject.year}
+                    </div>
+                  </div>
+                </div>
+
+                <div className={popupProject.awards.length > 0 ? "grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 h-full" : "grid grid-cols-1 gap-6 mt-6 h-full"}>
+                  <div className="border-4 p-4" style={{ borderColor: "hsl(var(--creative-accent))" }}>
+                    <div className="text-3xl font-comic font-bold" style={{ color: "hsl(var(--creative-fg))" }}>
+                      XP
+                    </div>
+                    <p className="text-base md:text-lg leading-relaxed font-content font-content-medium whitespace-pre-line mt-3" style={{ color: "hsl(var(--creative-fg-muted))" }}>
+                      {popupXp}
+                    </p>
+                  </div>
+
+                  {popupProject.awards.length > 0 && (
+                    <div className="border-4 p-4" style={{ borderColor: "hsl(var(--creative-accent))" }}>
+                      <div className="text-2xl font-comic font-bold" style={{ color: "hsl(var(--creative-fg))" }}>
+                        Accolades
+                      </div>
+                      <ul className="text-base md:text-lg leading-relaxed font-content font-content-medium mt-3" style={{ color: "hsl(var(--creative-fg-muted))" }}>
+                        {popupProject.awards.map((a, idx) => (
+                          <li key={idx} className="list-disc ml-6">
+                            {a}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        )}
+      </Dialog>
     </div>
   );
 };
