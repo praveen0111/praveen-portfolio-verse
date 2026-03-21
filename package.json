@@ -10,7 +10,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "optimize-images": "node scripts/convert-to-webp.mjs"
+    "optimize-images": "node scripts/convert-to-webp.mjs",
+    "recompress-hero-images": "node scripts/recompress-hero-webp.mjs"
   },
   "dependencies": {
     "@fontsource/bangers": "^5.2.8",

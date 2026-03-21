@@ -178,22 +178,23 @@ body {
 }
 
 /* Body/content text – Classic Comic Sans Italic (not headlines/headings/subheadings) */
+/* System Comic Sans first so text is readable before async webfont CSS applies */
 .font-content {
-  font-family: 'Comic Sans Pro W99 Italic', sans-serif;
+  font-family: 'Comic Sans Pro W99 Italic', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
 }
 
 .font-content-light {
-  font-family: 'Comic Sans Pro W99 Italic', sans-serif;
+  font-family: 'Comic Sans Pro W99 Italic', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
   font-weight: 300;
 }
 
 .font-content-medium {
-  font-family: 'Comic Sans Pro W99 Italic', sans-serif;
+  font-family: 'Comic Sans Pro W99 Italic', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
   font-weight: 400;
 }
 
 .font-content-bold {
-  font-family: 'Comic Sans Pro W99 Bold Italic', sans-serif;
+  font-family: 'Comic Sans Pro W99 Bold Italic', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
 }
 
 /* ============================================
@@ -420,7 +421,7 @@ body {
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Comic Sans Pro W99 Italic', sans-serif;
+    font-family: 'Comic Sans Pro W99 Italic', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
     overscroll-behavior: none;
   }
 

@@ -8,10 +8,28 @@
     <title>Praveen Elanchezhian | Creative Filmmaker & Think Strategist</title>
     <meta name="description" content="Portfolio of Praveen Elanchezhian - Filmmaker, MBA Candidate, and Product & Marketing Strategist specializing in visual storytelling and technology innovation." />
     <meta name="author" content="Praveen Elanchezhian" />
-    
-    <!-- Classic Comic Sans Italic: body/content text (not headlines/subheadings) -->
-    <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/a0de82726b6f69516a51b2fa19956269?family=Comic+Sans+Pro+W99+Italic">
-    <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/daacd0e7a4d4f7d0409b1f78c7035d10?family=Comic+Sans+Pro+W99+Bold+Italic">
+
+    <!-- Mobile perf: early connection; hero image often LCP on home -->
+    <link rel="preconnect" href="https://db.onlinewebfonts.com" crossorigin />
+    <link rel="preload" as="image" href="/images/think-background.webp" fetchpriority="high" />
+
+    <!-- Comic Sans Pro: non-blocking (avoids render-blocking CSS on first paint) -->
+    <link
+      rel="stylesheet"
+      href="https://db.onlinewebfonts.com/c/a0de82726b6f69516a51b2fa19956269?family=Comic+Sans+Pro+W99+Italic"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="https://db.onlinewebfonts.com/c/daacd0e7a4d4f7d0409b1f78c7035d10?family=Comic+Sans+Pro+W99+Bold+Italic"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/a0de82726b6f69516a51b2fa19956269?family=Comic+Sans+Pro+W99+Italic" />
+      <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/daacd0e7a4d4f7d0409b1f78c7035d10?family=Comic+Sans+Pro+W99+Bold+Italic" />
+    </noscript>
 
     <meta property="og:title" content="Praveen Elanchezhian | Portfolio" />
     <meta property="og:description" content="Creative Filmmaker & Think Strategist - Explore my work in visual storytelling and product innovation" />

@@ -87,6 +87,14 @@ const ComicParticles = ({ mode, intensity }: ComicParticlesProps) => {
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
+    /** Narrow viewports: fewer particles = less main-thread work (mobile Lighthouse TBT) */
+    const mobileFactor =
+      typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches ? 0.42 : 1;
+    const particleTarget = Math.max(
+      8,
+      Math.floor(config.particleCount * finalIntensity * mobileFactor),
+    );
+
     // Set canvas size
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -98,7 +106,7 @@ const ComicParticles = ({ mode, intensity }: ComicParticlesProps) => {
     // Initialize particles
     const initParticles = () => {
       particlesRef.current = [];
-      for (let i = 0; i < config.particleCount * finalIntensity; i++) {
+      for (let i = 0; i < particleTarget; i++) {
         const type = Math.random() < 0.6 ? "dot" : Math.random() < 0.8 ? "ink" : "grain";
         particlesRef.current.push({
           x: Math.random() * canvas.width,

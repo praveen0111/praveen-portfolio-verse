@@ -318,7 +318,7 @@ const HeroSlider = ({
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: isMobile ? "center" : "right center" }}
           draggable={false}
-          fetchPriority="high"
+          fetchPriority="low"
           decoding="async"
         />
       </div>

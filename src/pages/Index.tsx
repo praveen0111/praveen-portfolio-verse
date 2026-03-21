@@ -32,7 +32,7 @@ function sleep(ms: number): Promise<void> {
 }
 
 /** Minimum duration for “Entering…” — always runs; also waits for hero image preload */
-const HOME_LOADING_MS = 2500;
+const HOME_LOADING_MS = 2000;
 
 /** After loading + reveal: 0.5s zoom+blur transition, then slider intro plays */
 const HOME_REVEAL_MS = 500;
