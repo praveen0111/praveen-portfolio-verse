@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import ComicParticles from "./ComicParticles";
+import DotGrid from "./DotGrid";
 
 /**
  * ============================================
@@ -106,9 +107,16 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
 
   return (
     <div
-      className="min-h-screen min-h-screen-mobile bg-energy-think texture-halftone texture-halftone-dots-think"
+      className="relative min-h-screen min-h-screen-mobile overflow-x-hidden bg-energy-think"
       style={{ backgroundColor: "hsl(var(--think-bg))" }}
     >
+      <DotGrid
+        variant="think"
+        shockRadius={130}
+        shockStrength={14}
+        resistance={1000}
+        returnDuration={0.5}
+      />
       {/* Comic Particles */}
       <ComicParticles mode="think" />
       

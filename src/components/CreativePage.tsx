@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { Dialog, DialogClose, DialogContent } from "./ui/dialog";
 import ComicParticles from "./ComicParticles";
+import DotGrid from "./DotGrid";
 
 interface CreativePageProps {
   onGoHome: () => void;
@@ -527,9 +528,16 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
 
   return (
     <div
-      className="min-h-screen min-h-screen-mobile bg-energy-creative-red texture-halftone texture-halftone-dots-red"
+      className="relative min-h-screen min-h-screen-mobile overflow-x-hidden bg-energy-creative-red"
       style={{ backgroundColor: "hsl(var(--creative-duotone-bg))" }}
     >
+      <DotGrid
+        variant="create"
+        shockRadius={130}
+        shockStrength={14}
+        resistance={1000}
+        returnDuration={0.5}
+      />
       {/* Comic Particles */}
       <ComicParticles mode="creative" />
 

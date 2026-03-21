@@ -1,9 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import { Mail, Linkedin, Instagram, Twitter, Youtube, Link2 } from "lucide-react";
 import ComicParticles from "./ComicParticles";
+import DotGrid from "./DotGrid";
 import LogoLoop from "./LogoLoop";
 import { ComicPopHeadlinePlate } from "./ComicPopHeadlinePlate";
 
@@ -33,15 +42,74 @@ const socialLogos = [
   { node: <Link2 className="w-full h-full" />, title: "Linktree", href: "https://linktr.ee/praveen01" },
 ];
 
+const THANKS_COPY =
+  "Thanks for reaching out! I'll get back to you in exactly the same time your favourite bank takes to refund a failed transaction!";
+
 const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactPageProps) => {
+  const formRef = useRef<HTMLFormElement>(null);
   const [name, setName] = useState("");
   const [mailId, setMailId] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [thanksOpen, setThanksOpen] = useState(false);
 
   // Web3Forms is a browser form POST (no backend needed).
   const web3formsAccessKey = (import.meta as any).env?.VITE_WEB3FORMS_ACCESS_KEY as string | undefined;
   const WEB3FORMS_ACCESS_KEY_FALLBACK = "b47700fc-8db8-492e-9c8a-58820550a166";
+
+  const submitViaApi = async () => {
+    const form = formRef.current;
+    if (!form) return;
+
+    const captchaEl = form.querySelector<HTMLTextAreaElement>('textarea[name="h-captcha-response"]');
+    if (!captchaEl?.value?.trim()) {
+      setError("Please complete the captcha.");
+      return;
+    }
+
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const formData = new FormData(form);
+      const payload: Record<string, string> = {};
+      formData.forEach((value, key) => {
+        if (typeof value === "string") payload[key] = value;
+      });
+
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = (await res.json()) as { success?: boolean; message?: string };
+
+      if (data.success) {
+        setName("");
+        setMailId("");
+        setMessage("");
+        form.reset();
+        try {
+          const w = window as unknown as { hcaptcha?: { reset: (id?: number) => void } };
+          w.hcaptcha?.reset();
+        } catch {
+          /* ignore */
+        }
+        setThanksOpen(true);
+      } else {
+        setError(data.message ?? "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     // Load Web3Forms client script (enables hCaptcha widget wiring).
@@ -58,13 +126,19 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
 
   return (
     <div
-      className="min-h-screen min-h-screen-mobile flex flex-col bg-black texture-halftone"
+      className="relative flex min-h-screen min-h-screen-mobile flex-col overflow-x-hidden bg-black"
       style={{
         /* Solid black: avoid bg-energy-dark radial gradients (they anchor to page height and cause a mid-scroll seam). */
         backgroundColor: "#000",
-        ["--halftone-dot" as any]: "48 100% 65%",
       }}
     >
+      <DotGrid
+        variant="contact"
+        shockRadius={130}
+        shockStrength={14}
+        resistance={1000}
+        returnDuration={0.5}
+      />
       {/* Comic Particles */}
       <ComicParticles mode="fusion" />
 
@@ -193,10 +267,10 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
             </h2>
 
             <form
+              ref={formRef}
               className="mt-4 flex flex-col gap-3"
-              action="https://api.web3forms.com/submit"
-              method="POST"
               onSubmit={(e) => {
+                e.preventDefault();
                 setError(null);
 
                 const trimmedName = name.trim();
@@ -205,19 +279,18 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
 
                 if (trimmedName.length < 2) {
                   setError("Please enter your name.");
-                  e.preventDefault();
                   return;
                 }
                 if (!/^\S+@\S+\.\S+$/.test(trimmedMail)) {
                   setError("Please enter a valid mail ID.");
-                  e.preventDefault();
                   return;
                 }
                 if (trimmedMessage.length < 5) {
                   setError("Please enter your message.");
-                  e.preventDefault();
                   return;
                 }
+
+                void submitViaApi();
               }}
             >
               <input type="hidden" name="access_key" value={web3formsAccessKey ?? WEB3FORMS_ACCESS_KEY_FALLBACK} />
@@ -282,7 +355,8 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
               <div className="flex justify-center pt-1">
                 <Button
                   type="submit"
-                  className="border-4 px-8 py-3 font-comic text-lg font-bold"
+                  disabled={submitting}
+                  className="border-4 px-8 py-3 font-comic text-lg font-bold disabled:opacity-60"
                   style={{
                     backgroundColor: "hsl(var(--accent))",
                     color: "hsl(var(--accent-foreground))",
@@ -290,13 +364,49 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
                     boxShadow: "0 0 16px hsl(var(--accent) / 0.5), 4px 4px 0 hsl(var(--accent) / 0.5)",
                   }}
                 >
-                  Submit
+                  {submitting ? "Sending…" : "Submit"}
                 </Button>
               </div>
             </form>
           </section>
         </div>
       </main>
+
+      <Dialog open={thanksOpen} onOpenChange={setThanksOpen}>
+        <DialogContent
+          showClose={false}
+          className="border-4 max-w-md"
+          style={{
+            borderColor: "hsl(var(--accent))",
+            backgroundColor: "hsl(var(--think-bg))",
+            color: "hsl(var(--fusion-fg))",
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle className="sr-only">Message sent</DialogTitle>
+            <DialogDescription
+              className="text-base sm:text-lg font-comic font-bold text-center leading-snug pt-1 text-[hsl(var(--fusion-fg))]"
+            >
+              {THANKS_COPY}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button
+              type="button"
+              className="border-4 px-10 py-3 font-comic text-lg font-bold"
+              style={{
+                backgroundColor: "hsl(var(--accent))",
+                color: "hsl(var(--accent-foreground))",
+                borderColor: "hsl(var(--accent))",
+                boxShadow: "0 0 16px hsl(var(--accent) / 0.5), 4px 4px 0 hsl(var(--accent) / 0.5)",
+              }}
+              onClick={() => setThanksOpen(false)}
+            >
+              Ok
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <footer
