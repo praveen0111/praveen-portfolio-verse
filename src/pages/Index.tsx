@@ -14,8 +14,8 @@ type PageView = "home" | "creative" | "think" | "contact";
 const PAGE_ORDER: PageView[] = ["home", "creative", "think", "contact"];
 
 const HERO_PRELOAD_IMAGES = [
-  "/images/think-background.png",
-  "/images/creative-background.png",
+  "/images/think-background.webp",
+  "/images/creative-background.webp",
 ] as const;
 
 function preloadImage(src: string): Promise<void> {

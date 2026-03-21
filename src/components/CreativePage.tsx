@@ -255,34 +255,34 @@ const FILTER_BAR = [
   { label: "Creative Producer", token: "creativepro" },
 ] as const;
 
-const DEFAULT_IMAGES = ["/Create/atom/poster.png", "/Create/atom/scene1.png", "/Create/atom/scene2.png"];
+const DEFAULT_IMAGES = ["/Create/atom/poster.webp", "/Create/atom/scene1.webp", "/Create/atom/scene2.webp"];
 
 const projectImages: Record<string, string[]> = {
-  Penance: ["/Create/penance/poster.png", "/Create/penance/scene1.png", "/Create/penance/scene2.png"],
-  GR3Y: ["/Create/gr3y/poster.png", "/Create/gr3y/scene1.jpg", "/Create/gr3y/scene2.png"],
-  STRANGERS: ["/Create/strangers/poster.png", "/Create/strangers/scene1.png", "/Create/strangers/scene2.png"],
-  "Thiruttu Dhum": ["/Create/thiruttu/poster.png", "/Create/thiruttu/scene1.png", "/Create/thiruttu/scene2.png"],
-  "Policy Bazaar × Sathyeah": ["/Create/policy/poster.png", "/Create/policy/scene1.png", "/Create/policy/scene2.png"],
-  "English Partner × Sathyeah": ["/Create/english/poster.png", "/Create/english/scene1.png", "/Create/english/scene2.png"],
-  Eggsistence: ["/Create/egg/poster.jpg", "/Create/egg/scene1.png", "/Create/egg/scene2.png"],
+  Penance: ["/Create/penance/poster.webp", "/Create/penance/scene1.webp", "/Create/penance/scene2.webp"],
+  GR3Y: ["/Create/gr3y/poster.webp", "/Create/gr3y/scene1.webp", "/Create/gr3y/scene2.webp"],
+  STRANGERS: ["/Create/strangers/poster.webp", "/Create/strangers/scene1.webp", "/Create/strangers/scene2.webp"],
+  "Thiruttu Dhum": ["/Create/thiruttu/poster.webp", "/Create/thiruttu/scene1.webp", "/Create/thiruttu/scene2.webp"],
+  "Policy Bazaar × Sathyeah": ["/Create/policy/poster.webp", "/Create/policy/scene1.webp", "/Create/policy/scene2.webp"],
+  "English Partner × Sathyeah": ["/Create/english/poster.webp", "/Create/english/scene1.webp", "/Create/english/scene2.webp"],
+  Eggsistence: ["/Create/egg/poster.webp", "/Create/egg/scene1.webp", "/Create/egg/scene2.webp"],
   "Nisadya 1-DTG": [
-    "/Create/nisadya1dtg/poster.png",
-    "/Create/nisadya1dtg/scene1.png",
-    "/Create/nisadya1dtg/scene2.png",
+    "/Create/nisadya1dtg/poster.webp",
+    "/Create/nisadya1dtg/scene1.webp",
+    "/Create/nisadya1dtg/scene2.webp",
   ],
   "Nisadya Date Reveal": [
-    "/Create/nisadyadatereveal/poster.png",
-    "/Create/nisadyadatereveal/scene1.png",
-    "/Create/nisadyadatereveal/scene2.png",
+    "/Create/nisadyadatereveal/poster.webp",
+    "/Create/nisadyadatereveal/scene1.webp",
+    "/Create/nisadyadatereveal/scene2.webp",
   ],
-  "LICET's FABLAB": ["/Create/fablab/poster.png", "/Create/fablab/scene1.png", "/Create/fablab/scene2.png"],
-  "ATOM – Campus Partner": ["/Create/atom/poster.png", "/Create/atom/scene1.png", "/Create/atom/scene2.png"],
+  "LICET's FABLAB": ["/Create/fablab/poster.webp", "/Create/fablab/scene1.webp", "/Create/fablab/scene2.webp"],
+  "ATOM – Campus Partner": ["/Create/atom/poster.webp", "/Create/atom/scene1.webp", "/Create/atom/scene2.webp"],
   "Dumb, Dumber & Dumbest": [
-    "/Create/dumbdumber/poster.jpg",
-    "/Create/dumbdumber/scene1.png",
-    "/Create/dumbdumber/scene2.png",
+    "/Create/dumbdumber/poster.webp",
+    "/Create/dumbdumber/scene1.webp",
+    "/Create/dumbdumber/scene2.webp",
   ],
-  "TAMIZH Product Concept": ["/Create/Tamizh/Poster.png", "/Create/Tamizh/Scene1.png", "/Create/Tamizh/Scene2.png"],
+  "TAMIZH Product Concept": ["/Create/Tamizh/Poster.webp", "/Create/Tamizh/Scene1.webp", "/Create/Tamizh/Scene2.webp"],
 };
 
 function PosterCarousel({
@@ -526,7 +526,10 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
     : "";
 
   return (
-    <div className="min-h-screen bg-energy-creative texture-grain" style={{ backgroundColor: "hsl(var(--creative-bg))" }}>
+    <div
+      className="min-h-screen min-h-screen-mobile bg-energy-creative-red texture-halftone texture-halftone-dots-red"
+      style={{ backgroundColor: "hsl(var(--creative-duotone-bg))" }}
+    >
       {/* Comic Particles */}
       <ComicParticles mode="creative" />
 

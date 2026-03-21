@@ -66,6 +66,9 @@
     --creative-accent-alt: 15 100% 65%;
     --creative-glow: 15 100% 60%;
     --creative-glow-warm: 190 100% 55%;
+    /* Create page full-bleed duotone (red, mirrors Think layout) */
+    --creative-duotone-bg: 0 30% 5%;
+    --creative-duotone-bg-alt: 8 26% 10%;
 
     /* ============================================
      * CONTACT PAGE - FUSION ZONE (dark base + neon accents)
@@ -515,8 +518,9 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, hsl(var(--halftone-dot)) 1px, transparent 1px);
-  background-size: 6px 6px;
+  /* Dots: 1.5px radius (+50% vs 1px); grid 12×12px (+100% spacing vs 6px) */
+  background-image: radial-gradient(circle, hsl(var(--halftone-dot)) 1.5px, transparent 1.5px);
+  background-size: 12px 12px;
   opacity: 0.12;
   pointer-events: none;
   z-index: 1;
@@ -524,6 +528,11 @@ body {
 
 .texture-halftone-dots-create {
   --halftone-dot: var(--creative-accent);
+}
+
+/* Create page halftone — red dots on dark red field (Think/Contact-style overlay) */
+.texture-halftone-dots-red {
+  --halftone-dot: var(--neon-red);
 }
 
 .texture-halftone-dots-think {

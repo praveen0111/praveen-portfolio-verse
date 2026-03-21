@@ -55,8 +55,8 @@ const HeroSlider = ({
   const [knobRotateDeg, setKnobRotateDeg] = useState(0);
 
   // Asset paths
-  const thinkBackground = "/images/think-background.png";
-  const creativeBackground = "/images/creative-background.png";
+  const thinkBackground = "/images/think-background.webp";
+  const creativeBackground = "/images/creative-background.webp";
 
   useEffect(() => {
     introLockedRef.current = introLocked;
