@@ -23,6 +23,9 @@ function parseHslComponents(value: string): { h: number; s: number; l: number } 
 
 export interface DotGridProps {
   variant: DotGridVariant;
+  /** Max distance (px) from cursor where dots react; beyond this, no effect. */
+  proximity?: number;
+  /** Falloff scale (px) for `(1 - dist / shockRadius)` inside the proximity zone. */
   shockRadius?: number;
   shockStrength?: number;
   resistance?: number;
@@ -37,10 +40,11 @@ export interface DotGridProps {
  */
 const DotGrid = ({
   variant,
-  shockRadius = 130,
-  shockStrength = 14,
-  resistance = 1000,
-  returnDuration = 0.5,
+  proximity = 150,
+  shockRadius = 300,
+  shockStrength = 10,
+  resistance = 450,
+  returnDuration = 2,
   dotOpacity = 0.12,
 }: DotGridProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -90,12 +94,12 @@ const DotGrid = ({
         for (let cx = GRID_STEP_PX / 2; cx < w; cx += GRID_STEP_PX) {
           const dist = Math.hypot(cx - mx, cy - my);
           let t = 0;
-          if (dist < shockRadius && str > 0) {
-            t = (1 - dist / shockRadius) * str;
+          if (dist <= proximity && str > 0) {
+            t = Math.max(0, 1 - dist / shockRadius) * str;
           }
-          const lighten = t * (shockStrength / 14) * 10;
+          const lighten = t * shockStrength;
           const lightness = Math.min(96, l + lighten);
-          const alpha = dotOpacity + t * (shockStrength / 14) * 0.35;
+          const alpha = dotOpacity + t * (shockStrength / 10) * 0.35;
           ctx.globalAlpha = Math.min(0.55, alpha);
           ctx.fillStyle = `hsl(${h} ${s}% ${lightness}%)`;
           ctx.beginPath();
@@ -141,7 +145,7 @@ const DotGrid = ({
       ro.disconnect();
       gsap.killTweensOf(state);
     };
-  }, [variant, shockRadius, shockStrength, resistance, returnDuration, dotOpacity, readAccentHsl]);
+  }, [variant, proximity, shockRadius, shockStrength, resistance, returnDuration, dotOpacity, readAccentHsl]);
 
   return (
     <div ref={containerRef} className="dot-grid-layer" aria-hidden>

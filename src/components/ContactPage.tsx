@@ -132,13 +132,7 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
         backgroundColor: "#000",
       }}
     >
-      <DotGrid
-        variant="contact"
-        shockRadius={130}
-        shockStrength={14}
-        resistance={1000}
-        returnDuration={0.5}
-      />
+      <DotGrid variant="contact" />
       {/* Comic Particles */}
       <ComicParticles mode="fusion" />
 

@@ -531,13 +531,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
       className="relative min-h-screen min-h-screen-mobile overflow-x-hidden bg-energy-creative-red"
       style={{ backgroundColor: "hsl(var(--creative-duotone-bg))" }}
     >
-      <DotGrid
-        variant="create"
-        shockRadius={130}
-        shockStrength={14}
-        resistance={1000}
-        returnDuration={0.5}
-      />
+      <DotGrid variant="create" />
       {/* Comic Particles */}
       <ComicParticles mode="creative" />
 

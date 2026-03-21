@@ -31,7 +31,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/** Minimum duration for “Entering my world…” — always runs; also waits for hero image preload */
+/** Minimum duration for “Entering…” — always runs; also waits for hero image preload */
 const HOME_LOADING_MS = 2500;
 
 /** After loading + reveal: 0.5s zoom+blur transition, then slider intro plays */
@@ -159,7 +159,7 @@ const Index = () => {
             aria-label="Loading"
           >
             <p className="font-comic text-xl sm:text-2xl md:text-3xl text-white px-4 text-center">
-              Entering my world
+              Entering
               <span className="home-loading-dots" aria-hidden>
                 {".".repeat(5).split("").map((_, i) => (
                   <span key={i} className="home-loading-dot">

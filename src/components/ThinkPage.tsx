@@ -110,13 +110,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
       className="relative min-h-screen min-h-screen-mobile overflow-x-hidden bg-energy-think"
       style={{ backgroundColor: "hsl(var(--think-bg))" }}
     >
-      <DotGrid
-        variant="think"
-        shockRadius={130}
-        shockStrength={14}
-        resistance={1000}
-        returnDuration={0.5}
-      />
+      <DotGrid variant="think" />
       {/* Comic Particles */}
       <ComicParticles mode="think" />
       
