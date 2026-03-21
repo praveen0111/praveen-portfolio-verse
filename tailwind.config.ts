@@ -41,8 +41,9 @@ export default {
       },
       borderRadius: { lg: "var(--radius)", md: "calc(var(--radius) - 2px)", sm: "calc(var(--radius) - 4px)" },
       fontFamily: {
-        comic: ["Bangers", "cursive"],
-        "comic-secondary": ["Oswald", "sans-serif"],
+        comic: ["Tiny5", "sans-serif"],
+        "comic-secondary": ["Tiny5", "sans-serif"],
+        content: ["Jersey 15", "sans-serif"],
       },
       keyframes: {
         "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },
@@ -59,6 +60,522 @@ export default {
         "scale-fade-in": { from: { transform: "scale(0.9)", opacity: "0" }, to: { transform: "scale(1)", opacity: "1" } },
         "lightbox-open": { from: { transform: "scale(0.8)", opacity: "0" }, to: { transform: "scale(1)", opacity: "1" } },
         "overlay-fade": { from: { opacity: "0" }, to: { opacity: "1" } },
+        "page-turn-left": {
+          "0%": { 
+            transform: "perspective(2000px) rotateY(90deg) translateX(100%) rotateZ(-25deg)", 
+            opacity: "0", 
+            transformOrigin: "left center",
+            filter: "brightness(0.3)"
+          },
+          "20%": { 
+            transform: "perspective(2000px) rotateY(70deg) translateX(80%) rotateZ(-18deg)", 
+            opacity: "0.2", 
+            transformOrigin: "left center",
+            filter: "brightness(0.4)"
+          },
+          "40%": { 
+            transform: "perspective(2000px) rotateY(45deg) translateX(50%) rotateZ(-10deg)", 
+            opacity: "0.5", 
+            transformOrigin: "left center",
+            filter: "brightness(0.6)"
+          },
+          "60%": { 
+            transform: "perspective(2000px) rotateY(25deg) translateX(25%) rotateZ(-5deg)", 
+            opacity: "0.75", 
+            transformOrigin: "left center",
+            filter: "brightness(0.8)"
+          },
+          "80%": { 
+            transform: "perspective(2000px) rotateY(8deg) translateX(5%) rotateZ(-2deg)", 
+            opacity: "0.9", 
+            transformOrigin: "left center",
+            filter: "brightness(0.95)"
+          },
+          "100%": { 
+            transform: "perspective(2000px) rotateY(0deg) translateX(0) rotateZ(0deg)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(1)"
+          },
+        },
+        "page-turn-right": {
+          "0%": { 
+            transform: "perspective(2000px) rotateY(-90deg) translateX(-100%) rotateZ(25deg)", 
+            opacity: "0", 
+            transformOrigin: "right center",
+            filter: "brightness(0.3)"
+          },
+          "20%": { 
+            transform: "perspective(2000px) rotateY(-70deg) translateX(-80%) rotateZ(18deg)", 
+            opacity: "0.2", 
+            transformOrigin: "right center",
+            filter: "brightness(0.4)"
+          },
+          "40%": { 
+            transform: "perspective(2000px) rotateY(-45deg) translateX(-50%) rotateZ(10deg)", 
+            opacity: "0.5", 
+            transformOrigin: "right center",
+            filter: "brightness(0.6)"
+          },
+          "60%": { 
+            transform: "perspective(2000px) rotateY(-25deg) translateX(-25%) rotateZ(5deg)", 
+            opacity: "0.75", 
+            transformOrigin: "right center",
+            filter: "brightness(0.8)"
+          },
+          "80%": { 
+            transform: "perspective(2000px) rotateY(-8deg) translateX(-5%) rotateZ(2deg)", 
+            opacity: "0.9", 
+            transformOrigin: "right center",
+            filter: "brightness(0.95)"
+          },
+          "100%": { 
+            transform: "perspective(2000px) rotateY(0deg) translateX(0) rotateZ(0deg)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(1)"
+          },
+        },
+        "page-turn-up": {
+          "0%": { 
+            transform: "perspective(2000px) rotateX(90deg) translateY(100%) rotateZ(15deg)", 
+            opacity: "0", 
+            transformOrigin: "center bottom",
+            filter: "brightness(0.3)"
+          },
+          "20%": { 
+            transform: "perspective(2000px) rotateX(70deg) translateY(80%) rotateZ(12deg)", 
+            opacity: "0.2", 
+            transformOrigin: "center bottom",
+            filter: "brightness(0.4)"
+          },
+          "40%": { 
+            transform: "perspective(2000px) rotateX(45deg) translateY(50%) rotateZ(8deg)", 
+            opacity: "0.5", 
+            transformOrigin: "center bottom",
+            filter: "brightness(0.6)"
+          },
+          "60%": { 
+            transform: "perspective(2000px) rotateX(25deg) translateY(25%) rotateZ(4deg)", 
+            opacity: "0.75", 
+            transformOrigin: "center bottom",
+            filter: "brightness(0.8)"
+          },
+          "80%": { 
+            transform: "perspective(2000px) rotateX(8deg) translateY(5%) rotateZ(1deg)", 
+            opacity: "0.9", 
+            transformOrigin: "center bottom",
+            filter: "brightness(0.95)"
+          },
+          "100%": { 
+            transform: "perspective(2000px) rotateX(0deg) translateY(0) rotateZ(0deg)", 
+            opacity: "1", 
+            transformOrigin: "center bottom",
+            filter: "brightness(1)"
+          },
+        },
+        "page-turn-out-left": {
+          "0%": { 
+            transform: "perspective(2000px) rotateY(0deg) translateX(0) rotateZ(0deg)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(1)"
+          },
+          "20%": { 
+            transform: "perspective(2000px) rotateY(-15deg) translateX(-15%) rotateZ(3deg)", 
+            opacity: "0.9", 
+            transformOrigin: "left center",
+            filter: "brightness(0.95)"
+          },
+          "40%": { 
+            transform: "perspective(2000px) rotateY(-35deg) translateX(-35%) rotateZ(8deg)", 
+            opacity: "0.75", 
+            transformOrigin: "left center",
+            filter: "brightness(0.8)"
+          },
+          "60%": { 
+            transform: "perspective(2000px) rotateY(-55deg) translateX(-60%) rotateZ(12deg)", 
+            opacity: "0.5", 
+            transformOrigin: "left center",
+            filter: "brightness(0.6)"
+          },
+          "80%": { 
+            transform: "perspective(2000px) rotateY(-75deg) translateX(-85%) rotateZ(18deg)", 
+            opacity: "0.2", 
+            transformOrigin: "left center",
+            filter: "brightness(0.4)"
+          },
+          "100%": { 
+            transform: "perspective(2000px) rotateY(-90deg) translateX(-100%) rotateZ(25deg)", 
+            opacity: "0", 
+            transformOrigin: "left center",
+            filter: "brightness(0.3)"
+          },
+        },
+        "page-turn-out-right": {
+          "0%": { 
+            transform: "perspective(2000px) rotateY(0deg) translateX(0) rotateZ(0deg)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(1)"
+          },
+          "20%": { 
+            transform: "perspective(2000px) rotateY(15deg) translateX(15%) rotateZ(-3deg)", 
+            opacity: "0.9", 
+            transformOrigin: "right center",
+            filter: "brightness(0.95)"
+          },
+          "40%": { 
+            transform: "perspective(2000px) rotateY(35deg) translateX(35%) rotateZ(-8deg)", 
+            opacity: "0.75", 
+            transformOrigin: "right center",
+            filter: "brightness(0.8)"
+          },
+          "60%": { 
+            transform: "perspective(2000px) rotateY(55deg) translateX(60%) rotateZ(-12deg)", 
+            opacity: "0.5", 
+            transformOrigin: "right center",
+            filter: "brightness(0.6)"
+          },
+          "80%": { 
+            transform: "perspective(2000px) rotateY(75deg) translateX(85%) rotateZ(-18deg)", 
+            opacity: "0.2", 
+            transformOrigin: "right center",
+            filter: "brightness(0.4)"
+          },
+          "100%": { 
+            transform: "perspective(2000px) rotateY(90deg) translateX(100%) rotateZ(-25deg)", 
+            opacity: "0", 
+            transformOrigin: "right center",
+            filter: "brightness(0.3)"
+          },
+        },
+        "page-turn-out-up": {
+          "0%": { 
+            transform: "perspective(2000px) rotateX(0deg) translateY(0) rotateZ(0deg)", 
+            opacity: "1", 
+            transformOrigin: "center bottom",
+            filter: "brightness(1)"
+          },
+          "20%": { 
+            transform: "perspective(2000px) rotateX(-15deg) translateY(-15%) rotateZ(-3deg)", 
+            opacity: "0.9", 
+            transformOrigin: "center bottom",
+            filter: "brightness(0.95)"
+          },
+          "40%": { 
+            transform: "perspective(2000px) rotateX(-35deg) translateY(-35%) rotateZ(-8deg)", 
+            opacity: "0.75", 
+            transformOrigin: "center bottom",
+            filter: "brightness(0.8)"
+          },
+          "60%": { 
+            transform: "perspective(2000px) rotateX(-55deg) translateY(-60%) rotateZ(-12deg)", 
+            opacity: "0.5", 
+            transformOrigin: "center bottom",
+            filter: "brightness(0.6)"
+          },
+          "80%": { 
+            transform: "perspective(2000px) rotateX(-75deg) translateY(-85%) rotateZ(-18deg)", 
+            opacity: "0.2", 
+            transformOrigin: "center bottom",
+            filter: "brightness(0.4)"
+          },
+          "100%": { 
+            transform: "perspective(2000px) rotateX(-90deg) translateY(-100%) rotateZ(-25deg)", 
+            opacity: "0", 
+            transformOrigin: "center bottom",
+            filter: "brightness(0.3)"
+          },
+        },
+        "page-curl-from-right": {
+          "0%": { 
+            transform: "perspective(2000px) rotateY(0deg) rotateZ(0deg) translateZ(0px)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(1)",
+            clipPath: "inset(0 0 0 0)"
+          },
+          "3%": { 
+            transform: "perspective(2000px) rotateY(-1deg) rotateZ(-2deg) translateZ(2px)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(0.99)",
+            clipPath: "inset(0 0 0 0)"
+          },
+          "8%": { 
+            transform: "perspective(2000px) rotateY(-5deg) rotateZ(-5deg) translateZ(5px)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(0.96)",
+            clipPath: "inset(0 2% 0 0)"
+          },
+          "15%": { 
+            transform: "perspective(2000px) rotateY(-15deg) rotateZ(-8deg) translateZ(10px)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(0.9)",
+            clipPath: "inset(0 5% 0 0)"
+          },
+          "25%": { 
+            transform: "perspective(2000px) rotateY(-25deg) rotateZ(-10deg) translateZ(15px)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(0.82)",
+            clipPath: "inset(0 10% 0 0)"
+          },
+          "40%": { 
+            transform: "perspective(2000px) rotateY(-40deg) rotateZ(-12deg) translateZ(20px)", 
+            opacity: "0.98", 
+            transformOrigin: "right center",
+            filter: "brightness(0.7)",
+            clipPath: "inset(0 20% 0 0)"
+          },
+          "55%": { 
+            transform: "perspective(2000px) rotateY(-60deg) rotateZ(-15deg) translateZ(25px)", 
+            opacity: "0.95", 
+            transformOrigin: "right center",
+            filter: "brightness(0.55)",
+            clipPath: "inset(0 35% 0 0)"
+          },
+          "70%": { 
+            transform: "perspective(2000px) rotateY(-78deg) rotateZ(-18deg) translateZ(30px)", 
+            opacity: "0.85", 
+            transformOrigin: "right center",
+            filter: "brightness(0.4)",
+            clipPath: "inset(0 55% 0 0)"
+          },
+          "85%": { 
+            transform: "perspective(2000px) rotateY(-88deg) rotateZ(-22deg) translateZ(35px)", 
+            opacity: "0.5", 
+            transformOrigin: "right center",
+            filter: "brightness(0.25)",
+            clipPath: "inset(0 80% 0 0)"
+          },
+          "100%": { 
+            transform: "perspective(2000px) rotateY(-90deg) rotateZ(-25deg) translateZ(40px)", 
+            opacity: "0", 
+            transformOrigin: "right center",
+            filter: "brightness(0.15)",
+            clipPath: "inset(0 100% 0 0)"
+          },
+        },
+        "page-curl-from-left": {
+          "0%": { 
+            transform: "perspective(2000px) rotateY(0deg) rotateZ(0deg) translateZ(0px)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(1)",
+            clipPath: "inset(0 0 0 0)"
+          },
+          "3%": { 
+            transform: "perspective(2000px) rotateY(1deg) rotateZ(2deg) translateZ(2px)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(0.99)",
+            clipPath: "inset(0 0 0 0)"
+          },
+          "8%": { 
+            transform: "perspective(2000px) rotateY(5deg) rotateZ(5deg) translateZ(5px)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(0.96)",
+            clipPath: "inset(0 0 0 2%)"
+          },
+          "15%": { 
+            transform: "perspective(2000px) rotateY(15deg) rotateZ(8deg) translateZ(10px)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(0.9)",
+            clipPath: "inset(0 0 0 5%)"
+          },
+          "25%": { 
+            transform: "perspective(2000px) rotateY(25deg) rotateZ(10deg) translateZ(15px)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(0.82)",
+            clipPath: "inset(0 0 0 10%)"
+          },
+          "40%": { 
+            transform: "perspective(2000px) rotateY(40deg) rotateZ(12deg) translateZ(20px)", 
+            opacity: "0.98", 
+            transformOrigin: "left center",
+            filter: "brightness(0.7)",
+            clipPath: "inset(0 0 0 20%)"
+          },
+          "55%": { 
+            transform: "perspective(2000px) rotateY(60deg) rotateZ(15deg) translateZ(25px)", 
+            opacity: "0.95", 
+            transformOrigin: "left center",
+            filter: "brightness(0.55)",
+            clipPath: "inset(0 0 0 35%)"
+          },
+          "70%": { 
+            transform: "perspective(2000px) rotateY(78deg) rotateZ(18deg) translateZ(30px)", 
+            opacity: "0.85", 
+            transformOrigin: "left center",
+            filter: "brightness(0.4)",
+            clipPath: "inset(0 0 0 55%)"
+          },
+          "85%": { 
+            transform: "perspective(2000px) rotateY(88deg) rotateZ(22deg) translateZ(35px)", 
+            opacity: "0.5", 
+            transformOrigin: "left center",
+            filter: "brightness(0.25)",
+            clipPath: "inset(0 0 0 80%)"
+          },
+          "100%": { 
+            transform: "perspective(2000px) rotateY(90deg) rotateZ(25deg) translateZ(40px)", 
+            opacity: "0", 
+            transformOrigin: "left center",
+            filter: "brightness(0.15)",
+            clipPath: "inset(0 0 0 100%)"
+          },
+        },
+        "page-reveal-from-right": {
+          "0%": { 
+            transform: "perspective(2000px) rotateY(90deg) rotateZ(25deg) translateZ(40px)", 
+            opacity: "0", 
+            transformOrigin: "left center",
+            filter: "brightness(0.15)",
+            clipPath: "inset(0 100% 0 0)"
+          },
+          "15%": { 
+            transform: "perspective(2000px) rotateY(88deg) rotateZ(22deg) translateZ(35px)", 
+            opacity: "0.5", 
+            transformOrigin: "left center",
+            filter: "brightness(0.25)",
+            clipPath: "inset(0 80% 0 0)"
+          },
+          "30%": { 
+            transform: "perspective(2000px) rotateY(78deg) rotateZ(18deg) translateZ(30px)", 
+            opacity: "0.85", 
+            transformOrigin: "left center",
+            filter: "brightness(0.4)",
+            clipPath: "inset(0 55% 0 0)"
+          },
+          "45%": { 
+            transform: "perspective(2000px) rotateY(60deg) rotateZ(15deg) translateZ(25px)", 
+            opacity: "0.95", 
+            transformOrigin: "left center",
+            filter: "brightness(0.55)",
+            clipPath: "inset(0 35% 0 0)"
+          },
+          "60%": { 
+            transform: "perspective(2000px) rotateY(40deg) rotateZ(12deg) translateZ(20px)", 
+            opacity: "0.98", 
+            transformOrigin: "left center",
+            filter: "brightness(0.7)",
+            clipPath: "inset(0 20% 0 0)"
+          },
+          "75%": { 
+            transform: "perspective(2000px) rotateY(25deg) rotateZ(10deg) translateZ(15px)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(0.82)",
+            clipPath: "inset(0 10% 0 0)"
+          },
+          "85%": { 
+            transform: "perspective(2000px) rotateY(15deg) rotateZ(8deg) translateZ(10px)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(0.9)",
+            clipPath: "inset(0 5% 0 0)"
+          },
+          "92%": { 
+            transform: "perspective(2000px) rotateY(5deg) rotateZ(5deg) translateZ(5px)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(0.96)",
+            clipPath: "inset(0 2% 0 0)"
+          },
+          "97%": { 
+            transform: "perspective(2000px) rotateY(1deg) rotateZ(2deg) translateZ(2px)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(0.99)",
+            clipPath: "inset(0 0 0 0)"
+          },
+          "100%": { 
+            transform: "perspective(2000px) rotateY(0deg) rotateZ(0deg) translateZ(0px)", 
+            opacity: "1", 
+            transformOrigin: "left center",
+            filter: "brightness(1)",
+            clipPath: "inset(0 0 0 0)"
+          },
+        },
+        "page-reveal-from-left": {
+          "0%": { 
+            transform: "perspective(2000px) rotateY(-90deg) rotateZ(-25deg) translateZ(40px)", 
+            opacity: "0", 
+            transformOrigin: "right center",
+            filter: "brightness(0.15)",
+            clipPath: "inset(0 0 0 100%)"
+          },
+          "15%": { 
+            transform: "perspective(2000px) rotateY(-88deg) rotateZ(-22deg) translateZ(35px)", 
+            opacity: "0.5", 
+            transformOrigin: "right center",
+            filter: "brightness(0.25)",
+            clipPath: "inset(0 0 0 80%)"
+          },
+          "30%": { 
+            transform: "perspective(2000px) rotateY(-78deg) rotateZ(-18deg) translateZ(30px)", 
+            opacity: "0.85", 
+            transformOrigin: "right center",
+            filter: "brightness(0.4)",
+            clipPath: "inset(0 0 0 55%)"
+          },
+          "45%": { 
+            transform: "perspective(2000px) rotateY(-60deg) rotateZ(-15deg) translateZ(25px)", 
+            opacity: "0.95", 
+            transformOrigin: "right center",
+            filter: "brightness(0.55)",
+            clipPath: "inset(0 0 0 35%)"
+          },
+          "60%": { 
+            transform: "perspective(2000px) rotateY(-40deg) rotateZ(-12deg) translateZ(20px)", 
+            opacity: "0.98", 
+            transformOrigin: "right center",
+            filter: "brightness(0.7)",
+            clipPath: "inset(0 0 0 20%)"
+          },
+          "75%": { 
+            transform: "perspective(2000px) rotateY(-25deg) rotateZ(-10deg) translateZ(15px)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(0.82)",
+            clipPath: "inset(0 0 0 10%)"
+          },
+          "85%": { 
+            transform: "perspective(2000px) rotateY(-15deg) rotateZ(-8deg) translateZ(10px)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(0.9)",
+            clipPath: "inset(0 0 0 5%)"
+          },
+          "92%": { 
+            transform: "perspective(2000px) rotateY(-5deg) rotateZ(-5deg) translateZ(5px)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(0.96)",
+            clipPath: "inset(0 0 0 2%)"
+          },
+          "97%": { 
+            transform: "perspective(2000px) rotateY(-1deg) rotateZ(-2deg) translateZ(2px)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(0.99)",
+            clipPath: "inset(0 0 0 0)"
+          },
+          "100%": { 
+            transform: "perspective(2000px) rotateY(0deg) rotateZ(0deg) translateZ(0px)", 
+            opacity: "1", 
+            transformOrigin: "right center",
+            filter: "brightness(1)",
+            clipPath: "inset(0 0 0 0)"
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -76,6 +593,16 @@ export default {
         fadeIn: "fadeIn 0.5s ease-in-out",
         "lightbox-open": "lightbox-open 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
         "overlay-fade": "overlay-fade 0.2s ease-out",
+        "comic-page-turn-left": "page-turn-left 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "comic-page-turn-right": "page-turn-right 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "comic-page-turn-up": "page-turn-up 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "comic-page-turn-out-left": "page-turn-out-left 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "comic-page-turn-out-right": "page-turn-out-right 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "comic-page-turn-out-up": "page-turn-out-up 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "book-curl-from-right": "page-curl-from-right 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "book-curl-from-left": "page-curl-from-left 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "book-reveal-from-right": "page-reveal-from-right 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "book-reveal-from-left": "page-reveal-from-left 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
       },
     },
   },

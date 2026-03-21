@@ -137,6 +137,20 @@ const projects: CreativeProject[] = [
     awards: [],
   },
   {
+    title: "TAMIZH Product Concept",
+    genre: "AD",
+    typeLabel: "Advertisement",
+    year: "2026",
+    runtime: "1 Minute",
+    link: "https://drive.google.com/file/d/1KLaJTFdDQAvU_Z1VVd01-cLYaJGAoIWW/view?usp=sharing",
+    filters: ["promo", "ad", "editor", "creativepro"],
+    role: "Editor · Concept · AI Prompt Engineer",
+    description: "",
+    experience:
+      "Developed a concept video for XR smart glasses using a fully AI-driven production pipeline, intended for stakeholder presentation and early-stage product visualization.\n\nLeveraged the Higgsfield platform to generate the entire video from scratch, establishing a structured workflow that integrated prompt design, image generation, and video synthesis.\n\nThe project focused on clearly communicating product use cases and vision without traditional production resources, demonstrating the ability to translate abstract ideas into compelling visual narratives using emerging AI tools.",
+    awards: [],
+  },
+  {
     title: "Eggsistence",
     genre: "Short film",
     typeLabel: "Short Film · Drama / Satire",
@@ -224,20 +238,6 @@ const projects: CreativeProject[] = [
       "Three eccentric criminals. One unexpected betrayal. A spiral into chaos where things go hilariously, and violently, out of control.",
     experience:
       "Contributed as a VFX artist for this project, directed by Somesh. Brought in to execute specific shots requiring raw, gritty blood effects and subtle visual enhancements.\n\nThe work was completed within a tight one-day turnaround, demanding precision and speed under time constraints.\n\nThis project marked a shift from directing and writing into a focused technical role, collaborating on a film outside my usual creative circle and contributing purely through post-production and VFX execution.",
-    awards: [],
-  },
-  {
-    title: "TAMIZH Product Concept",
-    genre: "AD",
-    typeLabel: "Advertisement",
-    year: "2026",
-    runtime: "1 Minute",
-    link: "https://drive.google.com/file/d/1KLaJTFdDQAvU_Z1VVd01-cLYaJGAoIWW/view?usp=sharing",
-    filters: ["promo", "ad", "editor", "creativepro"],
-    role: "Editor · Concept · AI Prompt Engineer",
-    description: "",
-    experience:
-      "Developed a concept video for XR smart glasses using a fully AI-driven production pipeline, intended for stakeholder presentation and early-stage product visualization.\n\nLeveraged the Higgsfield platform to generate the entire video from scratch, establishing a structured workflow that integrated prompt design, image generation, and video synthesis.\n\nThe project focused on clearly communicating product use cases and vision without traditional production resources, demonstrating the ability to translate abstract ideas into compelling visual narratives using emerging AI tools.",
     awards: [],
   },
 ];
@@ -356,7 +356,7 @@ function PosterCarousel({
               className={`min-h-[12px] min-w-[12px] rounded-full border-2 ${
                 i === selectedIndex
                   ? "bg-[hsl(var(--creative-accent))] border-[hsl(var(--creative-accent))]"
-                  : "bg-white/15 border-white/15 hover:bg-white/25 hover:border-white/25"
+                  : "bg-white/15 border-white/15 hover:bg-white/25 hover:border-white/25 active:bg-white/25 active:border-white/25"
               }`}
               aria-label={`Go to slide ${i + 1}`}
             />
@@ -428,7 +428,7 @@ function PopupImageCarousel({
               e.stopPropagation();
               goPrev();
             }}
-            className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-20 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg-alt))] shadow-[3px_3px_0_hsl(var(--creative-accent))] opacity-90"
+            className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-20 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg-alt))] shadow-[3px_3px_0_hsl(var(--creative-accent))] opacity-90 touch-manipulation transition-[transform,box-shadow,filter] duration-150 active:scale-[0.96] active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110"
             aria-label="Previous"
           >
             <ChevronLeft className="w-6 h-6 text-[hsl(var(--creative-accent))]" strokeWidth={3} />
@@ -441,7 +441,7 @@ function PopupImageCarousel({
               e.stopPropagation();
               goNext();
             }}
-            className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-20 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg-alt))] shadow-[3px_3px_0_hsl(var(--creative-accent))] opacity-90"
+            className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-20 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg-alt))] shadow-[3px_3px_0_hsl(var(--creative-accent))] opacity-90 touch-manipulation transition-[transform,box-shadow,filter] duration-150 active:scale-[0.96] active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110"
             aria-label="Next"
           >
             <ChevronRight className="w-6 h-6 text-[hsl(var(--creative-accent))]" strokeWidth={3} />
@@ -460,7 +460,7 @@ function PopupImageCarousel({
                 className={`min-h-[12px] min-w-[12px] rounded-full border-2 ${
                   i === selectedIndex
                     ? "bg-[hsl(var(--creative-accent))] border-[hsl(var(--creative-accent))]"
-                    : "bg-white/15 border-white/15 hover:bg-white/25 hover:border-white/25"
+                    : "bg-white/15 border-white/15 hover:bg-white/25 hover:border-white/25 active:bg-white/25 active:border-white/25"
                 }`}
                 aria-label={`Go to slide ${i + 1}`}
               />
@@ -536,10 +536,10 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
         style={{ backgroundColor: "hsl(var(--creative-bg-alt))", borderColor: "hsl(var(--creative-accent))" }}
       >
         <div className="container mx-auto px-4 md:px-6">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 md:gap-4">
+          <div className="flex flex-row flex-nowrap justify-center items-stretch gap-1.5 sm:gap-3 md:gap-4">
             <Button
               onClick={onGoHome}
-              className="w-full sm:w-auto border-4 px-6 py-3 font-comic text-lg font-bold"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
               style={{
                 backgroundColor: "hsl(var(--creative-bg-alt))",
                 color: "hsl(var(--creative-fg))",
@@ -551,7 +551,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
             </Button>
             <Button
               onClick={onSwitchToThink}
-              className="w-full sm:w-auto border-4 px-6 py-3 font-comic text-lg font-bold"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
               style={{
                 backgroundColor: "hsl(var(--primary))",
                 color: "hsl(var(--primary-foreground))",
@@ -563,7 +563,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
             </Button>
             <Button
               onClick={onNavigateToContact}
-              className="w-full sm:w-auto border-4 px-6 py-3 font-comic text-lg font-bold"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
               style={{
                 backgroundColor: "hsl(var(--accent))",
                 color: "hsl(var(--accent-foreground))",
@@ -624,7 +624,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                       key={f.token}
                       type="button"
                       onClick={() => setSelectedFilterToken(f.token)}
-                      className="border-4 font-comic text-sm md:text-base font-bold px-4 py-2 transition-transform duration-200 hover:scale-[1.06] hover:brightness-110"
+                      className="border-4 font-comic text-sm md:text-base font-bold px-4 py-2 touch-manipulation transition-transform duration-200 hover:scale-[1.06] hover:brightness-110 active:scale-[1.06] active:brightness-110"
                       style={{
                         backgroundColor: isActive ? "hsl(var(--creative-accent))" : "hsl(var(--creative-bg-alt))",
                         color: isActive ? "hsl(var(--creative-bg))" : "hsl(var(--creative-fg-muted))",
@@ -677,7 +677,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                   >
                     {/* Card wrapper - always highlighted */}
                     <div
-                      className="relative h-full border-4 flex flex-col scale-100 opacity-100 transition-transform duration-200 hover:scale-[1.02] hover:brightness-110"
+                      className="relative h-full border-4 flex flex-col scale-100 opacity-100 touch-manipulation transition-transform duration-200 hover:scale-[1.02] hover:brightness-110 active:scale-[1.02] active:brightness-110"
                       style={{
                         backgroundColor: "hsl(var(--creative-bg-alt))",
                         borderColor: "hsl(var(--creative-accent))",
@@ -760,7 +760,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
               <DialogClose asChild>
                 <button
                   type="button"
-                  className="absolute top-4 right-4 z-[200] w-7 h-7 md:w-8 md:h-8 border-4 border-black bg-[hsl(var(--creative-bg))] text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] flex items-center justify-center font-comic text-xl md:text-2xl leading-none"
+                  className="absolute top-4 right-4 z-[200] w-7 h-7 md:w-8 md:h-8 border-4 border-black bg-[hsl(var(--creative-bg))] text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] flex items-center justify-center font-comic text-xl md:text-2xl leading-none touch-manipulation transition-[transform,box-shadow] duration-150 active:translate-y-px active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110"
                   aria-label="Close"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -812,10 +812,10 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
               </div>
 
               {/* Info blocks + XP + Accolades */}
-              <div className="flex-1 px-4 md:px-6 pb-8 min-h-0">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex-none px-4 md:px-6 pb-6 md:pb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
                   <div
-                    className="border-4 p-4 h-full"
+                    className="border-4 p-3 md:p-4"
                     style={{
                       borderColor: "hsl(var(--creative-accent))",
                       backgroundColor: "hsl(var(--creative-bg-alt))",
@@ -829,7 +829,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                   </div>
 
                   <div
-                    className="border-4 p-4 h-full"
+                    className="border-4 p-3 md:p-4"
                     style={{
                       borderColor: "hsl(var(--creative-accent))",
                       backgroundColor: "hsl(var(--creative-bg-alt))",
@@ -843,7 +843,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                   </div>
 
                   <div
-                    className="border-4 p-4 h-full"
+                    className="border-4 p-3 md:p-4"
                     style={{
                       borderColor: "hsl(var(--creative-accent))",
                       backgroundColor: "hsl(var(--creative-bg-alt))",
@@ -857,22 +857,28 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                   </div>
                 </div>
 
-                <div className={popupProject.awards.length > 0 ? "grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 h-full" : "grid grid-cols-1 gap-6 mt-6 h-full"}>
-                  <div className="border-4 p-4" style={{ borderColor: "hsl(var(--creative-accent))" }}>
+                <div
+                  className={
+                    popupProject.awards.length > 0
+                      ? "grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 mt-4 md:mt-5 items-start"
+                      : "grid grid-cols-1 gap-3 md:gap-4 mt-4 md:mt-5"
+                  }
+                >
+                  <div className="border-4 p-3 md:p-4" style={{ borderColor: "hsl(var(--creative-accent))" }}>
                     <div className="text-3xl font-comic font-bold" style={{ color: "hsl(var(--creative-fg))" }}>
                       XP
                     </div>
-                    <p className="text-base md:text-lg leading-relaxed font-content font-content-medium whitespace-pre-line mt-3" style={{ color: "hsl(var(--creative-fg-muted))" }}>
+                    <p className="text-base md:text-lg leading-snug md:leading-relaxed font-content font-content-medium whitespace-pre-line mt-2" style={{ color: "hsl(var(--creative-fg-muted))" }}>
                       {popupXp}
                     </p>
                   </div>
 
                   {popupProject.awards.length > 0 && (
-                    <div className="border-4 p-4" style={{ borderColor: "hsl(var(--creative-accent))" }}>
+                    <div className="border-4 p-3 md:p-4" style={{ borderColor: "hsl(var(--creative-accent))" }}>
                       <div className="text-2xl font-comic font-bold" style={{ color: "hsl(var(--creative-fg))" }}>
                         Accolades
                       </div>
-                      <ul className="text-base md:text-lg leading-relaxed font-content font-content-medium mt-3" style={{ color: "hsl(var(--creative-fg-muted))" }}>
+                      <ul className="text-base md:text-lg leading-snug md:leading-relaxed font-content font-content-medium mt-2 space-y-1" style={{ color: "hsl(var(--creative-fg-muted))" }}>
                         {popupProject.awards.map((a, idx) => (
                           <li key={idx} className="list-disc ml-6">
                             {a}

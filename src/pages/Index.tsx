@@ -1,46 +1,213 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 import HeroSlider from "@/components/HeroSlider";
 import CreativePage from "@/components/CreativePage";
 import ThinkPage from "@/components/ThinkPage";
 import ContactPage from "@/components/ContactPage";
 import PageTransition from "@/components/PageTransition";
+import ClickSpark from "@/components/ClickSpark";
+import Noise from "@/components/Noise";
 
 type PageView = "home" | "creative" | "think" | "contact";
 
+const PAGE_ORDER: PageView[] = ["home", "creative", "think", "contact"];
+
+const HERO_PRELOAD_IMAGES = [
+  "/images/think-background.png",
+  "/images/creative-background.png",
+] as const;
+
+function preloadImage(src: string): Promise<void> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve();
+    img.onerror = () => resolve();
+    img.src = src;
+  });
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/** 2.5s “Entering my world…”, then 0.5s zoom+blur reveal, then slider intro */
+const HOME_LOADING_MS = 2500;
+const HOME_REVEAL_MS = 500;
+
+type HomeEntryPhase = "loading" | "reveal" | "ready";
+
 const Index = () => {
   const [currentView, setCurrentView] = useState<PageView>("home");
+  const [homeEntryPhase, setHomeEntryPhase] = useState<HomeEntryPhase>("loading");
+  const [revealAnimate, setRevealAnimate] = useState(false);
+  const [homeIntroComplete, setHomeIntroComplete] = useState(false);
 
-  const handleNavigateCreative = () => {
-    setCurrentView("creative");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      await Promise.all([
+        Promise.all(HERO_PRELOAD_IMAGES.map(preloadImage)),
+        sleep(HOME_LOADING_MS),
+      ]);
+      if (!cancelled) setHomeEntryPhase("reveal");
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (homeEntryPhase !== "reveal") return;
+    setRevealAnimate(false);
+    let innerRaf = 0;
+    const outerRaf = requestAnimationFrame(() => {
+      innerRaf = requestAnimationFrame(() => setRevealAnimate(true));
+    });
+    const t = setTimeout(() => setHomeEntryPhase("ready"), HOME_REVEAL_MS);
+    return () => {
+      clearTimeout(t);
+      cancelAnimationFrame(outerRaf);
+      cancelAnimationFrame(innerRaf);
+    };
+  }, [homeEntryPhase]);
+
+  const isHomeContentFocused =
+    homeEntryPhase === "ready" || (homeEntryPhase === "reveal" && revealAnimate);
+
+  const handleHomeIntroComplete = useCallback(() => {
+    setHomeIntroComplete(true);
+  }, []);
+
+  const getPageIndex = (view: PageView): number => {
+    return PAGE_ORDER.indexOf(view);
   };
 
-  const handleNavigateThink = () => {
-    setCurrentView("think");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const getCurrentPageIndex = (): number => {
+    return getPageIndex(currentView);
   };
+
+  const canGoNext = (): boolean => {
+    return getCurrentPageIndex() < PAGE_ORDER.length - 1;
+  };
+
+  const canGoPrevious = (): boolean => {
+    return getCurrentPageIndex() > 0;
+  };
+
+  const handleNext = () => {
+    if (!canGoNext()) return;
+    const nextView = PAGE_ORDER[getCurrentPageIndex() + 1];
+    setCurrentView(nextView);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+
+  const handlePrevious = () => {
+    if (!canGoPrevious()) return;
+    const prevView = PAGE_ORDER[getCurrentPageIndex() - 1];
+    setCurrentView(prevView);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+
+  const navigateTo = (view: PageView) => {
+    if (currentView === view) return;
+    setCurrentView(view);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+
+  const handleNavigateCreative = () => navigateTo("creative");
+  const handleNavigateThink = () => navigateTo("think");
 
   const handleGoHome = () => {
+    if (currentView === "home") return;
     setCurrentView("home");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   const handleNavigateToContact = () => {
+    if (currentView === "contact") return;
     setCurrentView("contact");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden">
-      {/* Home Page - Split Screen Slider */}
+    <main
+      className="min-h-screen min-h-screen-mobile overflow-x-hidden relative"
+      style={{
+        perspective: "2000px",
+        perspectiveOrigin: "center center",
+        backgroundColor: "hsl(var(--creative-bg))",
+      }}
+    >
+      <div className="absolute inset-0 min-h-screen w-full">
+        <ClickSpark
+          sparkColor="#fff"
+          sparkSize={29}
+          sparkRadius={70}
+          sparkCount={8}
+          duration={400}
+        >
+        <div className="relative z-10 min-h-screen min-h-screen-mobile w-full">
       <PageTransition type="home" isVisible={currentView === "home"}>
-        <HeroSlider
-          onNavigateCreative={handleNavigateCreative}
-          onNavigateThink={handleNavigateThink}
-        />
+        {homeEntryPhase === "loading" && (
+          <div
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black"
+            role="status"
+            aria-live="polite"
+            aria-label="Loading"
+          >
+            <p className="font-comic text-xl sm:text-2xl md:text-3xl text-white px-4 text-center">
+              Entering my world
+              <span className="home-loading-dots" aria-hidden>
+                {".".repeat(5).split("").map((_, i) => (
+                  <span key={i} className="home-loading-dot">
+                    .
+                  </span>
+                ))}
+              </span>
+            </p>
+          </div>
+        )}
+        <div
+          className={cn(
+            "min-h-screen min-h-screen-mobile w-full transition-[filter,transform] duration-500 ease-out will-change-[filter,transform]",
+            isHomeContentFocused
+              ? "blur-0 scale-100"
+              : "blur-[14px] scale-[1.06] [transform-origin:center_center]",
+          )}
+        >
+          <HeroSlider
+            onNavigateCreative={handleNavigateCreative}
+            onNavigateThink={handleNavigateThink}
+            playIntro={homeEntryPhase === "ready" && !homeIntroComplete}
+            onIntroComplete={handleHomeIntroComplete}
+          />
+          {currentView === "home" && (
+            <div
+              className="pointer-events-none absolute inset-0 z-[19] flex items-center justify-center"
+              aria-hidden
+            >
+              <div
+                style={{
+                  width: "1080px",
+                  height: "1080px",
+                  position: "relative",
+                  maxWidth: "100vw",
+                  maxHeight: "100vh",
+                }}
+              >
+                <Noise
+                  patternSize={190}
+                  patternScaleX={0.9}
+                  patternScaleY={1}
+                  patternRefreshInterval={4}
+                  patternAlpha={20}
+                />
+              </div>
+            </div>
+          )}
+        </div>
       </PageTransition>
 
-      {/* Creative Page - Film Projects */}
       <PageTransition type="creative" isVisible={currentView === "creative"}>
         <CreativePage
           onGoHome={handleGoHome}
@@ -49,7 +216,6 @@ const Index = () => {
         />
       </PageTransition>
 
-      {/* Think Page - Academic/Professional */}
       <PageTransition type="think" isVisible={currentView === "think"}>
         <ThinkPage
           onGoHome={handleGoHome}
@@ -58,10 +224,16 @@ const Index = () => {
         />
       </PageTransition>
 
-      {/* Contact Page - Fusion Zone */}
       <PageTransition type="fusion" isVisible={currentView === "contact"}>
-        <ContactPage onGoHome={handleGoHome} />
+        <ContactPage
+          onGoHome={handleGoHome}
+          onSwitchToCreative={handleNavigateCreative}
+          onSwitchToThink={handleNavigateThink}
+        />
       </PageTransition>
+        </div>
+        </ClickSpark>
+      </div>
     </main>
   );
 };

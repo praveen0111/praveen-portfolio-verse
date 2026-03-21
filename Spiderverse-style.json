@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "name": "High-Energy Comic Motion UI",
+    "intent": "Cinematic, pop-art inspired, motion-forward web experience",
+    "design_philosophy": [
+      "Visual overload with controlled hierarchy",
+      "Comic-book language translated into digital UI",
+      "Movement implied even in static layouts",
+      "Deliberate imperfection and texture over clean minimalism"
+    ]
+  },
+
+  "color_system": {
+    "palette_type": "neon-complementary",
+    "primary_colors": [
+      "electric magenta",
+      "deep violet",
+      "neon red"
+    ],
+    "secondary_colors": [
+      "acid yellow",
+      "cyan blue",
+      "hot pink"
+    ],
+    "backgrounds": {
+      "style": "radial + angular gradients",
+      "layers": [
+        "dark base gradient",
+        "bright energy core",
+        "noise or halftone overlay"
+      ]
+    },
+    "contrast_strategy": "extreme",
+    "usage_rules": [
+      "Bright colors sit on dark fields",
+      "Yellow reserved for alerts, badges, or calls to action",
+      "Gradients imply depth and motion rather than realism"
+    ]
+  },
+
+  "typography": {
+    "primary_type": {
+      "style": "bold condensed sans-serif",
+      "usage": ["headings", "navigation", "badges"],
+      "characteristics": [
+        "high x-height",
+        "tight letter spacing",
+        "uppercase dominant"
+      ]
+    },
+    "secondary_type": {
+      "style": "clean geometric sans-serif",
+      "usage": ["labels", "meta text", "supporting UI"]
+    },
+    "expressive_text": {
+      "style": "hand-drawn or distorted display",
+      "usage": ["logos", "feature titles"],
+      "rules": [
+        "used sparingly",
+        "allowed to break alignment",
+        "may overlap imagery"
+      ]
+    }
+  },
+
+  "layout_system": {
+    "composition": "layered canvas",
+    "grid": {
+      "type": "asymmetric modular",
+      "columns": 12,
+      "gutters": "tight",
+      "breakage_allowed": true
+    },
+    "depth_model": {
+      "layers": [
+        "background texture",
+        "motion field",
+        "primary subject",
+        "interactive overlays",
+        "UI chrome"
+      ],
+      "z_axis_usage": "aggressive"
+    },
+    "alignment_rules": [
+      "Center-weighted hero sections",
+      "Vertical timelines anchored to edges",
+      "Cards float rather than sit flush"
+    ]
+  },
+
+  "imagery_treatment": {
+    "style": "stylized illustration over realism",
+    "effects": [
+      "chromatic aberration",
+      "motion streaks",
+      "glow outlines",
+      "hard rim lighting"
+    ],
+    "texture": {
+      "types": ["halftone dots", "film grain", "print noise"],
+      "opacity_range": "5-15%"
+    },
+    "framing": {
+      "cropping": "dynamic and off-center",
+      "bleed": "allowed beyond containers"
+    }
+  },
+
+  "iconography": {
+    "style": "minimal but bold",
+    "stroke_weight": "medium to heavy",
+    "fill": "solid",
+    "color_behavior": [
+      "inherits accent color",
+      "inverts on hover"
+    ]
+  },
+
+  "components": {
+    "navigation": {
+      "style": "flat text-based",
+      "background": "transparent or dark overlay",
+      "hover_behavior": [
+        "color shift",
+        "subtle glow"
+      ]
+    },
+    "buttons": {
+      "shape": "rectangular with sharp corners",
+      "borders": "thick or none",
+      "states": {
+        "default": "high-contrast",
+        "hover": "color inversion or glow",
+        "active": "slight scale-down"
+      }
+    },
+    "cards": {
+      "structure": [
+        "image block",
+        "title",
+        "meta label"
+      ],
+      "border": "high-contrast frame",
+      "hover_effects": [
+        "lift on z-axis",
+        "brightness increase"
+      ]
+    },
+    "badges": {
+      "shape": "burst or sticker-like",
+      "color": "alert yellow or neon",
+      "typography": "uppercase bold"
+    }
+  },
+
+  "motion_language": {
+    "overall_feel": "kinetic",
+    "animation_types": [
+      "parallax scroll",
+      "scale-in hero elements",
+      "glitch or jitter micro-interactions"
+    ],
+    "timing": {
+      "easing": "ease-out dominant",
+      "duration_ms": {
+        "micro": 120,
+        "macro": 400
+      }
+    },
+    "principles": [
+      "Motion reinforces energy",
+      "Nothing feels static",
+      "Animations never feel soft"
+    ]
+  },
+
+  "interaction_patterns": {
+    "scroll": {
+      "role": "narrative driver",
+      "elements_reacting": [
+        "background gradients",
+        "timeline indicators",
+        "hero imagery"
+      ]
+    },
+    "focus_management": {
+      "primary_focus": "hero visual",
+      "secondary_focus": "supporting cards",
+      "peripheral_elements": "decorative but animated"
+    }
+  },
+
+  "brand_tone": {
+    "emotional_keywords": [
+      "electric",
+      "rebellious",
+      "youthful",
+      "chaotic but intentional"
+    ],
+    "avoid": [
+      "corporate neutrality",
+      "soft pastels",
+      "perfect symmetry",
+      "flat minimalism"
+    ]
+  },
+
+  "ai_replication_guidelines": {
+    "prioritize": [
+      "color energy over cleanliness",
+      "layering over whitespace",
+      "motion cues even in static frames"
+    ],
+    "acceptable_variation": [
+      "palette shifts within neon spectrum",
+      "layout asymmetry",
+      "texture density"
+    ],
+    "consistency_rules": [
+      "Always maintain extreme contrast",
+      "Never remove texture entirely",
+      "Hero section must dominate first viewport"
+    ]
+  }
+}

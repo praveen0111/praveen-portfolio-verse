@@ -1,30 +1,19 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
+import ComicParticles from "./ComicParticles";
 
 /**
  * ============================================
- * THINK PAGE COMPONENT
+ * THINK PAGE - COMIC BOOK LAYOUT
  * ============================================
  * 
- * Academic/Professional profile page with:
- * - Warm daylight color palette
- * - Paper-like textures
- * - Clean, structured layout
- * - Precise, controlled motion
- * 
- * CONTENT ORDER (as specified):
- * 1. Education - Degrees, Institutions, Academic focus
- * 2. Tools & Technologies - Interactive cards
- * 3. Skills - Grouped logically
- * 4. Projects - Academic/Technical/Product work
- * 
- * HOW TO CUSTOMIZE:
- * 1. Edit education data in 'education' array
- * 2. Modify tools in 'tools' array
- * 3. Update skills in 'skills' array
- * 4. Add/remove projects in 'projects' array
- * 5. Replace placeholder links
+ * Academic/Professional profile as comic panels:
+ * - THINK side: neon palette (deep violet + electric magenta, acid yellow for CTAs)
+ * - Thick black comic panel borders
+ * - Bold comic typography (Bangers for headings)
+ * - Panel-based structure, not cards
+ * - Reading like a comic book
  */
 
 interface ThinkPageProps {
@@ -45,10 +34,6 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
-  /**
-   * EDUCATION DATA
-   * HOW TO CUSTOMIZE: Add/edit entries in this array
-   */
   const education = [
     {
       id: 1,
@@ -68,10 +53,6 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
     },
   ];
 
-  /**
-   * TOOLS & TECHNOLOGIES DATA
-   * HOW TO CUSTOMIZE: Add/edit entries with name and proficiency level
-   */
   const tools = [
     { name: "Figma", category: "Design", level: 90 },
     { name: "Adobe XD", category: "Design", level: 85 },
@@ -83,10 +64,6 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
     { name: "Excel", category: "Analytics", level: 90 },
   ];
 
-  /**
-   * SKILLS DATA
-   * HOW TO CUSTOMIZE: Add/edit skill groups and individual skills
-   */
   const skills = [
     {
       category: "Product & Strategy",
@@ -106,10 +83,6 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
     },
   ];
 
-  /**
-   * PROJECTS DATA
-   * HOW TO CUSTOMIZE: Add projects with links to demos/repos
-   */
   const projects = [
     {
       id: 1,
@@ -118,7 +91,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
       period: "Jul 2024 - Present",
       description: "Designing UI/UX for AR Smart Glasses with hand gesture and voice control. Collaborating on display and interaction systems.",
       tools: ["Figma", "Unity", "Blender"],
-      link: "#", // <!-- INSERT PROJECT LINK HERE -->
+      link: "#",
     },
     {
       id: 2,
@@ -127,228 +100,338 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
       period: "May 2025 - Jul 2025",
       description: "Developed social media calendars, copywriting, and video scripting for TAFE and DahNAY. Experimented with 3D modelling and AI-based design.",
       tools: ["Notion", "Canva", "Adobe Suite"],
-      link: "#", // <!-- INSERT PROJECT LINK HERE -->
+      link: "#",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-think-bg texture-paper animate-think-enter">
-      {/* Warm daylight gradient overlay */}
-      <div 
-        className="fixed inset-0 pointer-events-none z-0"
-        style={{
-          background: `
-            radial-gradient(ellipse at 20% 10%, hsl(var(--think-glow) / 0.2) 0%, transparent 40%),
-            radial-gradient(ellipse at 80% 90%, hsl(var(--think-glow) / 0.15) 0%, transparent 30%)
-          `
-        }}
-      />
+    <div
+      className="min-h-screen min-h-screen-mobile bg-energy-think texture-halftone texture-halftone-dots-think"
+      style={{ backgroundColor: "hsl(var(--think-bg))" }}
+    >
+      {/* Comic Particles */}
+      <ComicParticles mode="think" />
       
-      {/* Navigation */}
-      <nav className="relative z-10 py-6 md:py-8 border-b border-think-border">
+      {/* Navigation - flat text-based, dark overlay, hover color shift + glow */}
+      <nav className="relative z-10 py-4 md:py-6 border-b-4" style={{ backgroundColor: "hsl(var(--think-bg-alt))", borderColor: "hsl(var(--think-accent))" }}>
         <div className="container mx-auto px-4 md:px-6">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 md:gap-4">
+          <div className="flex flex-row flex-nowrap justify-center items-stretch gap-1.5 sm:gap-3 md:gap-4">
             <Button
               onClick={onGoHome}
-              variant="ghost"
-              className="w-full sm:w-auto text-think-fg-muted hover:text-think-fg hover:bg-think-glow/50 transition-all font-semibold"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
+              style={{
+                backgroundColor: "hsl(var(--think-bg))",
+                color: "hsl(var(--think-fg))",
+                borderColor: "hsl(var(--think-accent))",
+                boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 4px 4px 0 hsl(var(--think-accent) / 0.6)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 24px hsl(var(--think-accent) / 0.6), 6px 6px 0 hsl(var(--think-accent) / 0.5)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 16px hsl(var(--think-accent) / 0.4), 4px 4px 0 hsl(var(--think-accent) / 0.6)";
+              }}
             >
-              Home
+              HOME
             </Button>
             <Button
               onClick={onSwitchToCreative}
-              className="w-full sm:w-auto bg-creative-accent text-creative-bg font-semibold px-6 py-3 rounded-lg hover:bg-creative-glow transition-all shadow-md hover:shadow-lg"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
+              style={{
+                backgroundColor: "hsl(var(--neon-red))",
+                color: "hsl(var(--primary-foreground))",
+                borderColor: "hsl(var(--neon-red))",
+                boxShadow: "0 0 16px hsl(var(--neon-red) / 0.55), 4px 4px 0 hsl(var(--neon-red) / 0.5)",
+              }}
             >
-              View Creative Work
+              VIEW CREATE.
             </Button>
             <Button
               onClick={onNavigateToContact}
-              className="w-full sm:w-auto bg-think-accent text-white font-semibold px-6 py-3 rounded-lg hover:bg-think-accent-alt transition-all shadow-md hover:shadow-lg"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
+              style={{
+                backgroundColor: "hsl(var(--accent))",
+                color: "hsl(var(--accent-foreground))",
+                borderColor: "hsl(var(--accent))",
+                boxShadow: "0 0 16px hsl(var(--accent) / 0.55), 4px 4px 0 hsl(var(--accent) / 0.5)",
+              }}
             >
-              Contact
+              CONTACT
             </Button>
           </div>
         </div>
       </nav>
 
-      {/* Main Content */}
-      <main className="relative z-10 py-12 md:py-20">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-5xl mx-auto">
-            
-            {/* Profile Header */}
-            <header className="flex flex-col md:flex-row items-center text-center md:text-left gap-6 md:gap-8 mb-12 md:mb-16 animate-think-reveal">
-              <div className="w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden bg-think-bg-alt flex-shrink-0 shadow-xl border-4 border-think-accent/30">
+      {/* Main Content - Comic Panel Layout */}
+      <main className="relative z-10 py-8 md:py-12">
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          
+          {/* Profile Header Panel - high-contrast frame */}
+          <div
+            className="mb-8 md:mb-12 p-6 md:p-10 border-4"
+            style={{
+              backgroundColor: "hsl(var(--think-bg-alt))",
+              borderColor: "hsl(var(--think-accent))",
+              boxShadow: "0 0 20px hsl(var(--think-accent) / 0.2), 8px 8px 0 hsl(var(--think-accent) / 0.3)",
+            }}
+          >
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
+              <div
+                className="w-32 h-32 md:w-40 md:h-40 border-4 flex-shrink-0"
+                style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))" }}
+              >
                 <img
-                  src="https://placehold.co/200x200/FAF8F4/1F1F1F?text=PE"
-                  alt="Praveen Elanchezhian - Professional headshot"
+                  src="https://placehold.co/200x200/1a0d1a/ff00ff?text=PE"
+                  alt="Praveen Elanchezhian"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div>
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-think-fg">
-                  Praveen Elanchezhian
+              <div className="flex-1 text-center md:text-left">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-comic font-bold mb-2" style={{ color: "hsl(var(--think-fg))" }}>
+                  PRAVEEN ELANCHEZHIAN
                 </h1>
-                <p className="text-lg md:text-xl text-think-accent mt-2 font-semibold">
-                  MBA Candidate | Product & Marketing Strategist
+                <p className="text-xl md:text-2xl font-comic-secondary font-bold mb-3" style={{ color: "hsl(var(--think-accent))" }}>
+                  MBA CANDIDATE | PRODUCT & MARKETING STRATEGIST
                 </p>
-                <p className="mt-4 text-base md:text-lg text-think-fg-muted leading-relaxed max-w-xl">
+                <p className="text-base md:text-lg font-content font-content-medium leading-relaxed" style={{ color: "hsl(var(--think-fg-muted))" }}>
                   Passionate about building products at the intersection of technology, design, and business strategy.
                 </p>
               </div>
-            </header>
+            </div>
+          </div>
 
-            {/* SECTION 1: Education */}
-            <section className="mb-12 animate-think-reveal [animation-delay:100ms]">
-              <button
-                onClick={() => toggleSection("education")}
-                className="w-full flex items-center justify-between text-3xl md:text-4xl font-bold mb-6 text-think-accent hover:text-think-accent-alt transition-colors"
-              >
-                <span>Education</span>
-                {expandedSections.education ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
-              </button>
-              
-              {expandedSections.education && (
-                <div className="space-y-6">
-                  {education.map((edu) => (
-                    <div
-                      key={edu.id}
-                      className="bg-white p-6 md:p-8 rounded-xl shadow-md border-2 border-think-border hover:border-think-accent/50 transition-all duration-300"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2">
-                        <h3 className="text-lg md:text-xl font-bold text-think-fg">{edu.degree}</h3>
-                        <span className="text-sm font-semibold text-think-fg-muted whitespace-nowrap">{edu.period}</span>
-                      </div>
-                      <p className="text-base md:text-lg font-semibold text-think-accent mb-2">{edu.institution}</p>
-                      <p className="text-sm text-think-fg-muted">{edu.description}</p>
+          {/* Education Panel */}
+          <div className="mb-8 md:mb-12">
+            <button
+              onClick={() => toggleSection("education")}
+              className="w-full flex items-center justify-between p-4 min-h-[44px] border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-left touch-manipulation transition-[transform,filter] duration-150 active:scale-[0.995] active:brightness-95"
+              style={{
+                backgroundColor: "hsl(var(--think-accent))",
+                color: "hsl(var(--think-fg))",
+                borderColor: "hsl(var(--think-glow))",
+                boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)",
+              }}
+            >
+              <span>EDUCATION</span>
+              {expandedSections.education ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
+            </button>
+            
+            {expandedSections.education && (
+              <div className="space-y-4">
+                {education.map((edu) => (
+                  <div
+                    key={edu.id}
+                    className="p-6 md:p-8 border-4"
+                    style={{ 
+                      backgroundColor: "hsl(var(--think-bg))",
+                      boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)"
+                    }}
+                  >
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
+                      <h3 className="text-xl md:text-2xl font-comic font-bold" style={{ color: "hsl(var(--think-fg))" }}>
+                        {edu.degree}
+                      </h3>
+                      <span className="text-base font-content font-content-medium whitespace-nowrap" style={{ color: "hsl(var(--think-fg-muted))" }}>
+                        {edu.period}
+                      </span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </section>
+                    <p className="text-lg md:text-xl font-content font-content-bold mb-2" style={{ color: "hsl(var(--think-accent))" }}>
+                      {edu.institution}
+                    </p>
+                    <p className="text-base font-content font-content-medium" style={{ color: "hsl(var(--think-fg-muted))" }}>
+                      {edu.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-            {/* SECTION 2: Tools & Technologies */}
-            <section className="mb-12 animate-think-reveal [animation-delay:200ms]">
-              <button
-                onClick={() => toggleSection("tools")}
-                className="w-full flex items-center justify-between text-3xl md:text-4xl font-bold mb-6 text-think-accent hover:text-think-accent-alt transition-colors"
-              >
-                <span>Tools & Technologies</span>
-                {expandedSections.tools ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
-              </button>
-              
-              {expandedSections.tools && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {tools.map((tool) => (
-                    <div
-                      key={tool.name}
-                      className="bg-white p-4 rounded-xl shadow-sm border-2 border-think-border hover:border-think-accent hover:shadow-md transition-all duration-300 group"
-                    >
-                      <p className="font-semibold text-think-fg group-hover:text-think-accent transition-colors">{tool.name}</p>
-                      <p className="text-xs text-think-fg-muted mt-1">{tool.category}</p>
-                      {/* Proficiency bar */}
-                      <div className="mt-3 h-1.5 bg-think-bg-alt rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-think-accent rounded-full transition-all duration-500"
-                          style={{ width: `${tool.level}%` }}
-                        />
-                      </div>
+          {/* Tools & Technologies Panel */}
+          <div className="mb-8 md:mb-12">
+            <button
+              onClick={() => toggleSection("tools")}
+              className="w-full flex items-center justify-between p-4 min-h-[44px] border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-left touch-manipulation transition-[transform,filter] duration-150 active:scale-[0.995] active:brightness-95"
+              style={{ 
+                backgroundColor: "hsl(var(--think-accent))",
+                color: "hsl(var(--think-fg))",
+                boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)"
+              }}
+            >
+              <span>TOOLS & TECHNOLOGIES</span>
+              {expandedSections.tools ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
+            </button>
+            
+            {expandedSections.tools && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {tools.map((tool) => (
+                  <div
+                    key={tool.name}
+                    className="p-4 border-4"
+                    style={{ 
+                      backgroundColor: "hsl(var(--think-bg-alt))",
+                      boxShadow: "0 0 10px hsl(var(--think-accent) / 0.15), 4px 4px 0 hsl(var(--think-accent) / 0.2)"
+                    }}
+                  >
+                    <p className="font-comic text-lg font-bold mb-1" style={{ color: "hsl(var(--think-fg))" }}>
+                      {tool.name}
+                    </p>
+                    <p className="text-xs font-content font-content-light mb-3" style={{ color: "hsl(var(--think-fg-muted))" }}>
+                      {tool.category}
+                    </p>
+                    {/* Proficiency bar */}
+                    <div className="h-2 border-2" style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))" }}>
+                      <div
+                        className="h-full"
+                        style={{ 
+                          width: `${tool.level}%`,
+                          backgroundColor: "hsl(var(--think-accent))"
+                        }}
+                      />
                     </div>
-                  ))}
-                </div>
-              )}
-            </section>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-            {/* SECTION 3: Skills */}
-            <section className="mb-12 animate-think-reveal [animation-delay:300ms]">
-              <button
-                onClick={() => toggleSection("skills")}
-                className="w-full flex items-center justify-between text-3xl md:text-4xl font-bold mb-6 text-think-accent hover:text-think-accent-alt transition-colors"
-              >
-                <span>Skills</span>
-                {expandedSections.skills ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
-              </button>
-              
-              {expandedSections.skills && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {skills.map((skillGroup) => (
+          {/* Skills Panel */}
+          <div className="mb-8 md:mb-12">
+            <button
+              onClick={() => toggleSection("skills")}
+              className="w-full flex items-center justify-between p-4 min-h-[44px] border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-left touch-manipulation transition-[transform,filter] duration-150 active:scale-[0.995] active:brightness-95"
+              style={{ 
+                backgroundColor: "hsl(var(--think-accent))",
+                color: "hsl(var(--think-fg))",
+                boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)"
+              }}
+            >
+              <span>SKILLS</span>
+              {expandedSections.skills ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
+            </button>
+            
+            {expandedSections.skills && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {skills.map((skillGroup) => (
+                  <div
+                    key={skillGroup.category}
+                    className="p-6 border-4"
+                    style={{ 
+                      backgroundColor: "hsl(var(--think-bg))",
+                      boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)"
+                    }}
+                  >
+                    <h4 className="font-comic text-2xl font-bold mb-4" style={{ color: "hsl(var(--think-accent))" }}>
+                      {skillGroup.category}
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {skillGroup.items.map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-3 py-2 border-2 font-content text-sm font-content-medium"
+                          style={{ 
+                            backgroundColor: "hsl(var(--think-bg-alt))",
+                            color: "hsl(var(--think-fg))"
+                          }}
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Projects Panel */}
+          <div className="mb-8 md:mb-12">
+            <button
+              onClick={() => toggleSection("projects")}
+              className="w-full flex items-center justify-between p-4 min-h-[44px] border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-left touch-manipulation transition-[transform,filter] duration-150 active:scale-[0.995] active:brightness-95"
+              style={{ 
+                backgroundColor: "hsl(var(--think-accent))",
+                color: "hsl(var(--think-fg))",
+                boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)"
+              }}
+            >
+              <span>EXPERIENCE & PROJECTS</span>
+              {expandedSections.projects ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
+            </button>
+            
+            {expandedSections.projects && (
+              <div className="space-y-4">
+                {projects.map((project) => (
+                  <a
+                    key={project.id}
+                    href={project.link}
+                    className="block"
+                    aria-label={`View ${project.title}`}
+                  >
                     <div
-                      key={skillGroup.category}
-                      className="bg-white p-6 rounded-xl shadow-sm border-2 border-think-border"
+                      className="p-6 md:p-8 border-4"
+                      style={{
+                        backgroundColor: "hsl(var(--think-bg))",
+                        borderColor: "hsl(var(--think-accent))",
+                        boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.boxShadow = "0 0 20px hsl(var(--think-accent) / 0.4), 8px 8px 0 hsl(var(--think-accent) / 0.3)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.boxShadow = "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)";
+                      }}
                     >
-                      <h4 className="font-bold text-think-accent mb-4">{skillGroup.category}</h4>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
+                        <h3 className="text-xl md:text-2xl font-comic font-bold flex items-center gap-2" style={{ color: "hsl(var(--think-fg))" }}>
+                          {project.title}
+                          <ExternalLink className="w-5 h-5" />
+                        </h3>
+<span className="text-base font-content font-content-medium whitespace-nowrap" style={{ color: "hsl(var(--think-fg-muted))" }}>
+                        {project.period}
+                      </span>
+                      </div>
+                      
+                      <p className="text-lg md:text-xl font-content font-content-bold mb-3" style={{ color: "hsl(var(--think-accent))" }}>
+                        {project.company}
+                      </p>
+                      
+                      <p className="text-base font-content font-content-medium mb-4" style={{ color: "hsl(var(--think-fg-muted))" }}>
+                        {project.description}
+                      </p>
+                      
                       <div className="flex flex-wrap gap-2">
-                        {skillGroup.items.map((skill) => (
+                        {project.tools.map((tool) => (
                           <span
-                            key={skill}
-                            className="px-3 py-1.5 bg-think-bg-alt text-think-fg text-sm rounded-full border border-think-border hover:bg-think-glow hover:border-think-accent transition-all duration-200"
+                            key={tool}
+                            className="px-3 py-1 border-2 font-content text-sm font-content-medium"
+                            style={{ 
+                              backgroundColor: "hsl(var(--think-bg-alt))",
+                              color: "hsl(var(--think-fg))"
+                            }}
                           >
-                            {skill}
+                            {tool}
                           </span>
                         ))}
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </section>
-
-            {/* SECTION 4: Projects */}
-            <section className="mb-12 animate-think-reveal [animation-delay:400ms]">
-              <button
-                onClick={() => toggleSection("projects")}
-                className="w-full flex items-center justify-between text-3xl md:text-4xl font-bold mb-6 text-think-accent hover:text-think-accent-alt transition-colors"
-              >
-                <span>Experience & Projects</span>
-                {expandedSections.projects ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
-              </button>
-              
-              {expandedSections.projects && (
-                <div className="space-y-6">
-                  {projects.map((project) => (
-                    <a
-                      key={project.id}
-                      href={project.link}
-                      className="group block"
-                      aria-label={`View details for ${project.title}`}
-                    >
-                      <div className="bg-white p-6 md:p-8 rounded-xl shadow-md border-2 border-think-border hover:border-think-accent hover:shadow-xl transition-all duration-300 hover:scale-[1.01]">
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
-                          <h3 className="text-lg md:text-xl font-bold text-think-fg group-hover:text-think-accent transition-colors flex items-center gap-2">
-                            {project.title}
-                            <ExternalLink className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                          </h3>
-                          <span className="text-sm font-semibold text-think-fg-muted whitespace-nowrap">{project.period}</span>
-                        </div>
-                        
-                        <p className="text-base md:text-lg font-semibold text-think-accent mb-4">{project.company}</p>
-                        
-                        <p className="text-sm md:text-base text-think-fg-muted mb-4">{project.description}</p>
-                        
-                        <div className="flex flex-wrap gap-2">
-                          {project.tools.map((tool) => (
-                            <span
-                              key={tool}
-                              className="px-2 py-1 bg-think-glow/50 text-think-fg text-xs rounded-full"
-                            >
-                              {tool}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              )}
-            </section>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 bg-think-fg/5 backdrop-blur-sm py-6 border-t border-think-border">
-        <div className="container mx-auto px-4 md:px-6 text-center text-think-fg-muted">
-          <p className="text-sm md:text-base">&copy; 2025 Praveen Elanchezhian. All Rights Reserved.</p>
+      <footer 
+        className="relative z-10 py-6 border-t-4 text-center"
+        style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))" }}
+      >
+        <div className="container mx-auto px-4 md:px-6">
+<p className="text-sm md:text-base font-content font-content-medium" style={{ color: "hsl(var(--think-fg-muted))" }}>
+          &copy; 2026 PRAVEEN ELANCHEZHIAN. ALL RIGHTS RESERVED.
+        </p>
         </div>
       </footer>
     </div>

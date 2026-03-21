@@ -58,10 +58,10 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
 
   return (
     <div
-      className="min-h-screen min-h-screen-mobile flex flex-col bg-energy-dark texture-halftone"
+      className="min-h-screen min-h-screen-mobile flex flex-col bg-black texture-halftone"
       style={{
-        backgroundColor: "hsl(var(--fusion-bg))",
-        // Light yellow dots in Contact background
+        /* Solid black: avoid bg-energy-dark radial gradients (they anchor to page height and cause a mid-scroll seam). */
+        backgroundColor: "#000",
         ["--halftone-dot" as any]: "48 100% 65%",
       }}
     >
@@ -74,10 +74,10 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
         style={{ backgroundColor: "hsl(0 0% 0%)", borderColor: "hsl(var(--accent))" }}
       >
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 md:gap-4">
+          <div className="flex flex-row flex-nowrap justify-center items-stretch gap-1.5 sm:gap-3 md:gap-4">
             <Button
               onClick={onGoHome}
-              className="w-full sm:w-auto border-4 px-6 py-3 font-comic text-lg font-bold"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
               style={{
                 backgroundColor: "hsl(var(--think-bg))",
                 color: "hsl(var(--think-fg))",
@@ -89,7 +89,7 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
             </Button>
             <Button
               onClick={onSwitchToCreative}
-              className="w-full sm:w-auto border-4 px-6 py-3 font-comic text-lg font-bold"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
               style={{
                 backgroundColor: "hsl(var(--neon-red))",
                 color: "hsl(var(--primary-foreground))",
@@ -101,7 +101,7 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
             </Button>
             <Button
               onClick={onSwitchToThink}
-              className="w-full sm:w-auto border-4 px-6 py-3 font-comic text-lg font-bold"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
               style={{
                 backgroundColor: "hsl(var(--primary))",
                 color: "hsl(var(--primary-foreground))",
@@ -118,19 +118,41 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
       {/* Main Content */}
       <main className="relative z-10 py-8 sm:py-12 md:py-20">
         <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
-          {/* Header Panel - high-contrast frame */}
-          <header className="relative text-center mb-8 sm:mb-12 md:mb-16">
-            <ComicPopHeadlinePlate
-              variant="secondary"
-              align="center"
-              className="inline-block"
-              textClassName="text-2xl sm:text-3xl md:text-5xl lg:text-6xl"
-              plateClassName="comic-pop-plate--contact-header"
-              plateStyle={{ ["--plate-bg" as any]: "hsl(var(--accent))" } as any}
-            >
-              LET'S CONNECT
-            </ComicPopHeadlinePlate>
+          {/* Header Panel - high-contrast frame (hidden on mobile) */}
+          <header className="relative text-left sm:text-center mb-8 sm:mb-12 md:mb-16 hidden sm:block">
+            {/* Mobile: half-size plate (CSS scale); wrapper matches layout box. Font size unchanged. */}
+            <div className="max-sm:relative max-sm:inline-block max-sm:w-[216px] max-sm:h-[36px] max-sm:overflow-visible sm:contents">
+              <ComicPopHeadlinePlate
+                variant="secondary"
+                align="left"
+                className="inline-block"
+                textClassName="text-2xl sm:text-3xl md:text-5xl lg:text-6xl text-left sm:text-center"
+                plateClassName="comic-pop-plate--contact-header"
+                plateStyle={{ ["--plate-bg" as any]: "hsl(var(--accent))" } as any}
+              >
+                LET'S CONNECT
+              </ComicPopHeadlinePlate>
+            </div>
           </header>
+
+          {/* Mobile only: parallelogram bar (skew + counter-skew text, matches comic plate angle) */}
+          <div className="mb-6 flex justify-center sm:hidden">
+            <span
+              className="inline-block -skew-x-[10deg] border-4 [box-shadow:0_0_16px_hsl(var(--accent)/0.5),4px_4px_0_hsl(var(--accent)/0.5)]"
+              style={{
+                backgroundColor: "hsl(var(--accent))",
+                borderColor: "hsl(var(--accent))",
+                padding: "0.5em 0.75em",
+              }}
+            >
+              <span
+                className="inline-block skew-x-[10deg] font-comic font-bold text-xl leading-tight uppercase tracking-wide text-center"
+                style={{ color: "hsl(var(--accent-foreground))" }}
+              >
+                LET&apos;S CONNECT
+              </span>
+            </span>
+          </div>
 
           {/* Logo loop - horizontal infinite scroll */}
           <div
@@ -151,7 +173,7 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
               hoverSpeed={0}
               scaleOnHover
               fadeOut
-              fadeOutColor="hsl(var(--fusion-bg))"
+              fadeOutColor="#000000"
               ariaLabel="Social links: LinkedIn, Instagram, Gmail, X, YouTube, Linktree"
             />
           </div>
@@ -250,9 +272,6 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="font-comic font-bold text-sm sm:text-base" style={{ color: "hsl(var(--fusion-fg))" }}>
-                  Captcha
-                </label>
                 <div className="flex justify-center">
                   <div className="h-captcha" data-captcha="true" />
                 </div>

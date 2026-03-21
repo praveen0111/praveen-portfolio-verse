@@ -43,12 +43,24 @@ const ComicPanel = ({
   const panelRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    let isEffectActive = true;
+    timeoutIdRef.current = null;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), delay);
+        if (entry.isIntersecting && isEffectActive) {
+          if (timeoutIdRef.current !== null) {
+            clearTimeout(timeoutIdRef.current);
+          }
+          timeoutIdRef.current = setTimeout(() => {
+            if (!isEffectActive) {
+              return;
+            }
+            setIsVisible(true);
+            timeoutIdRef.current = null;
+          }, delay);
         }
       },
       { threshold: 0.15, rootMargin: "-50px" }
@@ -71,6 +83,11 @@ const ComicPanel = ({
     handleScroll();
 
     return () => {
+      isEffectActive = false;
+      if (timeoutIdRef.current !== null) {
+        clearTimeout(timeoutIdRef.current);
+        timeoutIdRef.current = null;
+      }
       observer.disconnect();
       window.removeEventListener("scroll", handleScroll);
     };
@@ -112,7 +129,6 @@ const ComicPanel = ({
           ${borderColor} border-4
           shadow-2xl ${shadowColor}
           hover:shadow-3xl
-          transition-shadow duration-300
         `;
       case "burst":
         return `
@@ -136,7 +152,6 @@ const ComicPanel = ({
       ref={panelRef}
       className={`
         relative overflow-hidden
-        transition-all duration-700 ease-out
         ${getVariantStyles()}
         ${className}
       `}
@@ -145,7 +160,6 @@ const ComicPanel = ({
         transform: isVisible 
           ? `translateY(${parallaxOffset}px)` 
           : getInitialTransform(),
-        transitionDelay: `${delay}ms`,
       }}
     >
       {/* Halftone corner decoration */}
