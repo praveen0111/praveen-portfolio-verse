@@ -298,6 +298,8 @@ const HeroSlider = ({
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: isMobile ? "center" : "left center" }}
           draggable={false}
+          fetchPriority="high"
+          decoding="async"
         />
       </div>
 
@@ -316,6 +318,8 @@ const HeroSlider = ({
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: isMobile ? "center" : "right center" }}
           draggable={false}
+          fetchPriority="high"
+          decoding="async"
         />
       </div>
 

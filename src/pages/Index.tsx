@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import HeroSlider from "@/components/HeroSlider";
-import CreativePage from "@/components/CreativePage";
-import ThinkPage from "@/components/ThinkPage";
-import ContactPage from "@/components/ContactPage";
 import PageTransition from "@/components/PageTransition";
 import ClickSpark from "@/components/ClickSpark";
 import Noise from "@/components/Noise";
+
+const CreativePage = lazy(() => import("@/components/CreativePage"));
+const ThinkPage = lazy(() => import("@/components/ThinkPage"));
+const ContactPage = lazy(() => import("@/components/ContactPage"));
 
 type PageView = "home" | "creative" | "think" | "contact";
 
@@ -30,8 +31,10 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/** 2.5s “Entering my world…”, then 0.5s zoom+blur reveal, then slider intro */
+/** Minimum duration for “Entering my world…” — always runs; also waits for hero image preload */
 const HOME_LOADING_MS = 2500;
+
+/** After loading + reveal: 0.5s zoom+blur transition, then slider intro plays */
 const HOME_REVEAL_MS = 500;
 
 type HomeEntryPhase = "loading" | "reveal" | "ready";
@@ -169,7 +172,7 @@ const Index = () => {
         )}
         <div
           className={cn(
-            "min-h-screen min-h-screen-mobile w-full transition-[filter,transform] duration-500 ease-out will-change-[filter,transform]",
+            "relative min-h-screen min-h-screen-mobile w-full transition-[filter,transform] duration-500 ease-out will-change-[filter,transform]",
             isHomeContentFocused
               ? "blur-0 scale-100"
               : "blur-[14px] scale-[1.06] [transform-origin:center_center]",
@@ -182,55 +185,44 @@ const Index = () => {
             onIntroComplete={handleHomeIntroComplete}
           />
           {currentView === "home" && (
-            <div
-              className="pointer-events-none absolute inset-0 z-[19] flex items-center justify-center"
-              aria-hidden
-            >
-              <div
-                style={{
-                  width: "1080px",
-                  height: "1080px",
-                  position: "relative",
-                  maxWidth: "100vw",
-                  maxHeight: "100vh",
-                }}
-              >
-                <Noise
-                  patternSize={190}
-                  patternScaleX={0.9}
-                  patternScaleY={1}
-                  patternRefreshInterval={4}
-                  patternAlpha={20}
-                />
-              </div>
+            <div className="pointer-events-none absolute inset-0 z-[19]" aria-hidden>
+              <Noise
+                patternSize={190}
+                patternScaleX={0.9}
+                patternScaleY={1}
+                patternRefreshInterval={10}
+                patternAlpha={20}
+              />
             </div>
           )}
         </div>
       </PageTransition>
 
-      <PageTransition type="creative" isVisible={currentView === "creative"}>
-        <CreativePage
-          onGoHome={handleGoHome}
-          onSwitchToThink={handleNavigateThink}
-          onNavigateToContact={handleNavigateToContact}
-        />
-      </PageTransition>
+      <Suspense fallback={null}>
+        <PageTransition type="creative" isVisible={currentView === "creative"}>
+          <CreativePage
+            onGoHome={handleGoHome}
+            onSwitchToThink={handleNavigateThink}
+            onNavigateToContact={handleNavigateToContact}
+          />
+        </PageTransition>
 
-      <PageTransition type="think" isVisible={currentView === "think"}>
-        <ThinkPage
-          onGoHome={handleGoHome}
-          onSwitchToCreative={handleNavigateCreative}
-          onNavigateToContact={handleNavigateToContact}
-        />
-      </PageTransition>
+        <PageTransition type="think" isVisible={currentView === "think"}>
+          <ThinkPage
+            onGoHome={handleGoHome}
+            onSwitchToCreative={handleNavigateCreative}
+            onNavigateToContact={handleNavigateToContact}
+          />
+        </PageTransition>
 
-      <PageTransition type="fusion" isVisible={currentView === "contact"}>
-        <ContactPage
-          onGoHome={handleGoHome}
-          onSwitchToCreative={handleNavigateCreative}
-          onSwitchToThink={handleNavigateThink}
-        />
-      </PageTransition>
+        <PageTransition type="fusion" isVisible={currentView === "contact"}>
+          <ContactPage
+            onGoHome={handleGoHome}
+            onSwitchToCreative={handleNavigateCreative}
+            onSwitchToThink={handleNavigateThink}
+          />
+        </PageTransition>
+      </Suspense>
         </div>
         </ClickSpark>
       </div>

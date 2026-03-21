@@ -19,16 +19,24 @@ const Noise = ({
 
     let frame = 0;
     let animationId;
-    const canvasSize = 1024;
+    /** Smaller buffer = far less CPU than 1024² full redraws every few frames */
+    const canvasSize = 512;
 
     const resize = () => {
       if (!canvas) return;
       canvas.width = canvasSize;
       canvas.height = canvasSize;
-
-      canvas.style.width = '100vw';
-      canvas.style.height = '100vh';
+      /* Stretch grain to fill the overlay parent (must not use 100vw/100vh — wrong when parent is not viewport-aligned) */
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
     };
+
+    const parent = canvas.parentElement;
+    const ro =
+      parent &&
+      typeof ResizeObserver !== 'undefined' &&
+      new ResizeObserver(() => resize());
+    if (ro && parent) ro.observe(parent);
 
     const drawGrain = () => {
       const imageData = ctx.createImageData(canvasSize, canvasSize);
@@ -46,19 +54,27 @@ const Noise = ({
     };
 
     const loop = () => {
-      if (frame % patternRefreshInterval === 0) {
+      const hidden = typeof document !== 'undefined' && document.visibilityState === 'hidden';
+      if (!hidden && frame % patternRefreshInterval === 0) {
         drawGrain();
       }
       frame++;
       animationId = window.requestAnimationFrame(loop);
     };
 
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') frame = 0;
+    };
+
     window.addEventListener('resize', resize);
+    document.addEventListener('visibilitychange', onVisibility);
     resize();
     loop();
 
     return () => {
+      ro?.disconnect();
       window.removeEventListener('resize', resize);
+      document.removeEventListener('visibilitychange', onVisibility);
       window.cancelAnimationFrame(animationId);
     };
   }, [patternSize, patternScaleX, patternScaleY, patternRefreshInterval, patternAlpha]);

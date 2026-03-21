@@ -1,5 +1,7 @@
-@import "@fontsource/bangers";
-@import "@fontsource/oswald";
+/* Latin-only subsets — avoids loading cyrillic/vietnamese/latin-ext (~100KB+ saved) */
+@import "@fontsource/bangers/latin-400.css";
+@import "@fontsource/oswald/latin-400.css";
+@import "@fontsource/oswald/latin-700.css";
 
 @tailwind base;
 @tailwind components;
