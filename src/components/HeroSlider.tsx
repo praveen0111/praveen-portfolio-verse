@@ -257,7 +257,7 @@ const HeroSlider = ({
     <>
       <div 
         ref={containerRef} 
-        className="relative w-full h-screen min-h-[100dvh] overflow-hidden select-none"
+        className="relative h-full min-h-0 w-full flex-1 overflow-hidden select-none"
         style={{ willChange: "contents" }}
       >
       {/* Comic Particles */}

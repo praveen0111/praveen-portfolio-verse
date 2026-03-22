@@ -132,16 +132,34 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "instant" });
   };
 
+  const isHome = currentView === "home";
+
+  useEffect(() => {
+    if (!isHome) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isHome]);
+
   return (
     <main
-      className="min-h-screen min-h-screen-mobile overflow-x-hidden relative"
+      className={cn(
+        "overflow-x-hidden relative",
+        isHome
+          ? "h-[100dvh] max-h-[100dvh] min-h-0 overflow-hidden overscroll-none"
+          : "min-h-screen min-h-screen-mobile",
+      )}
       style={{
         perspective: "2000px",
         perspectiveOrigin: "center center",
         backgroundColor: "hsl(var(--creative-bg))",
       }}
     >
-      <div className="absolute inset-0 min-h-screen w-full">
+      <div
+        className={cn("absolute inset-0 w-full", isHome ? "h-full min-h-0 overflow-hidden" : "min-h-screen")}
+      >
         <ClickSpark
           sparkColor="#fff"
           sparkSize={29}
@@ -149,8 +167,13 @@ const Index = () => {
           sparkCount={8}
           duration={400}
         >
-        <div className="relative z-10 min-h-screen min-h-screen-mobile w-full">
-      <PageTransition type="home" isVisible={currentView === "home"}>
+        <div
+          className={cn(
+            "relative z-10 w-full",
+            isHome ? "flex h-full min-h-0 flex-col overflow-hidden" : "min-h-screen min-h-screen-mobile",
+          )}
+        >
+      <PageTransition type="home" isVisible={currentView === "home"} fitViewport>
         {homeEntryPhase === "loading" && (
           <div
             className="fixed inset-0 z-[200] flex items-center justify-center bg-black"
@@ -172,7 +195,7 @@ const Index = () => {
         )}
         <div
           className={cn(
-            "relative min-h-screen min-h-screen-mobile w-full transition-[filter,transform] duration-500 ease-out will-change-[filter,transform]",
+            "relative w-full min-h-0 flex-1 flex flex-col overflow-hidden transition-[filter,transform] duration-500 ease-out will-change-[filter,transform]",
             isHomeContentFocused
               ? "blur-0 scale-100"
               : "blur-[14px] scale-[1.06] [transform-origin:center_center]",
