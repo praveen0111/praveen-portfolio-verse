@@ -775,14 +775,18 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
         {popupProject && (
           <DialogContent
             showClose={false}
-            className="fixed inset-0 z-[100] w-screen h-screen max-w-none translate-x-0 translate-y-0 left-0 top-0 gap-0 border-0 bg-transparent p-0 shadow-none sm:rounded-none overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            className="fixed inset-0 z-[100] flex h-screen max-h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 bg-transparent p-0 shadow-none sm:rounded-none"
             style={{ backgroundColor: "hsl(var(--creative-bg-alt))" }}
           >
-            <div className="relative w-full h-full flex flex-col">
+            <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+              <DotGrid variant="create" />
+            </div>
+            <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <div className="flex min-h-[100dvh] w-full flex-col">
               <DialogClose asChild>
                 <button
                   type="button"
-                  className="absolute top-4 right-4 z-[200] w-7 h-7 md:w-8 md:h-8 border-4 border-black bg-[hsl(var(--creative-bg))] text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] flex items-center justify-center font-comic text-xl md:text-2xl leading-none touch-manipulation transition-[transform,box-shadow] duration-150 active:translate-y-px active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110"
+                  className="absolute top-2 right-4 z-[200] w-7 h-7 md:w-8 md:h-8 border-4 border-black bg-[hsl(var(--creative-bg))] text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] flex items-center justify-center font-comic text-xl md:text-2xl leading-none touch-manipulation transition-[transform,box-shadow] duration-150 active:translate-y-px active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110"
                   aria-label="Close"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -792,38 +796,46 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                 </button>
               </DialogClose>
 
-              {/* Title + WATCH NOW */}
+              {/* Title + synopsis + WATCH NOW */}
               <div className="flex-none px-4 md:px-6 pt-10 md:pt-12">
-                <div className="flex flex-wrap items-start gap-4">
-                  <h2 className="font-comic font-bold text-3xl md:text-4xl text-[hsl(var(--creative-fg))] break-words leading-tight">
-                    {popupProject.title}
-                  </h2>
+                <div
+                  className="border-4 p-3 md:p-4"
+                  style={{
+                    borderColor: "hsl(var(--creative-accent))",
+                    backgroundColor: "hsl(var(--creative-bg-alt))",
+                    boxShadow: "0 0 16px hsl(var(--creative-accent) / 0.25)",
+                  }}
+                >
+                  <div className="flex flex-wrap items-start gap-4">
+                    <h2 className="font-comic font-bold text-3xl md:text-4xl text-[hsl(var(--creative-fg))] break-words leading-tight">
+                      {popupProject.title}
+                    </h2>
 
-                  {popupProject.link !== "#" && (
-                    <Button
-                      type="button"
-                      className="border-4 font-comic text-sm md:text-base font-bold px-5 py-2"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        window.open(popupProject.link, "_blank", "noopener,noreferrer");
-                      }}
-                      style={{
-                        backgroundColor: "hsl(var(--creative-accent))",
-                        color: "hsl(var(--creative-bg))",
-                        borderColor: "hsl(var(--creative-glow))",
-                        boxShadow: "0 0 16px hsl(var(--creative-accent) / 0.45), 4px 4px 0 hsl(var(--creative-accent) / 0.25)",
-                      }}
-                    >
-                      WATCH NOW
-                    </Button>
-                  )}
+                    {popupProject.link !== "#" && (
+                      <Button
+                        type="button"
+                        className="border-4 font-comic text-sm md:text-base font-bold px-5 py-2"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          window.open(popupProject.link, "_blank", "noopener,noreferrer");
+                        }}
+                        style={{
+                          backgroundColor: "hsl(var(--creative-accent))",
+                          color: "hsl(var(--creative-bg))",
+                          borderColor: "hsl(var(--creative-glow))",
+                          boxShadow: "0 0 16px hsl(var(--creative-accent) / 0.45), 4px 4px 0 hsl(var(--creative-accent) / 0.25)",
+                        }}
+                      >
+                        WATCH NOW
+                      </Button>
+                    )}
+                  </div>
+
+                  <p className="mt-3 text-base md:text-lg leading-relaxed font-content font-content-medium whitespace-pre-line" style={{ color: "hsl(var(--creative-fg-muted))" }}>
+                    {popupProject.description}
+                  </p>
                 </div>
-
-                {/* Synopsis below title */}
-                <p className="mt-2 text-base md:text-lg leading-relaxed font-content font-content-medium whitespace-pre-line" style={{ color: "hsl(var(--creative-fg-muted))" }}>
-                  {popupProject.description}
-                </p>
               </div>
 
               {/* Image carousel */}
@@ -894,20 +906,30 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                       : "grid grid-cols-1 gap-3 md:gap-4 mt-4 md:mt-5"
                   }
                 >
-                  <div className="border-4 p-3 md:p-4" style={{ borderColor: "hsl(var(--creative-accent))" }}>
-                    <div className="text-3xl font-comic font-bold" style={{ color: "hsl(var(--creative-fg))" }}>
-                      XP
-                    </div>
-                    <p className="text-base md:text-lg leading-snug md:leading-relaxed font-content font-content-medium whitespace-pre-line mt-2" style={{ color: "hsl(var(--creative-fg-muted))" }}>
+                  <div
+                    className="border-4 p-3 md:p-4"
+                    style={{
+                      borderColor: "hsl(var(--creative-accent))",
+                      backgroundColor: "hsl(var(--creative-bg-alt))",
+                      boxShadow: "0 0 16px hsl(var(--creative-accent) / 0.25)",
+                    }}
+                  >
+                    <div className="text-2xl font-comic font-bold text-[hsl(var(--creative-fg-muted))]">XP</div>
+                    <p className="text-base md:text-lg leading-snug md:leading-relaxed font-content font-content-medium whitespace-pre-line mt-2" style={{ color: "hsl(var(--creative-fg))" }}>
                       {popupXp}
                     </p>
                   </div>
 
                   {popupProject.awards.length > 0 && (
-                    <div className="border-4 p-3 md:p-4" style={{ borderColor: "hsl(var(--creative-accent))" }}>
-                      <div className="text-2xl font-comic font-bold" style={{ color: "hsl(var(--creative-fg))" }}>
-                        Accolades
-                      </div>
+                    <div
+                      className="border-4 p-3 md:p-4"
+                      style={{
+                        borderColor: "hsl(var(--creative-accent))",
+                        backgroundColor: "hsl(var(--creative-bg-alt))",
+                        boxShadow: "0 0 16px hsl(var(--creative-accent) / 0.25)",
+                      }}
+                    >
+                      <div className="text-2xl font-comic font-bold text-[hsl(var(--creative-fg-muted))]">Accolades</div>
                       <ul className="text-base md:text-lg leading-snug md:leading-relaxed font-content font-content-medium mt-2 space-y-1" style={{ color: "hsl(var(--creative-fg-muted))" }}>
                         {popupProject.awards.map((a, idx) => (
                           <li key={idx} className="list-disc ml-6">
@@ -918,6 +940,18 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                     </div>
                   )}
                 </div>
+              </div>
+
+              <footer
+                className="relative z-10 mt-auto py-6 border-t-4 text-center flex-none"
+                style={{ backgroundColor: "hsl(var(--creative-bg-alt))", borderColor: "hsl(var(--creative-accent))" }}
+              >
+                <div className="container mx-auto px-4 md:px-6">
+                  <p className="text-sm md:text-base font-content font-content-medium" style={{ color: "hsl(var(--creative-fg-muted))" }}>
+                    &copy; 2026 PRAVEEN ELANCHEZHIAN. ALL RIGHTS RESERVED.
+                  </p>
+                </div>
+              </footer>
               </div>
             </div>
           </DialogContent>

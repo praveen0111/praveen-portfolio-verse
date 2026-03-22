@@ -183,7 +183,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                 style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))" }}
               >
                 <img
-                  src="https://placehold.co/200x200/1a0d1a/ff00ff?text=PE"
+                  src="/images/PE.png"
                   alt="Praveen Elanchezhian"
                   className="w-full h-full object-cover"
                 />
