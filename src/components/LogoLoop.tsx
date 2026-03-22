@@ -141,6 +141,13 @@ const LogoLoop = ({
 
   /** Capture phase so we run before <a> hit-testing quirks on mobile. */
   const onPointerDownCapture = (e: React.PointerEvent) => {
+    // If the user is pressing a social/link anchor, do not grab pointer capture.
+    // Otherwise setPointerCapture on the wrapper prevents the click from reaching the <a> on desktop.
+    const node = e.target as Node;
+    const el = node instanceof Element ? node : node.parentElement;
+    if (el?.closest("a[href]")) {
+      return;
+    }
     startDrag(e);
   };
 
