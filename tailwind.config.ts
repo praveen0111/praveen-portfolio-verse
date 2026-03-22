@@ -576,6 +576,15 @@ export default {
             clipPath: "inset(0 0 0 0)"
           },
         },
+        /** Homepage THINK / CREATE headline plates — hover bounce */
+        "hero-plate-bounce": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "18%": { transform: "translateY(-11px)" },
+          "36%": { transform: "translateY(0)" },
+          "54%": { transform: "translateY(-7px)" },
+          "72%": { transform: "translateY(0)" },
+          "86%": { transform: "translateY(-3px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -603,6 +612,7 @@ export default {
         "book-curl-from-left": "page-curl-from-left 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
         "book-reveal-from-right": "page-reveal-from-right 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
         "book-reveal-from-left": "page-reveal-from-left 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "hero-plate-bounce": "hero-plate-bounce 0.75s ease-in-out infinite",
       },
     },
   },

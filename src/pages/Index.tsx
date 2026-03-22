@@ -32,7 +32,7 @@ function sleep(ms: number): Promise<void> {
 }
 
 /** Minimum duration for “Entering…” — always runs; also waits for hero image preload */
-const HOME_LOADING_MS = 2000;
+const HOME_LOADING_MS = 1000;
 
 /** After loading + reveal: 0.5s zoom+blur transition, then slider intro plays */
 const HOME_REVEAL_MS = 500;
@@ -134,6 +134,9 @@ const Index = () => {
 
   const isHome = currentView === "home";
 
+  /** Until reveal + intro sweep finish: block THINK / CREATE / divider */
+  const homeNavigationLocked = homeEntryPhase !== "ready" || !homeIntroComplete;
+
   useEffect(() => {
     if (!isHome) return;
     const prev = document.body.style.overflow;
@@ -206,6 +209,7 @@ const Index = () => {
             onNavigateThink={handleNavigateThink}
             playIntro={homeEntryPhase === "ready" && !homeIntroComplete}
             onIntroComplete={handleHomeIntroComplete}
+            navigationLocked={homeNavigationLocked}
           />
           {currentView === "home" && (
             <div className="pointer-events-none absolute inset-0 z-[19]" aria-hidden>

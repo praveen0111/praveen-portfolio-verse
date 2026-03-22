@@ -145,36 +145,33 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
           <div className="flex flex-row flex-nowrap justify-center items-stretch gap-1.5 sm:gap-3 md:gap-4">
             <Button
               onClick={onGoHome}
-              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center transition-[box-shadow,filter] duration-200 ease-out hover:brightness-110 shadow-[0_0_16px_hsl(var(--accent)/0.4),4px_4px_0_hsl(var(--accent)/0.5)] hover:shadow-[0_0_28px_hsl(var(--accent)/0.65),0_0_52px_hsl(var(--accent)/0.25),6px_6px_0_hsl(var(--accent)/0.55)]"
               style={{
                 backgroundColor: "hsl(var(--think-bg))",
                 color: "hsl(var(--think-fg))",
                 borderColor: "hsl(var(--accent))",
-                boxShadow: "0 0 16px hsl(var(--accent) / 0.4), 4px 4px 0 hsl(var(--accent) / 0.5)",
               }}
             >
               Home
             </Button>
             <Button
               onClick={onSwitchToCreative}
-              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center transition-[box-shadow,filter] duration-200 ease-out hover:brightness-110 shadow-[0_0_16px_hsl(var(--neon-red)/0.5),4px_4px_0_hsl(var(--neon-red)/0.5)] hover:shadow-[0_0_28px_hsl(var(--neon-red)/0.75),0_0_52px_hsl(var(--neon-red)/0.28),6px_6px_0_hsl(var(--neon-red)/0.55)]"
               style={{
                 backgroundColor: "hsl(var(--neon-red))",
                 color: "hsl(var(--primary-foreground))",
                 borderColor: "hsl(var(--neon-red))",
-                boxShadow: "0 0 16px hsl(var(--neon-red) / 0.5), 4px 4px 0 hsl(var(--neon-red) / 0.5)",
               }}
             >
               VIEW CREATE.
             </Button>
             <Button
               onClick={onSwitchToThink}
-              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center"
+              className="flex-1 min-w-0 border-4 px-2 py-2 sm:px-6 sm:py-3 font-comic text-[calc(0.75rem*1.25)] sm:text-lg font-bold leading-tight text-center transition-[box-shadow,filter] duration-200 ease-out hover:brightness-110 shadow-[0_0_16px_hsl(var(--primary)/0.5),4px_4px_0_hsl(var(--primary)/0.5)] hover:shadow-[0_0_28px_hsl(var(--primary)/0.65),0_0_52px_hsl(var(--primary)/0.25),6px_6px_0_hsl(var(--primary)/0.55)]"
               style={{
                 backgroundColor: "hsl(var(--primary))",
                 color: "hsl(var(--primary-foreground))",
                 borderColor: "hsl(var(--primary))",
-                boxShadow: "0 0 16px hsl(var(--primary) / 0.5), 4px 4px 0 hsl(var(--primary) / 0.5)",
               }}
             >
               VIEW THINK.

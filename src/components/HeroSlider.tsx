@@ -10,6 +10,8 @@ interface HeroSliderProps {
   /** When true after initial load, runs divider sweep: left → right → center */
   playIntro?: boolean;
   onIntroComplete?: () => void;
+  /** When true, THINK/CREATE and divider are inactive (loading, reveal blur, intro sweep) */
+  navigationLocked?: boolean;
 }
 
 /** Pause at each intro stop (was 1s) */
@@ -28,6 +30,7 @@ const HeroSlider = ({
   onNavigateThink,
   playIntro = false,
   onIntroComplete,
+  navigationLocked = false,
 }: HeroSliderProps) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
@@ -334,10 +337,18 @@ const HeroSlider = ({
       >
         <button
           type="button"
-          onClick={onNavigateThink}
+          onClick={() => {
+            if (navigationLocked) return;
+            onNavigateThink();
+          }}
+          disabled={navigationLocked}
+          aria-disabled={navigationLocked}
           aria-label="Go to Think"
           className={cn(
-            "absolute z-10 pointer-events-auto cursor-pointer select-none touch-manipulation transition-transform duration-150 active:scale-[0.98]",
+            "absolute z-10 select-none touch-manipulation transition-transform duration-150",
+            navigationLocked
+              ? "pointer-events-none cursor-not-allowed opacity-60"
+              : "group pointer-events-auto cursor-pointer active:scale-[0.98]",
             isMobile ? MOBILE_THINK_BUTTON_CLASS : "left-1/2 top-24 -translate-x-1/2 md:top-28",
           )}
           style={{ background: "none", border: "none", padding: 0 }}
@@ -348,16 +359,24 @@ const HeroSlider = ({
               isMobile ? "scale-[0.675] -translate-x-14" : "scale-[0.5625]"
             )}
           >
-            <ComicPopHeadlinePlate
-              variant="primary"
-              align="center"
-              className="inline-block"
-              textClassName="text-[2rem] xs:text-[2.5rem] sm:text-[2.8125rem] md:text-7xl lg:text-8xl"
-              plateStyle={isMobile ? undefined : { left: "386px" }}
-              inline
+            <span
+              className={cn(
+                "inline-block will-change-transform",
+                !navigationLocked &&
+                  "motion-safe:animate-hero-plate-bounce motion-reduce:animate-none group-hover:animate-none",
+              )}
             >
-              THINK.
-            </ComicPopHeadlinePlate>
+              <ComicPopHeadlinePlate
+                variant="primary"
+                align="center"
+                className="inline-block"
+                textClassName="text-[2rem] xs:text-[2.5rem] sm:text-[2.8125rem] md:text-7xl lg:text-8xl"
+                plateStyle={isMobile ? undefined : { left: "386px" }}
+                inline
+              >
+                THINK.
+              </ComicPopHeadlinePlate>
+            </span>
           </span>
         </button>
       </div>
@@ -373,10 +392,18 @@ const HeroSlider = ({
       >
         <button
           type="button"
-          onClick={onNavigateCreative}
+          onClick={() => {
+            if (navigationLocked) return;
+            onNavigateCreative();
+          }}
+          disabled={navigationLocked}
+          aria-disabled={navigationLocked}
           aria-label="Go to Creative"
           className={cn(
-            "absolute z-10 pointer-events-auto cursor-pointer select-none touch-manipulation transition-transform duration-150 active:scale-[0.98]",
+            "absolute z-10 select-none touch-manipulation transition-transform duration-150",
+            navigationLocked
+              ? "pointer-events-none cursor-not-allowed opacity-60"
+              : "group pointer-events-auto cursor-pointer active:scale-[0.98]",
             isMobile
               ? MOBILE_CREATE_BUTTON_CLASS
               : "left-[20%] top-24 -translate-x-1/2 md:top-28",
@@ -391,22 +418,30 @@ const HeroSlider = ({
                 : "scale-[0.5625]"
             )}
           >
-            <ComicPopHeadlinePlate
-              variant="secondary"
-              align="center"
-              className="inline-block"
-              textClassName="text-[2rem] xs:text-[2.5rem] sm:text-[2.8125rem] md:text-7xl lg:text-8xl"
-              plateStyle={
-                ({
-                  top: "18px",
-                  // Override just this plate's bg to neon red
-                  ["--plate-bg" as any]: "hsl(var(--neon-red) / 0.9)",
-                } as any)
-              }
-              inline
+            <span
+              className={cn(
+                "inline-block will-change-transform",
+                !navigationLocked &&
+                  "motion-safe:animate-hero-plate-bounce motion-reduce:animate-none group-hover:animate-none",
+              )}
             >
-              CREATE.
-            </ComicPopHeadlinePlate>
+              <ComicPopHeadlinePlate
+                variant="secondary"
+                align="center"
+                className="inline-block"
+                textClassName="text-[2rem] xs:text-[2.5rem] sm:text-[2.8125rem] md:text-7xl lg:text-8xl"
+                plateStyle={
+                  ({
+                    top: "18px",
+                    // Override just this plate's bg to neon red
+                    ["--plate-bg" as any]: "hsl(var(--neon-red) / 0.9)",
+                  } as any)
+                }
+                inline
+              >
+                CREATE.
+              </ComicPopHeadlinePlate>
+            </span>
           </span>
         </button>
       </div>
@@ -414,11 +449,15 @@ const HeroSlider = ({
       {/* Divider with fluid movement - min 44px touch area on mobile (above THINK/CREATE hit areas) */}
       <div
         ref={dividerRef}
-        className={`absolute z-[50] flex items-center justify-center touch-none ${
-          isMobile 
-            ? "left-0 right-0 cursor-ns-resize min-h-[44px]" 
-            : "top-0 bottom-0 cursor-ew-resize min-w-[44px]"
-        }`}
+        className={cn(
+          "absolute z-[50] flex items-center justify-center touch-none",
+          isMobile ? "left-0 right-0 min-h-[44px]" : "top-0 bottom-0 min-w-[44px]",
+          navigationLocked
+            ? "pointer-events-none cursor-not-allowed opacity-70"
+            : isMobile
+              ? "cursor-ns-resize"
+              : "cursor-ew-resize",
+        )}
         style={isMobile 
           ? {
               top: `${sliderPosition}%`,
@@ -432,13 +471,13 @@ const HeroSlider = ({
             }
         }
         onMouseDown={() => {
-          if (introLockedRef.current) return;
+          if (navigationLocked || introLockedRef.current) return;
           prevDragPosRef.current = positionRef.current;
           setKnobRotateDeg(0);
           setIsDragging(true);
         }}
         onTouchStart={() => {
-          if (introLockedRef.current) return;
+          if (navigationLocked || introLockedRef.current) return;
           prevDragPosRef.current = positionRef.current;
           setKnobRotateDeg(0);
           setIsDragging(true);
