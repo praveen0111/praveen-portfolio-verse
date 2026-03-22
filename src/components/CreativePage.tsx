@@ -286,6 +286,16 @@ const projectImages: Record<string, string[]> = {
   "TAMIZH Product Concept": ["/Create/Tamizh/Poster.webp", "/Create/Tamizh/Scene1.webp", "/Create/Tamizh/Scene2.webp"],
 };
 
+/** Full-screen popup carousel only. Grid cards stay `aspect-video`. */
+function popupCarouselAspectRatio(projectTitle: string): "4 / 3" | "16 / 9" {
+  const fourByThree = new Set([
+    "Thiruttu Dhum",
+    "Policy Bazaar × Sathyeah",
+    "English Partner × Sathyeah",
+  ]);
+  return fourByThree.has(projectTitle) ? "4 / 3" : "16 / 9";
+}
+
 function PosterCarousel({
   images,
   runtime,
@@ -412,7 +422,7 @@ function PopupImageCarousel({
               key={`${src}-${i}`}
               src={src}
               alt=""
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out will-change-transform will-change-filter ${
+              className={`absolute inset-0 w-full h-full object-contain object-center transition-all duration-700 ease-out will-change-transform will-change-filter ${
                 isActive ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-[1.04] blur-[8px] pointer-events-none"
               }`}
             />
@@ -525,6 +535,13 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
   const popupXp = popupProject
     ? popupProject.experience?.trim() ? popupProject.experience : popupProject.description
     : "";
+
+  const popupCarouselLayout = useMemo(() => {
+    const ar = popupCarouselAspectRatio(popupProjectTitle ?? "");
+    const aw = ar === "4 / 3" ? 4 : 16;
+    const ah = ar === "4 / 3" ? 3 : 9;
+    return { ar, aw, ah };
+  }, [popupProjectTitle]);
 
   return (
     <div
@@ -811,7 +828,15 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
 
               {/* Image carousel */}
               <div className="flex-none px-4 md:px-6 pt-5 md:pt-6 pb-4">
-                <div className="w-full h-[42vh] md:h-[48vh] border-4" style={{ borderColor: "hsl(var(--creative-accent))" }}>
+                <div
+                  className="mx-auto border-4 max-h-[52vh] md:max-h-[58vh] w-[min(100%,calc(52vh*var(--pc-ar-w)/var(--pc-ar-h)))] md:w-[min(100%,calc(58vh*var(--pc-ar-w)/var(--pc-ar-h)))]"
+                  style={{
+                    borderColor: "hsl(var(--creative-accent))",
+                    aspectRatio: popupCarouselLayout.ar,
+                    ["--pc-ar-w" as string]: popupCarouselLayout.aw,
+                    ["--pc-ar-h" as string]: popupCarouselLayout.ah,
+                  }}
+                >
                   <PopupImageCarousel images={popupImages} initialIndex={popupInitialIndex} />
                 </div>
               </div>
