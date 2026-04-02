@@ -1,8 +1,56 @@
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "./ui/button";
-import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
+import { Badge } from "./ui/badge";
+import { LayoutGroup, motion } from "motion/react";
+import { ExternalLink } from "lucide-react";
 import ComicParticles from "./ComicParticles";
 import DotGrid from "./DotGrid";
+import RotatingText, { type RotatingTextRef } from "./RotatingText";
+import { cn } from "@/lib/utils";
+import {
+  thinkMeta,
+  thinkCV,
+  thinkEducation,
+  thinkExperience,
+  thinkSkills,
+  thinkTools,
+  thinkCertifications,
+} from "../../thinkPageData";
+
+/**
+ * Shared layout spring: rotating pills + middle “working at the intersection of”
+ * use the same values so the line eases as one unit (requires `popLayout` on rotators).
+ */
+const THINK_SUBTITLE_LAYOUT_SPRING = {
+  layout: {
+    type: "spring" as const,
+    stiffness: 280,
+    damping: 30,
+    mass: 0.85,
+  },
+};
+
+/** Middle static phrase — same layout transition as `pillLayoutTransition` on rotators. */
+const SUBTITLE_LAYOUT_TRANSITION = THINK_SUBTITLE_LAYOUT_SPRING;
+
+/** React Bits RotatingText: whole-phrase vertical scroll (no per-letter stagger). */
+const THINK_ROTATING_TEXT_SHARED = {
+  textEffect: "scroll" as const,
+  initial: { y: "100%" },
+  animate: { y: 0 },
+  exit: { y: "-100%" },
+  transition: {
+    type: "tween" as const,
+    duration: 0.5,
+    ease: "easeInOut" as const,
+  },
+  /** Lets layout animate while exiting text is popped out of flow (smooth middle phrase). */
+  animatePresenceMode: "popLayout" as const,
+  presenceAnchorX: "left" as const,
+  pillLayoutTransition: THINK_SUBTITLE_LAYOUT_SPRING,
+  /** Sequential lockstep with the other rotator (parent calls `next()` on both). */
+  randomizeOrder: false,
+};
 
 /**
  * ============================================
@@ -24,86 +72,36 @@ interface ThinkPageProps {
 }
 
 const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkPageProps) => {
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    education: true,
-    tools: true,
-    skills: true,
-    projects: true,
-  });
+  const nameLines = thinkMeta.name.map((s) => s.trim()).filter(Boolean);
+  const captionLines = (thinkMeta.heroCaptionLines ?? []).map((s) => s.trim()).filter(Boolean);
+  const subtitleRoles = (thinkMeta.subtitleRotatingRoles ?? []).map((s) => s.trim()).filter(Boolean);
+  const subtitleIntersection = (thinkMeta.subtitleRotatingIntersection ?? []).map((s) => s.trim()).filter(Boolean);
+  /** One phrase still loops visually by alternating the same string (re-triggers motion). */
+  const rolesForRotator =
+    subtitleRoles.length === 1 ? [subtitleRoles[0], subtitleRoles[0]] : subtitleRoles;
+  const intersectionForRotator =
+    subtitleIntersection.length === 1
+      ? [subtitleIntersection[0], subtitleIntersection[0]]
+      : subtitleIntersection;
+  const subtitleBetweenRaw = thinkMeta.subtitleBetween ?? "";
+  const hasSubtitleBetween = subtitleBetweenRaw.trim().length > 0;
+  const hasRotatingSubtitle = subtitleRoles.length > 0 && subtitleIntersection.length > 0;
+  const hasIdentityText = nameLines.length > 0 || hasRotatingSubtitle || captionLines.length > 0;
 
-  const toggleSection = (section: string) => {
-    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
-  };
+  const subtitleRoleRotRef = useRef<RotatingTextRef>(null);
+  const subtitleIntersectionRotRef = useRef<RotatingTextRef>(null);
+  const subtitleRotationMs = thinkMeta.subtitleRotationMs ?? 3600;
+  const subtitleShouldAutoRotate =
+    hasRotatingSubtitle && (rolesForRotator.length > 1 || intersectionForRotator.length > 1);
 
-  const education = [
-    {
-      id: 1,
-      degree: "Master of Business Administration (MBA)",
-      institution: "NIT, Trichy",
-      period: "2024-2026",
-      focus: "Product Management & Marketing Strategy",
-      description: "Specializing in the intersection of technology, marketing, and product design.",
-    },
-    {
-      id: 2,
-      degree: "B.E. Electronics and Communication Engineering",
-      institution: "Loyola ICAM College of Engineering and Technology, Chennai",
-      period: "2020-2024",
-      focus: "Technical Foundation",
-      description: "Strong foundation in engineering principles and technical systems.",
-    },
-  ];
-
-  const tools = [
-    { name: "Figma", category: "Design", level: 90 },
-    { name: "Adobe XD", category: "Design", level: 85 },
-    { name: "Notion", category: "Productivity", level: 95 },
-    { name: "Jira", category: "Project Management", level: 80 },
-    { name: "Google Analytics", category: "Analytics", level: 85 },
-    { name: "Miro", category: "Collaboration", level: 88 },
-    { name: "Canva", category: "Design", level: 92 },
-    { name: "Excel", category: "Analytics", level: 90 },
-  ];
-
-  const skills = [
-    {
-      category: "Product & Strategy",
-      items: ["Product Management", "Go-to-Market Strategy", "User Research", "Competitive Analysis"],
-    },
-    {
-      category: "Design & UX",
-      items: ["UI/UX Design", "Wireframing", "Prototyping", "Design Systems"],
-    },
-    {
-      category: "Marketing",
-      items: ["Brand Strategy", "Content Marketing", "Social Media", "Campaign Management"],
-    },
-    {
-      category: "Technical",
-      items: ["Data Analysis", "SQL Basics", "A/B Testing", "Agile Methodologies"],
-    },
-  ];
-
-  const projects = [
-    {
-      id: 1,
-      title: "Product Design Engineer & Consultant - AR Smart Glass",
-      company: "Tamizh",
-      period: "Jul 2024 - Present",
-      description: "Designing UI/UX for AR Smart Glasses with hand gesture and voice control. Collaborating on display and interaction systems.",
-      tools: ["Figma", "Unity", "Blender"],
-      link: "#",
-    },
-    {
-      id: 2,
-      title: "Summer Intern: Brand-Aligned Marketing Strategies",
-      company: "Madarth",
-      period: "May 2025 - Jul 2025",
-      description: "Developed social media calendars, copywriting, and video scripting for TAFE and DahNAY. Experimented with 3D modelling and AI-based design.",
-      tools: ["Notion", "Canva", "Adobe Suite"],
-      link: "#",
-    },
-  ];
+  useEffect(() => {
+    if (!subtitleShouldAutoRotate) return;
+    const id = window.setInterval(() => {
+      subtitleRoleRotRef.current?.next();
+      subtitleIntersectionRotRef.current?.next();
+    }, subtitleRotationMs);
+    return () => window.clearInterval(id);
+  }, [subtitleShouldAutoRotate, subtitleRotationMs, rolesForRotator.length, intersectionForRotator.length]);
 
   return (
     <div
@@ -155,11 +153,10 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
         </div>
       </nav>
 
-      {/* Main Content - Comic Panel Layout */}
+      {/* Main Content - Long Scroll Academic Narrative */}
       <main className="relative z-10 py-8 md:py-12">
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          
-          {/* Profile Header Panel - high-contrast frame */}
+          {/* Hero / Identity */}
           <div
             className="mb-8 md:mb-12 p-6 md:p-10 border-4"
             style={{
@@ -168,251 +165,297 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
               boxShadow: "0 0 20px hsl(var(--think-accent) / 0.2), 8px 8px 0 hsl(var(--think-accent) / 0.3)",
             }}
           >
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
+            <div className="flex flex-col md:flex-row items-center md:items-stretch gap-6 md:gap-10">
               <div
-                className="w-32 h-32 md:w-40 md:h-40 border-4 flex-shrink-0"
+                className="w-32 h-32 md:w-40 md:h-40 border-4 flex-shrink-0 self-center md:self-auto"
                 style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))" }}
               >
                 <img
-                  src="/images/PE.webp"
+                  src={thinkMeta.profileImage}
                   alt="Praveen Elanchezhian"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex-1 text-center md:text-left">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-comic font-bold mb-2" style={{ color: "hsl(var(--think-fg))" }}>
-                  PRAVEEN ELANCHEZHIAN
-                </h1>
-                <p className="text-xl md:text-2xl font-comic-secondary font-bold mb-3" style={{ color: "hsl(var(--think-accent))" }}>
-                  MBA CANDIDATE | PRODUCT & MARKETING STRATEGIST
-                </p>
-                <p className="text-base md:text-lg font-content font-content-medium leading-relaxed" style={{ color: "hsl(var(--think-fg-muted))" }}>
-                  Passionate about building products at the intersection of technology, design, and business strategy.
-                </p>
-              </div>
+              {hasIdentityText && (
+                <div className="flex min-h-0 flex-1 flex-col justify-center gap-3 text-center md:min-h-[10rem] md:text-left">
+                  {nameLines.length > 0 && (
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-comic font-bold leading-[1.05] tracking-tight" style={{ color: "hsl(var(--think-fg))" }}>
+                      {thinkMeta.name.map((raw, i) => {
+                        const line = raw.trim();
+                        if (!line) return null;
+                        const outlined = i === thinkMeta.nameOutlineIndex;
+                        return (
+                          <span
+                            key={i}
+                            className={cn("block", outlined && "px-0.5")}
+                            style={
+                              outlined
+                                ? {
+                                    color: "hsl(var(--think-bg))",
+                                    WebkitTextStroke: "2px hsl(var(--think-accent))",
+                                    paintOrder: "stroke fill",
+                                  }
+                                : undefined
+                            }
+                          >
+                            {line}
+                          </span>
+                        );
+                      })}
+                    </h1>
+                  )}
+                  {hasRotatingSubtitle && (
+                    <LayoutGroup id="think-hero-subtitle">
+                      {/*
+                        overflow-x on the flex row breaks Motion layout projection; scroll lives on outer wrapper.
+                      */}
+                      <div className="w-full max-w-full min-w-0 overflow-x-auto overflow-y-visible [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                        <p
+                          className="m-0 inline-flex min-w-max max-w-none flex-nowrap items-center justify-center gap-0 whitespace-nowrap text-base md:justify-start md:text-lg font-content font-content-medium leading-normal"
+                          style={{ color: "hsl(var(--think-fg-muted))" }}
+                        >
+                          <RotatingText
+                            ref={subtitleRoleRotRef}
+                            texts={rolesForRotator}
+                            {...THINK_ROTATING_TEXT_SHARED}
+                            auto={false}
+                            loop
+                            mainClassName={thinkMeta.subtitleRotatingMainClassName}
+                            splitLevelClassName={thinkMeta.subtitleRotatingSplitLevelClassName}
+                            className="shrink-0 self-center"
+                            elementLevelClassName="leading-normal"
+                          />
+                          {hasSubtitleBetween ? (
+                            <motion.span
+                              layout
+                              transition={SUBTITLE_LAYOUT_TRANSITION}
+                              className="inline-flex shrink-0 items-center whitespace-pre will-change-transform"
+                            >
+                              {subtitleBetweenRaw}
+                            </motion.span>
+                          ) : null}
+                          <RotatingText
+                            ref={subtitleIntersectionRotRef}
+                            texts={intersectionForRotator}
+                            {...THINK_ROTATING_TEXT_SHARED}
+                            auto={false}
+                            loop
+                            mainClassName={thinkMeta.subtitleRotatingMainClassName}
+                            splitLevelClassName={thinkMeta.subtitleRotatingSplitLevelClassName}
+                            className="shrink-0 self-center"
+                            elementLevelClassName="leading-normal"
+                          />
+                        </p>
+                      </div>
+                    </LayoutGroup>
+                  )}
+                  {captionLines.length > 0 && (
+                    <div className="border-l-4 pl-3 md:pl-4" style={{ borderColor: "hsl(var(--think-accent))" }}>
+                      <div className="space-y-1">
+                        {captionLines.map((line, i) => (
+                          <p
+                            key={i}
+                            className="font-comic text-sm md:text-base font-bold tracking-wide"
+                            style={{ color: "hsl(var(--think-accent))" }}
+                          >
+                            {line}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Education Panel */}
-          <div className="mb-8 md:mb-12">
-            <button
-              onClick={() => toggleSection("education")}
-              className="w-full flex items-center justify-between p-4 min-h-[44px] border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-left touch-manipulation transition-[transform,filter] duration-150 active:scale-[0.995] active:brightness-95"
-              style={{
-                backgroundColor: "hsl(var(--think-accent))",
-                color: "hsl(var(--think-fg))",
-                borderColor: "hsl(var(--think-glow))",
-                boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)",
-              }}
-            >
-              <span>EDUCATION</span>
-              {expandedSections.education ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
-            </button>
-            
-            {expandedSections.education && (
-              <div className="space-y-4">
-                {education.map((edu) => (
-                  <div
-                    key={edu.id}
-                    className="p-6 md:p-8 border-4"
-                    style={{ 
-                      backgroundColor: "hsl(var(--think-bg))",
-                      boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)"
-                    }}
-                  >
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
-                      <h3 className="text-xl md:text-2xl font-comic font-bold" style={{ color: "hsl(var(--think-fg))" }}>
-                        {edu.degree}
-                      </h3>
-                      <span className="text-base font-content font-content-medium whitespace-nowrap" style={{ color: "hsl(var(--think-fg-muted))" }}>
-                        {edu.period}
-                      </span>
-                    </div>
-                    <p className="text-lg md:text-xl font-content font-content-bold mb-2" style={{ color: "hsl(var(--think-accent))" }}>
-                      {edu.institution}
-                    </p>
-                    <p className="text-base font-content font-content-medium" style={{ color: "hsl(var(--think-fg-muted))" }}>
-                      {edu.description}
-                    </p>
+          {/* Education Timeline */}
+          <section className="mb-8 md:mb-12">
+            <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
+              EDUCATION JOURNEY
+            </h2>
+            <div className="space-y-4">
+              {thinkEducation.map((edu, idx) => (
+                <article key={`${edu.institution}-${idx}`} className="p-6 md:p-8 border-4" style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)" }}>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
+                    <h3 className="text-xl md:text-2xl font-comic font-bold" style={{ color: "hsl(var(--think-fg))" }}>
+                      {edu.degree}
+                    </h3>
+                    <span className="text-base font-content font-content-medium whitespace-nowrap" style={{ color: "hsl(var(--think-fg-muted))" }}>
+                      {edu.period}
+                    </span>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
+                  <p className="text-lg md:text-xl font-content font-content-bold mb-2" style={{ color: "hsl(var(--think-accent))" }}>
+                    {edu.institution}
+                  </p>
+                  <p className="text-sm md:text-base font-content font-content-medium mb-2" style={{ color: "hsl(var(--think-fg))" }}>
+                    Focus: {edu.focus}
+                  </p>
+                  <p className="text-base font-content font-content-medium" style={{ color: "hsl(var(--think-fg-muted))" }}>
+                    {edu.description}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
 
-          {/* Tools & Technologies Panel */}
-          <div className="mb-8 md:mb-12">
-            <button
-              onClick={() => toggleSection("tools")}
-              className="w-full flex items-center justify-between p-4 min-h-[44px] border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-left touch-manipulation transition-[transform,filter] duration-150 active:scale-[0.995] active:brightness-95"
-              style={{ 
-                backgroundColor: "hsl(var(--think-accent))",
-                color: "hsl(var(--think-fg))",
-                boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)"
-              }}
-            >
-              <span>TOOLS & TECHNOLOGIES</span>
-              {expandedSections.tools ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
-            </button>
-            
-            {expandedSections.tools && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {tools.map((tool) => (
-                  <div
-                    key={tool.name}
-                    className="p-4 border-4"
-                    style={{ 
-                      backgroundColor: "hsl(var(--think-bg-alt))",
-                      boxShadow: "0 0 10px hsl(var(--think-accent) / 0.15), 4px 4px 0 hsl(var(--think-accent) / 0.2)"
-                    }}
-                  >
-                    <p className="font-comic text-lg font-bold mb-1" style={{ color: "hsl(var(--think-fg))" }}>
-                      {tool.name}
-                    </p>
-                    <p className="text-xs font-content font-content-light mb-3" style={{ color: "hsl(var(--think-fg-muted))" }}>
-                      {tool.category}
-                    </p>
-                    {/* Proficiency bar */}
-                    <div className="h-2 border-2" style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))" }}>
-                      <div
-                        className="h-full"
-                        style={{ 
-                          width: `${tool.level}%`,
-                          backgroundColor: "hsl(var(--think-accent))"
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Skills Panel */}
-          <div className="mb-8 md:mb-12">
-            <button
-              onClick={() => toggleSection("skills")}
-              className="w-full flex items-center justify-between p-4 min-h-[44px] border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-left touch-manipulation transition-[transform,filter] duration-150 active:scale-[0.995] active:brightness-95"
-              style={{ 
-                backgroundColor: "hsl(var(--think-accent))",
-                color: "hsl(var(--think-fg))",
-                boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)"
-              }}
-            >
-              <span>SKILLS</span>
-              {expandedSections.skills ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
-            </button>
-            
-            {expandedSections.skills && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {skills.map((skillGroup) => (
-                  <div
-                    key={skillGroup.category}
-                    className="p-6 border-4"
-                    style={{ 
-                      backgroundColor: "hsl(var(--think-bg))",
-                      boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)"
-                    }}
-                  >
-                    <h4 className="font-comic text-2xl font-bold mb-4" style={{ color: "hsl(var(--think-accent))" }}>
-                      {skillGroup.category}
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {skillGroup.items.map((skill) => (
-                        <span
-                          key={skill}
-                          className="px-3 py-2 border-2 font-content text-sm font-content-medium"
-                          style={{ 
-                            backgroundColor: "hsl(var(--think-bg-alt))",
-                            color: "hsl(var(--think-fg))"
-                          }}
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Projects Panel */}
-          <div className="mb-8 md:mb-12">
-            <button
-              onClick={() => toggleSection("projects")}
-              className="w-full flex items-center justify-between p-4 min-h-[44px] border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-left touch-manipulation transition-[transform,filter] duration-150 active:scale-[0.995] active:brightness-95"
-              style={{ 
-                backgroundColor: "hsl(var(--think-accent))",
-                color: "hsl(var(--think-fg))",
-                boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)"
-              }}
-            >
-              <span>EXPERIENCE & PROJECTS</span>
-              {expandedSections.projects ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
-            </button>
-            
-            {expandedSections.projects && (
-              <div className="space-y-4">
-                {projects.map((project) => (
-                  <a
-                    key={project.id}
-                    href={project.link}
+          {/* Applied Academic Experience */}
+          <section className="mb-8 md:mb-12">
+            <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
+              APPLIED LEARNING: EXPERIENCE & PROJECTS
+            </h2>
+            <div className="space-y-4">
+              {thinkExperience.map((project, idx) => {
+                const hasLink = project.link && project.link !== "#";
+                const Wrapper = hasLink ? "a" : "div";
+                return (
+                  <Wrapper
+                    key={`${project.role}-${idx}`}
+                    {...(hasLink
+                      ? {
+                          href: project.link,
+                          target: "_blank",
+                          rel: "noopener noreferrer",
+                          "aria-label": `View ${project.role}`,
+                        }
+                      : {})}
                     className="block"
-                    aria-label={`View ${project.title}`}
                   >
-                    <div
-                      className="p-6 md:p-8 border-4"
-                      style={{
-                        backgroundColor: "hsl(var(--think-bg))",
-                        borderColor: "hsl(var(--think-accent))",
-                        boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow = "0 0 20px hsl(var(--think-accent) / 0.4), 8px 8px 0 hsl(var(--think-accent) / 0.3)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow = "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)";
-                      }}
-                    >
+                    <article className="p-6 md:p-8 border-4" style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)" }}>
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
                         <h3 className="text-xl md:text-2xl font-comic font-bold flex items-center gap-2" style={{ color: "hsl(var(--think-fg))" }}>
-                          {project.title}
-                          <ExternalLink className="w-5 h-5" />
+                          {project.role}
+                          {hasLink && <ExternalLink className="w-5 h-5" />}
                         </h3>
-<span className="text-base font-content font-content-medium whitespace-nowrap" style={{ color: "hsl(var(--think-fg-muted))" }}>
-                        {project.period}
-                      </span>
+                        <span className="text-base font-content font-content-medium whitespace-nowrap" style={{ color: "hsl(var(--think-fg-muted))" }}>
+                          {project.period}
+                        </span>
                       </div>
-                      
                       <p className="text-lg md:text-xl font-content font-content-bold mb-3" style={{ color: "hsl(var(--think-accent))" }}>
                         {project.company}
                       </p>
-                      
                       <p className="text-base font-content font-content-medium mb-4" style={{ color: "hsl(var(--think-fg-muted))" }}>
                         {project.description}
                       </p>
-                      
                       <div className="flex flex-wrap gap-2">
                         {project.tools.map((tool) => (
-                          <span
-                            key={tool}
-                            className="px-3 py-1 border-2 font-content text-sm font-content-medium"
-                            style={{ 
-                              backgroundColor: "hsl(var(--think-bg-alt))",
-                              color: "hsl(var(--think-fg))"
-                            }}
-                          >
+                          <span key={tool} className="px-3 py-1 border-2 font-content text-sm font-content-medium" style={{ backgroundColor: "hsl(var(--think-bg-alt))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-accent))" }}>
                             {tool}
                           </span>
                         ))}
                       </div>
-                    </div>
+                    </article>
+                  </Wrapper>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* Skill Domains */}
+          <section className="mb-8 md:mb-12">
+            <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
+              SKILL DOMAINS
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {thinkSkills.map((skillGroup) => (
+                <article key={skillGroup.group} className="p-6 border-4" style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)" }}>
+                  <h3 className="font-comic text-2xl font-bold mb-4" style={{ color: "hsl(var(--think-accent))" }}>
+                    {skillGroup.group}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {skillGroup.items.map((skill) => (
+                      <span key={skill} className="px-3 py-2 border-2 font-content text-sm font-content-medium" style={{ backgroundColor: "hsl(var(--think-bg-alt))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-accent))" }}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* Tools and Methods */}
+          <section className="mb-8 md:mb-12">
+            <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
+              TOOLS & METHODS
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {thinkTools.map((tool) => (
+                <article key={tool.name} className="p-4 border-4" style={{ backgroundColor: "hsl(var(--think-bg-alt))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 10px hsl(var(--think-accent) / 0.15), 4px 4px 0 hsl(var(--think-accent) / 0.2)" }}>
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <p className="font-comic text-lg font-bold" style={{ color: "hsl(var(--think-fg))" }}>
+                      {tool.name}
+                    </p>
+                    <Badge variant="secondary">{tool.tier}</Badge>
+                  </div>
+                  <p className="text-xs font-content font-content-light mb-3" style={{ color: "hsl(var(--think-fg-muted))" }}>
+                    {tool.category}
+                  </p>
+                  <div className="h-2 border-2" style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))" }}>
+                    <div className="h-full" style={{ width: `${tool.level}%`, backgroundColor: "hsl(var(--think-accent))" }} />
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* Certifications (optional) */}
+          {thinkCertifications.length > 0 && (
+            <section className="mb-8 md:mb-12">
+              <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
+                CERTIFICATIONS
+              </h2>
+              <div className="space-y-3">
+                {thinkCertifications.map((cert, idx) => (
+                  <a
+                    key={`${cert.name}-${idx}`}
+                    href={cert.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-5 border-4"
+                    style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 10px hsl(var(--think-accent) / 0.2), 5px 5px 0 hsl(var(--think-accent) / 0.2)" }}
+                  >
+                    <p className="font-comic text-xl" style={{ color: "hsl(var(--think-fg))" }}>
+                      {cert.name}
+                    </p>
+                    <p className="text-sm font-content font-content-medium" style={{ color: "hsl(var(--think-fg-muted))" }}>
+                      {cert.issuer} | {cert.year}
+                    </p>
                   </a>
                 ))}
               </div>
-            )}
-          </div>
+            </section>
+          )}
+
+          {/* CV CTA */}
+          <section className="mb-6 md:mb-8 p-6 md:p-8 border-4 text-center" style={{ backgroundColor: "hsl(var(--think-bg-alt))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 14px hsl(var(--think-accent) / 0.25), 6px 6px 0 hsl(var(--think-accent) / 0.25)" }}>
+            <h2 className="font-comic text-2xl md:text-3xl mb-3" style={{ color: "hsl(var(--think-accent))" }}>
+              {thinkCV.label.toUpperCase()}
+            </h2>
+            <p className="text-sm md:text-base mb-5 font-content font-content-medium" style={{ color: "hsl(var(--think-fg-muted))" }}>
+              Download the full academic and professional profile.
+            </p>
+            <a
+              href={thinkCV.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex"
+              aria-label={thinkCV.buttonText}
+            >
+              <Button
+                className="border-4 px-5 py-3 font-comic text-base md:text-lg font-bold"
+                style={{
+                  backgroundColor: "hsl(var(--think-accent))",
+                  color: "hsl(var(--think-fg))",
+                  borderColor: "hsl(var(--think-glow))",
+                  boxShadow: "0 0 16px hsl(var(--think-accent) / 0.45), 4px 4px 0 hsl(var(--think-accent) / 0.25)",
+                }}
+              >
+                {thinkCV.buttonText}
+                <ExternalLink className="w-4 h-4 ml-2" />
+              </Button>
+            </a>
+          </section>
         </div>
       </main>
 

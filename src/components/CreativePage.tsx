@@ -245,13 +245,13 @@ const projects: CreativeProject[] = [
 ];
 
 const FILTER_BAR = [
-  { label: "writer", token: "writer" },
-  { label: "director", token: "director" },
-  { label: "editor", token: "editor" },
-  { label: "cinematographer", token: "cinematographer" },
+  { label: "Writer", token: "writer" },
+  { label: "Director", token: "director" },
+  { label: "Editor", token: "editor" },
+  { label: "Cinematographer", token: "cinematographer" },
   { label: "Advertisement", token: "ad" },
-  { label: "shortfilm", token: "shortfilm" },
-  { label: "promo videos", token: "promo" },
+  { label: "Short Film", token: "shortfilm" },
+  { label: "Promo Videos", token: "promo" },
   { label: "VFX", token: "vfx" },
   { label: "Sound Design", token: "sounddesign" },
   { label: "Creative Producer", token: "creativepro" },

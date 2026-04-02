@@ -152,7 +152,7 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
                 borderColor: "hsl(var(--accent))",
               }}
             >
-              Home
+              HOME
             </Button>
             <Button
               onClick={onSwitchToCreative}

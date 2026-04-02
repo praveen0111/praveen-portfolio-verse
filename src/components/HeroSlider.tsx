@@ -1,8 +1,47 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import ComicParticles from "./ComicParticles";
 import { ComicInkStrokeBar } from "./ComicInkStrokeBar";
 import { ComicPopHeadlinePlate } from "./ComicPopHeadlinePlate";
 import { cn } from "@/lib/utils";
+
+function ComicKnobMicroStrokes() {
+  const rawId = useId().replace(/:/g, "");
+  const filterId = `knob-ink-${rawId}`;
+
+  // Deterministic “micro paint strokes” around the knob edge.
+  // Kept mostly vertical (top/bottom) and very small to avoid looking jagged.
+  const top = Array.from({ length: 17 }, (_, i) => {
+    const x = 18 + i * 4.6 + (i % 3 === 0 ? -1 : i % 3 === 1 ? 0.8 : 1.2);
+    const len = 2 + (i % 5) + (i % 2 === 0 ? 1 : 0); // ~2..8
+    const wobble = (i % 4 - 1.5) * 0.12; // tiny horizontal wobble
+    return { x, len, wobble };
+  });
+
+  return (
+    <svg className="absolute inset-0 z-0 overflow-visible pointer-events-none" viewBox="0 0 100 100" aria-hidden>
+      <defs>
+        <filter id={filterId} x="-30%" y="-30%" width="160%" height="160%" colorInterpolationFilters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="9" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.6" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+
+      {/* Top protrusions */}
+      <g filter={`url(#${filterId})`} stroke="#000" strokeWidth="2" strokeLinecap="round">
+        {top.map((s, idx) => (
+          <line key={`t-${idx}`} x1={s.x} y1={10} x2={s.x + s.wobble} y2={10 - s.len} />
+        ))}
+      </g>
+
+      {/* Bottom protrusions */}
+      <g filter={`url(#${filterId})`} stroke="#000" strokeWidth="2" strokeLinecap="round">
+        {top.map((s, idx) => (
+          <line key={`b-${idx}`} x1={s.x} y1={90} x2={s.x + s.wobble} y2={90 + s.len} />
+        ))}
+      </g>
+    </svg>
+  );
+}
 
 interface HeroSliderProps {
   onNavigateCreative: () => void;
@@ -486,20 +525,30 @@ const HeroSlider = ({
         <ComicInkStrokeBar orientation={isMobile ? "horizontal" : "vertical"} />
         
         <div 
-          className={`relative z-10 flex shrink-0 items-center justify-center rounded-full bg-black border-0 ${
+          className={`relative z-10 flex shrink-0 items-center justify-center rounded-full bg-black border-0 overflow-visible ${
             isMobile ? "h-14 w-14 sm:h-16 sm:w-16" : "h-16 w-16"
           }`}
           style={{
             boxShadow: "2.4px 3.2px 0 0 rgba(0, 0, 0, 0.4)",
-            transform: `${isDragging ? "scale(1.1)" : "scale(1)"} rotate(${knobRotateDeg}deg)`,
+            // Keep the circle outline stable while dragging; rotating the whole shape
+            // can create aliasing gaps that look "rough" near the vertical divider.
+            transform: `${isDragging ? "scale(1.1)" : "scale(1)"} translateZ(0)`,
             transition: isDragging
               ? "transform 0.05s linear"
               : "transform 0.22s ease-out",
           }}
         >
+          <ComicKnobMicroStrokes />
           <span
-            className="font-comic text-white leading-none select-none text-[26px] tracking-wide inline-flex h-[22px] w-9 items-center justify-center"
+            className="relative z-10 font-comic text-white leading-none select-none text-[26px] tracking-wide inline-flex h-[22px] w-9 items-center justify-center"
             aria-hidden
+            style={{
+              transform: `rotate(${knobRotateDeg}deg)`,
+              transformOrigin: "50% 50%",
+              // Helps keep text rotation crisp while avoiding extra edge aliasing.
+              willChange: "transform",
+              display: "inline-flex",
+            }}
           >
             P.E.
           </span>

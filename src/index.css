@@ -162,6 +162,32 @@ body {
  * COMIC TYPOGRAPHY SYSTEM (JSON: bold condensed, tight letter-spacing, uppercase dominant)
  * ============================================ */
 
+/* Local Comic Sans Pro (self-hosted; replaces onlinewebfonts CDN) */
+@font-face {
+  font-family: "Comic Sans Pro W99 Italic";
+  src: url("../OnlineWebFonts_COM_3c9799eff482614e7896c29ff4d5ed92/Comic Sans Pro W99 Italic/Web Fonts/a0de82726b6f69516a51b2fa19956269.svg#Comic Sans Pro W99 Italic")
+    format("svg");
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Comic Sans Pro W99 Italic";
+  src: url("../OnlineWebFonts_COM_3c9799eff482614e7896c29ff4d5ed92/Comic Sans Pro W99 Italic/Web Fonts/a0de82726b6f69516a51b2fa19956269.svg#Comic Sans Pro W99 Italic")
+    format("svg");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Comic Sans Pro W99 Bold Italic";
+  src: url("../OnlineWebFonts_COM_5378311005815c143c749c3727dd1d99/Comic Sans Pro W99 Bold Italic/Web Fonts/daacd0e7a4d4f7d0409b1f78c7035d10.svg#Comic Sans Pro W99 Bold Italic")
+    format("svg");
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
+
 /* Headline font - Bold comic impact, high x-height, in-between letter-spacing */
 .font-comic {
   font-family: 'Bangers', cursive;
@@ -178,23 +204,28 @@ body {
 }
 
 /* Body/content text – Classic Comic Sans Italic (not headlines/headings/subheadings) */
-/* System Comic Sans first so text is readable before async webfont CSS applies */
 .font-content {
   font-family: 'Comic Sans Pro W99 Italic', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+  font-style: italic;
+  font-weight: 400;
 }
 
 .font-content-light {
   font-family: 'Comic Sans Pro W99 Italic', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
   font-weight: 300;
+  font-style: italic;
 }
 
 .font-content-medium {
   font-family: 'Comic Sans Pro W99 Italic', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
   font-weight: 400;
+  font-style: italic;
 }
 
 .font-content-bold {
   font-family: 'Comic Sans Pro W99 Bold Italic', 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+  font-weight: 700;
+  font-style: italic;
 }
 
 /* ============================================
