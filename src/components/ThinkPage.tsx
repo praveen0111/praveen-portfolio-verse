@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { LayoutGroup, motion } from "motion/react";
+import { LayoutGroup } from "motion/react";
 import { ExternalLink } from "lucide-react";
 import ComicParticles from "./ComicParticles";
 import DotGrid from "./DotGrid";
@@ -17,10 +17,7 @@ import {
   thinkCertifications,
 } from "../../thinkPageData";
 
-/**
- * Shared layout spring: rotating pills + middle “working at the intersection of”
- * use the same values so the line eases as one unit (requires `popLayout` on rotators).
- */
+/** Shared layout spring for hero subtitle decrypt pills (LayoutGroup). */
 const THINK_SUBTITLE_LAYOUT_SPRING = {
   layout: {
     type: "spring" as const,
@@ -30,26 +27,19 @@ const THINK_SUBTITLE_LAYOUT_SPRING = {
   },
 };
 
-/** Middle static phrase — same layout transition as `pillLayoutTransition` on rotators. */
-const SUBTITLE_LAYOUT_TRANSITION = THINK_SUBTITLE_LAYOUT_SPRING;
-
-/** React Bits RotatingText: whole-phrase vertical scroll (no per-letter stagger). */
+/** React Bits RotatingText: decrypt-in / encrypt-out scramble (no opacity-only dissolve). */
 const THINK_ROTATING_TEXT_SHARED = {
-  textEffect: "scroll" as const,
-  initial: { y: "100%" },
-  animate: { y: 0 },
-  exit: { y: "-100%" },
+  textEffect: "decrypt" as const,
   transition: {
     type: "tween" as const,
-    duration: 0.5,
+    duration: 0.6,
     ease: "easeInOut" as const,
   },
-  /** Lets layout animate while exiting text is popped out of flow (smooth middle phrase). */
-  animatePresenceMode: "popLayout" as const,
-  presenceAnchorX: "left" as const,
+  /** Exit finishes encrypt-out before next phrase decrypts in (pairs well with `usePresence`). */
+  animatePresenceMode: "wait" as const,
   pillLayoutTransition: THINK_SUBTITLE_LAYOUT_SPRING,
-  /** Sequential lockstep with the other rotator (parent calls `next()` on both). */
-  randomizeOrder: false,
+  /** Each tick picks a random phrase (not the same as current when possible). */
+  randomizeOrder: true,
 };
 
 /**
@@ -75,7 +65,12 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
   const nameLines = thinkMeta.name.map((s) => s.trim()).filter(Boolean);
   const captionLines = (thinkMeta.heroCaptionLines ?? []).map((s) => s.trim()).filter(Boolean);
   const subtitleRoles = (thinkMeta.subtitleRotatingRoles ?? []).map((s) => s.trim()).filter(Boolean);
-  const subtitleIntersection = (thinkMeta.subtitleRotatingIntersection ?? []).map((s) => s.trim()).filter(Boolean);
+  const subtitleIntersection = (thinkMeta.subtitleRotatingIntersection ?? [])
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  const subtitleBetweenPhrases = (thinkMeta.subtitleRotatingBetween ?? [])
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
   /** One phrase still loops visually by alternating the same string (re-triggers motion). */
   const rolesForRotator =
     subtitleRoles.length === 1 ? [subtitleRoles[0], subtitleRoles[0]] : subtitleRoles;
@@ -83,25 +78,41 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
     subtitleIntersection.length === 1
       ? [subtitleIntersection[0], subtitleIntersection[0]]
       : subtitleIntersection;
-  const subtitleBetweenRaw = thinkMeta.subtitleBetween ?? "";
-  const hasSubtitleBetween = subtitleBetweenRaw.trim().length > 0;
-  const hasRotatingSubtitle = subtitleRoles.length > 0 && subtitleIntersection.length > 0;
+  const betweenForRotator =
+    subtitleBetweenPhrases.length === 1
+      ? [subtitleBetweenPhrases[0], subtitleBetweenPhrases[0]]
+      : subtitleBetweenPhrases;
+  const betweenTextsForRotator = betweenForRotator.map((w) => w);
+  const hasSubtitleBetween = subtitleBetweenPhrases.length > 0;
+  const hasRotatingSubtitle =
+    subtitleRoles.length > 0 && subtitleIntersection.length > 0 && hasSubtitleBetween;
   const hasIdentityText = nameLines.length > 0 || hasRotatingSubtitle || captionLines.length > 0;
 
   const subtitleRoleRotRef = useRef<RotatingTextRef>(null);
+  const subtitleBetweenRotRef = useRef<RotatingTextRef>(null);
   const subtitleIntersectionRotRef = useRef<RotatingTextRef>(null);
   const subtitleRotationMs = thinkMeta.subtitleRotationMs ?? 3600;
   const subtitleShouldAutoRotate =
-    hasRotatingSubtitle && (rolesForRotator.length > 1 || intersectionForRotator.length > 1);
+    hasRotatingSubtitle &&
+    (rolesForRotator.length > 1 ||
+      betweenForRotator.length > 1 ||
+      intersectionForRotator.length > 1);
 
   useEffect(() => {
     if (!subtitleShouldAutoRotate) return;
     const id = window.setInterval(() => {
       subtitleRoleRotRef.current?.next();
+      subtitleBetweenRotRef.current?.next();
       subtitleIntersectionRotRef.current?.next();
     }, subtitleRotationMs);
     return () => window.clearInterval(id);
-  }, [subtitleShouldAutoRotate, subtitleRotationMs, rolesForRotator.length, intersectionForRotator.length]);
+  }, [
+    subtitleShouldAutoRotate,
+    subtitleRotationMs,
+    rolesForRotator.length,
+    betweenForRotator.length,
+    intersectionForRotator.length,
+  ]);
 
   return (
     <div
@@ -177,7 +188,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                 />
               </div>
               {hasIdentityText && (
-                <div className="flex min-h-0 flex-1 flex-col justify-center gap-3 text-center md:min-h-[10rem] md:text-left">
+                <div className="flex min-h-0 min-w-0 w-full max-w-full flex-1 flex-col justify-center gap-3 text-center md:min-h-[10rem] md:text-left">
                   {nameLines.length > 0 && (
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-comic font-bold leading-[1.05] tracking-tight" style={{ color: "hsl(var(--think-fg))" }}>
                       {thinkMeta.name.map((raw, i) => {
@@ -210,8 +221,9 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                         overflow-x on the flex row breaks Motion layout projection; scroll lives on outer wrapper.
                       */}
                       <div className="w-full max-w-full min-w-0 overflow-x-auto overflow-y-visible [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                        <p
-                          className="m-0 inline-flex min-w-max max-w-none flex-nowrap items-center justify-center gap-0 whitespace-nowrap text-base md:justify-start md:text-lg font-content font-content-medium leading-normal"
+                        <div
+                          role="paragraph"
+                          className="m-0 flex w-max min-w-max max-w-none flex-row flex-nowrap items-center justify-center gap-x-[1ch] whitespace-nowrap text-base md:justify-start md:text-lg font-content font-content-medium leading-normal"
                           style={{ color: "hsl(var(--think-fg-muted))" }}
                         >
                           <RotatingText
@@ -226,13 +238,17 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                             elementLevelClassName="leading-normal"
                           />
                           {hasSubtitleBetween ? (
-                            <motion.span
-                              layout
-                              transition={SUBTITLE_LAYOUT_TRANSITION}
-                              className="inline-flex shrink-0 items-center whitespace-pre will-change-transform"
-                            >
-                              {subtitleBetweenRaw}
-                            </motion.span>
+                            <RotatingText
+                              ref={subtitleBetweenRotRef}
+                              texts={betweenTextsForRotator}
+                              {...THINK_ROTATING_TEXT_SHARED}
+                              auto={false}
+                              loop
+                              mainClassName={thinkMeta.subtitleRotatingMainClassName}
+                              splitLevelClassName={thinkMeta.subtitleRotatingSplitLevelClassName}
+                              className="shrink-0 self-center whitespace-pre"
+                              elementLevelClassName="leading-normal"
+                            />
                           ) : null}
                           <RotatingText
                             ref={subtitleIntersectionRotRef}
@@ -245,7 +261,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                             className="shrink-0 self-center"
                             elementLevelClassName="leading-normal"
                           />
-                        </p>
+                        </div>
                       </div>
                     </LayoutGroup>
                   )}

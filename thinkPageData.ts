@@ -10,17 +10,24 @@ export const thinkMeta = {
   /** Which `name` line (0-based) gets outline styling; use an index with no line to disable (e.g. 1 when only one line). */
   nameOutlineIndex: 1,
   /**
-   * Hero subtitle: [rotate1]  working at the intersection of  [rotate2] (single line in UI).
-   * Include any leading/trailing spaces you want; use whitespace-pre in UI so they don’t collapse.
+   * Hero subtitle middle pill (decrypt effect; synced with left/right). Spacing vs pills added in ThinkPage.
    */
-  subtitleBetween: "  working at the intersection of  ",
+  subtitleRotatingBetween: [
+    "writing",
+    "building",
+    "working on",
+    "crafting",
+    "developing",
+    "shaping",
+    "designing",
+  ],
   subtitleRotatingRoles: ["Product & Marketing Strategist", "Filmmaker", "Engineer"],
-  subtitleRotatingIntersection: ["Strategies", "Stories", "Systems"],
-  /** ms between phrase changes — both hero rotators tick together on this interval. */
+  subtitleRotatingIntersection: ["strategies", "stories", "systems"],
+  /** ms between phrase changes — all three hero rotators tick together on this interval. */
   subtitleRotationMs: 3600,
   /** Tailwind: outer “pill” around each rotating phrase (edit freely). */
   subtitleRotatingMainClassName:
-    "inline-flex w-max shrink-0 flex-nowrap items-center justify-center overflow-hidden px-2 sm:px-2 md:px-3 bg-cyan-300 text-black py-2 sm:py-2.5 md:py-3 rounded-lg leading-normal",
+    "inline-flex w-max max-w-none shrink-0 flex-nowrap items-center justify-center overflow-hidden whitespace-nowrap px-0.5 sm:px-1 md:px-1 bg-cyan-300 text-black py-2 sm:py-2.5 md:py-3 rounded-lg leading-normal",
   /** Clip vertical scroll; fixed min-height keeps the row visually one line. */
   subtitleRotatingSplitLevelClassName:
     "pb-1 pt-0.5",
