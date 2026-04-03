@@ -45,6 +45,7 @@ export const thinkTechstackIconSlugs: string[] = [
   "aftereffects",
   "photoshop",
   "xd",
+  "illustrator",
   "powerpoint",
   "excel",
   "clickup",
@@ -53,7 +54,6 @@ export const thinkTechstackIconSlugs: string[] = [
   "powerbi",
   "davinciresolve",
   "cursor",
-  "jira",
   "github",
   "vscode",
 ];
@@ -66,6 +66,7 @@ export const thinkTechstackIconLabels: string[] = [
   "Adobe After Effects",
   "Adobe Photoshop",
   "Adobe XD",
+  "Adobe Illustrator",
   "PowerPoint",
   "Excel",
   "ClickUp",
@@ -74,23 +75,22 @@ export const thinkTechstackIconLabels: string[] = [
   "Power BI",
   "DaVinci Resolve",
   "Cursor",
-  "Jira",
   "GitHub",
   "Visual Studio Code",
 ];
 
 /** Bump when any raster under `/logo-cloud/icons/` changes so the canvas cloud reloads images (same path is otherwise cached). */
-const LOGO_CLOUD_ICONS_VERSION = "20260405";
+const LOGO_CLOUD_ICONS_VERSION = "20260406-stack";
 
 const logoIcon = (slug: string) => `/logo-cloud/icons/${slug}.png?v=${LOGO_CLOUD_ICONS_VERSION}`;
 
 export const thinkTechstackIconImageUrls: string[] = thinkTechstackIconSlugs.map(logoIcon);
 
-/** 1–5 stars per tool — same order as icons (edit to match your experience). */
-export type ThinkTechstackXpStars = 1 | 2 | 3 | 4 | 5;
+/** Star rating per tool (0.5 steps). Same order as icons. */
+export type ThinkTechstackXpStars = 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
 
 export const thinkTechstackIconXp: ThinkTechstackXpStars[] = [
-  4, 5, 5, 4, 4, 4, 5, 4, 4, 4, 3, 4, 5, 5, 4, 5, 5,
+  4, 3.5, 5, 4, 3.5, 3.5, 3, 4.5, 4, 4, 4, 3.5, 3, 3.5, 4, 3, 3,
 ];
 
 /**
@@ -98,23 +98,23 @@ export const thinkTechstackIconXp: ThinkTechstackXpStars[] = [
  * Edit freely; shown on desktop when hovering the cloud.
  */
 export const thinkTechstackIconUsage: string[] = [
-  "Quick social and pitch visuals: Canva keeps brand-consistent layouts fast when I don’t need a full design file.",
-  "Figma is where I prototype flows, hand off specs, and align with design on UX before anything ships.",
-  "Premiere is my timeline for narrative cuts, dialogue, and delivery—especially for creative and campaign pieces.",
-  "After Effects for motion titles, simple compositing, and polish that sells the story without over-building.",
-  "Photoshop for still retouching, key art tweaks, and asset cleanup when pixels matter.",
-  "XD when I need lightweight prototypes or legacy handoffs tied to older Adobe-centric workflows.",
-  "PowerPoint for storytelling decks: narrative arc, clear asks, and exec-ready visuals.",
-  "Excel for models, budgets, and data sanity checks when decisions need a spreadsheet backbone.",
-  "ClickUp for sprint hygiene: tasks, owners, and visibility across product and marketing workstreams.",
-  "Python for scripting, light automation, and gluing data pipelines when no-code isn’t enough.",
-  "Higgsfield for generative experiments and rapid visual ideation alongside traditional pipelines.",
-  "Power BI for dashboards and stakeholder reporting when data needs to be readable, not just accurate.",
-  "DaVinci Resolve for colour, finishing, and heavier post when the project demands a grading-first workflow.",
-  "Cursor is my daily IDE for this site and side projects—AI-assisted coding with tight iteration loops.",
-  "Jira for backlog hygiene, epics, and engineering alignment when delivery needs traceability.",
-  "GitHub for version control, reviews, and shipping changes with a clear history.",
-  "VS Code for editing, extensions, and a familiar environment across stacks and repos.",
+  "When I need something on deck, Canva is the move. Assets, pitch one-pagers, quick decks — my go-to without dragging me into a design rabbit hole.",
+  "My shared language with design. Where I test flows, poke at UX assumptions, and make sure what I'm imagining is actually buildable.",
+  "This is home. Every narrative cut, every dialogue sequence, every creative piece that needs to actually land — Premiere is where I live when the story has to be earned in the edit.",
+  "The polish layer. I reach for After Effects when a motion title or a clean composite is the difference between a video that feels finished and one that just... ends.",
+  "Pixel-level work when it counts. Key art, asset cleanup, that one image that needs to look exactly right — no substitute when the still matters.",
+  "When a lightweight prototype needs to slot into an older Adobe-centric handoff without friction, XD is still there.",
+  "My safety net in the Adobe ecosystem. When an asset needs to be controlled at the vector level and done properly, Illustrator is the answer.",
+  "A good deck has a narrative arc, a clear ask, and visuals that hold the room. PowerPoint is where I build the story before I'm in the war-room.",
+  "When a decision needs a number behind it, Excel is where I go to either prove or kill the idea. Models, budgets, sanity checks, pros and cons — spreadsheet thinking is still real thinking.",
+  "Sprint hygiene isn't glamorous but it matters. ClickUp keeps tasks owned, workstreams visible, and the gap between product and marketing from becoming a blame conversation.",
+  "I reach for Python when no-code hits its ceiling. Automation, light scripting, stitching data pipelines together, IoT side quests — it's a no-brainer.",
+  "Still figuring out where generative fits in my workflow, but Higgsfield is where I run the experiments. Fast visual ideation that sometimes produces something worth keeping.",
+  "Not my favourite, but when someone needs a dashboard they can actually read — not just a spreadsheet they'll ignore — Power BI steps in. Still figuring it out honestly.",
+  "When a project lives or dies in the grade, I move to Resolve. Colour, finishing, the kind of post Premiere isn't built to obsess over — this is my grading-first workflow.",
+  "My driver for this site and everything I'm building on the side. AI-assist that keeps the iteration loop tight and me in flow.",
+  "Version control, reviews, a clean history of what shipped and why. Not exciting — just non-negotiable.",
+  "Reliable across every stack I've touched. Extensions for whatever I need, familiar enough to never slow me down.",
 ];
 
 export const thinkManifesto = {
@@ -142,7 +142,7 @@ export const thinkEducation = [
       "Specialising in the intersection of technology, marketing, and product design — with applied work in AR/XR and brand communication.",
   },
   {
-    institution: "Loyola ICAM College of Engineering, Chennai",
+    institution: "Loyola ICAM College of Engineering and Technology, Chennai",
     degree: "B.E. Electronics & Communication Engineering",
     period: "2020 – 2024",
     focus: "Technical Foundation",

@@ -21,6 +21,7 @@ const entries = [
   ["aftereffects", "after-effects.png"],
   ["photoshop", "photoshop.png"],
   ["xd", "xd.png"],
+  ["illustrator", "illustrator-source.svg"],
   ["powerpoint", "icons8-powerpoint-512.png"],
   ["excel", "excel.png"],
   ["clickup", "icons8-clickup-512.png"],
@@ -29,7 +30,6 @@ const entries = [
   ["powerbi", "icons8-power-bi-2021-512.png"],
   ["davinciresolve", "icons8-davinci-resolve-512.png"],
   ["cursor", "icons8-cursor-ai-512.png"],
-  ["jira", "icons8-jira-512.png"],
   ["github", "icons8-github-512.png"],
   ["vscode", "icons8-visual-studio-code-512.png"],
 ];

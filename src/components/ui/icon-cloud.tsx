@@ -71,8 +71,8 @@ const DEPTH_OPACITY_GAMMA = 1.35;
 
 /** Fibonacci sphere radius in world units (higher = icons use more of the square). */
 const SPHERE_WORLD_RADIUS = 118;
-/** Half-width of each icon slot as a fraction of canvas side. */
-const ICON_SLOT_FRAC = 0.09;
+/** Half-width of each icon slot as a fraction of canvas side (~20% smaller than 0.09 baseline). */
+const ICON_SLOT_FRAC = 0.072;
 /**
  * Picking uses a larger radius than drawing so logos are easier to click on dense clouds
  * (especially when depthScale shrinks back-facing icons).
