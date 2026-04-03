@@ -26,7 +26,7 @@ export const thinkMeta = {
   subtitleRotationMs: 3600,
   /** Tailwind: outer “pill” around each rotating phrase (edit freely). */
   subtitleRotatingMainClassName:
-    "inline-flex w-max max-w-none shrink-0 flex-nowrap items-center justify-center overflow-hidden whitespace-nowrap px-0.5 sm:px-1 md:justify-start md:pl-0 md:pr-1 bg-cyan-300 text-black py-2 sm:py-2.5 md:py-3 rounded-lg leading-normal",
+    "inline-flex w-max max-w-none shrink-0 flex-nowrap items-center justify-center overflow-hidden whitespace-nowrap px-0.5 sm:px-1 md:justify-start md:pl-0 md:pr-1 bg-cyan-300 text-white py-2 sm:py-2.5 md:py-3 rounded-lg leading-normal",
   /** Clip vertical scroll; fixed min-height keeps the row visually one line. */
   subtitleRotatingSplitLevelClassName:
     "pb-1 pt-0.5",
@@ -34,6 +34,91 @@ export const thinkMeta = {
   heroCaptionLines: [] as string[],
   profileImage: "/images/PE.webp",
 };
+
+/**
+ * Tool ids parallel to `thinkTechstackIconImageUrls` (uniform 512×512 PNG under `/public/logo-cloud/icons/`; a matching `.svg` wrapper lives beside each PNG for reuse).
+ */
+export const thinkTechstackIconSlugs: string[] = [
+  "notion",
+  "canva",
+  "figma",
+  "premierepro",
+  "aftereffects",
+  "photoshop",
+  "xd",
+  "microsoftoffice",
+  "powerpoint",
+  "excel",
+  "clickup",
+  "python",
+  "higgsfield",
+  "powerbi",
+  "davinciresolve",
+  "cursor",
+  "jira",
+  "github",
+  "vscode",
+];
+
+/** Human-readable names for icon cloud hover (same order as URLs / slugs). */
+export const thinkTechstackIconLabels: string[] = [
+  "Notion",
+  "Canva",
+  "Figma",
+  "Adobe Premiere Pro",
+  "Adobe After Effects",
+  "Adobe Photoshop",
+  "Adobe XD",
+  "Microsoft Office",
+  "PowerPoint",
+  "Excel",
+  "ClickUp",
+  "Python",
+  "Higgsfield",
+  "Power BI",
+  "DaVinci Resolve",
+  "Cursor",
+  "Jira",
+  "GitHub",
+  "Visual Studio Code",
+];
+
+const logoIcon = (slug: string) => `/logo-cloud/icons/${slug}.png`;
+
+export const thinkTechstackIconImageUrls: string[] = thinkTechstackIconSlugs.map(logoIcon);
+
+/** 1–5 stars per tool — same order as icons (edit to match your experience). */
+export type ThinkTechstackXpStars = 1 | 2 | 3 | 4 | 5;
+
+export const thinkTechstackIconXp: ThinkTechstackXpStars[] = [
+  5, 4, 5, 5, 4, 4, 4, 5, 5, 4, 4, 4, 3, 4, 5, 5, 4, 5, 5,
+];
+
+/**
+ * How and why you use each tool — same order as icons.
+ * Edit freely; shown on desktop when hovering the cloud.
+ */
+export const thinkTechstackIconUsage: string[] = [
+  "I run roadmaps, PRDs, and stakeholder wikis in Notion so strategy and execution stay in one living workspace.",
+  "Quick social and pitch visuals: Canva keeps brand-consistent layouts fast when I don’t need a full design file.",
+  "Figma is where I prototype flows, hand off specs, and align with design on UX before anything ships.",
+  "Premiere is my timeline for narrative cuts, dialogue, and delivery—especially for creative and campaign pieces.",
+  "After Effects for motion titles, simple compositing, and polish that sells the story without over-building.",
+  "Photoshop for still retouching, key art tweaks, and asset cleanup when pixels matter.",
+  "XD when I need lightweight prototypes or legacy handoffs tied to older Adobe-centric workflows.",
+  "Office is the default for decks, docs, and collaboration in corporate and academic settings—fast and universal.",
+  "PowerPoint for storytelling decks: narrative arc, clear asks, and exec-ready visuals.",
+  "Excel for models, budgets, and data sanity checks when decisions need a spreadsheet backbone.",
+  "ClickUp for sprint hygiene: tasks, owners, and visibility across product and marketing workstreams.",
+  "Python for scripting, light automation, and gluing data pipelines when no-code isn’t enough.",
+  "Higgsfield for generative experiments and rapid visual ideation alongside traditional pipelines.",
+  "Power BI for dashboards and stakeholder reporting when data needs to be readable, not just accurate.",
+  "DaVinci Resolve for colour, finishing, and heavier post when the project demands a grading-first workflow.",
+  "Cursor is my daily IDE for this site and side projects—AI-assisted coding with tight iteration loops.",
+  "Jira for backlog hygiene, epics, and engineering alignment when delivery needs traceability.",
+  "GitHub for version control, reviews, and shipping changes with a clear history.",
+  "VS Code for editing, extensions, and a familiar environment across stacks and repos.",
+];
 
 export const thinkManifesto = {
   statement: [
@@ -122,20 +207,6 @@ export const thinkSkills = [
     group: "Technical",
     items: ["Data Analysis", "SQL Basics", "A/B Testing", "Agile Methodologies"],
   },
-];
-
-// ─── TOOLS ──────────────────────────────────────────────────
-// tier: "Proficient" | "Advanced" | "Expert"
-// level: 0–100 (drives the bar width visually)
-export const thinkTools = [
-  { name: "Figma",            category: "Design",       level: 90, tier: "Advanced"  },
-  { name: "Notion",           category: "Productivity", level: 95, tier: "Expert"    },
-  { name: "Canva",            category: "Design",       level: 92, tier: "Expert"    },
-  { name: "Adobe XD",         category: "Design",       level: 85, tier: "Proficient"},
-  { name: "Google Analytics", category: "Analytics",    level: 85, tier: "Proficient"},
-  { name: "Miro",             category: "Collaboration",level: 88, tier: "Advanced"  },
-  { name: "Jira",             category: "Project Mgmt", level: 80, tier: "Proficient"},
-  { name: "Excel",            category: "Analytics",    level: 90, tier: "Advanced"  },
 ];
 
 // ─── CERTIFICATIONS (add when available) ────────────────────
