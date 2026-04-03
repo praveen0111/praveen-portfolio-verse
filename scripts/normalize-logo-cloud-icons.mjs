@@ -15,7 +15,7 @@ const SIZE = 512;
 
 /** [slug, sourceFilename] — same order as thinkTechstackIconSlugs */
 const entries = [
-  ["canva", "icons8-canva-512.png"],
+  ["canva", "canva-source.png"],
   ["figma", "figma.png"],
   ["premierepro", "premiere-pro.png"],
   ["aftereffects", "after-effects.png"],

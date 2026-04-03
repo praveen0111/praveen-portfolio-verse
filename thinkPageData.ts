@@ -79,7 +79,10 @@ export const thinkTechstackIconLabels: string[] = [
   "Visual Studio Code",
 ];
 
-const logoIcon = (slug: string) => `/logo-cloud/icons/${slug}.png`;
+/** Bump when any raster under `/logo-cloud/icons/` changes so the canvas cloud reloads images (same path is otherwise cached). */
+const LOGO_CLOUD_ICONS_VERSION = "20260405";
+
+const logoIcon = (slug: string) => `/logo-cloud/icons/${slug}.png?v=${LOGO_CLOUD_ICONS_VERSION}`;
 
 export const thinkTechstackIconImageUrls: string[] = thinkTechstackIconSlugs.map(logoIcon);
 
