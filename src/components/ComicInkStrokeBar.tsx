@@ -1,6 +1,6 @@
 import { useId } from "react";
 
-/** Irregular comic ink stroke with tiny flecks; vertical = column between panels, horizontal = mobile strip */
+/** Irregular comic ink stroke with tiny flecks; vertical = desktop L/R split, horizontal = mobile top/bottom split */
 export function ComicInkStrokeBar({
   orientation,
 }: {

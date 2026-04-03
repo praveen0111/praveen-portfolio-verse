@@ -585,6 +585,11 @@ export default {
           "72%": { transform: "translateY(0)" },
           "86%": { transform: "translateY(-3px)" },
         },
+        /** Magic UI — Line Shadow Text */
+        "line-shadow": {
+          "0%": { backgroundPosition: "0 0" },
+          "100%": { backgroundPosition: "100% -100%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -613,6 +618,7 @@ export default {
         "book-reveal-from-right": "page-reveal-from-right 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
         "book-reveal-from-left": "page-reveal-from-left 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
         "hero-plate-bounce": "hero-plate-bounce 0.75s ease-in-out infinite",
+        "line-shadow": "line-shadow 15s linear infinite",
       },
     },
   },

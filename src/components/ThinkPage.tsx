@@ -1,20 +1,25 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
+import { LineShadowText } from "./ui/line-shadow-text";
 import { LayoutGroup } from "motion/react";
 import { ExternalLink } from "lucide-react";
 import ComicParticles from "./ComicParticles";
 import DotGrid from "./DotGrid";
 import RotatingText, { type RotatingTextRef } from "./RotatingText";
 import { cn } from "@/lib/utils";
+import { IconCloud } from "@/registry/magicui/icon-cloud";
+import { TechstackDetailPanel } from "./TechstackDetailPanel";
 import {
   thinkMeta,
   thinkCV,
   thinkEducation,
   thinkExperience,
   thinkSkills,
-  thinkTools,
   thinkCertifications,
+  thinkTechstackIconImageUrls,
+  thinkTechstackIconLabels,
+  thinkTechstackIconXp,
+  thinkTechstackIconUsage,
 } from "../../thinkPageData";
 
 /** Shared layout spring for hero subtitle decrypt pills (LayoutGroup). */
@@ -91,6 +96,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
   const subtitleRoleRotRef = useRef<RotatingTextRef>(null);
   const subtitleBetweenRotRef = useRef<RotatingTextRef>(null);
   const subtitleIntersectionRotRef = useRef<RotatingTextRef>(null);
+  const [techstackSelectedIndex, setTechstackSelectedIndex] = useState<number | null>(null);
   const subtitleRotationMs = thinkMeta.subtitleRotationMs ?? 3600;
   const subtitleShouldAutoRotate =
     hasRotatingSubtitle &&
@@ -190,26 +196,22 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
               {hasIdentityText && (
                 <div className="flex min-h-0 min-w-0 w-full max-w-full flex-1 flex-col justify-center gap-3 text-center md:min-h-[10rem] md:text-left">
                   {nameLines.length > 0 && (
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-comic font-bold leading-[1.05] tracking-tight" style={{ color: "hsl(var(--think-fg))" }}>
+                    <h1 className="flex flex-col gap-1 text-4xl font-comic font-bold leading-[1.05] tracking-tight text-center md:gap-1.5 md:text-5xl md:text-left lg:text-6xl">
                       {thinkMeta.name.map((raw, i) => {
                         const line = raw.trim();
                         if (!line) return null;
-                        const outlined = i === thinkMeta.nameOutlineIndex;
                         return (
                           <span
                             key={i}
-                            className={cn("block", outlined && "px-0.5")}
-                            style={
-                              outlined
-                                ? {
-                                    color: "hsl(var(--think-bg))",
-                                    WebkitTextStroke: "2px hsl(var(--think-accent))",
-                                    paintOrder: "stroke fill",
-                                  }
-                                : undefined
-                            }
+                            className="block w-full min-w-0 text-center md:flex md:justify-start md:text-left"
                           >
-                            {line}
+                            <LineShadowText
+                              as="span"
+                              className="mx-auto text-[hsl(var(--think-fg))] md:mx-0"
+                              shadowColor="hsl(var(--think-accent))"
+                            >
+                              {line}
+                            </LineShadowText>
                           </span>
                         );
                       })}
@@ -315,6 +317,49 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
             </div>
           </div>
 
+          {/* Tech stack — Magic UI icon cloud (Simple Icons) */}
+          <section className="mb-5 md:mb-8" aria-label="Tech stack">
+            <h2 className="mb-2.5 border-[3px] p-3 font-comic text-2xl sm:p-3.5 sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 13px hsl(var(--think-accent) / 0.4), 5px 5px 0 hsl(var(--think-accent) / 0.5)" }}>
+              TECHSTACK
+            </h2>
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch lg:gap-4">
+              {/* Left: icon cloud only */}
+              <article
+                className="flex w-full flex-col justify-center border-[3px] px-2.5 py-3 sm:px-3 sm:py-4 lg:max-w-[min(448px,43%)] lg:min-w-[min(100%,272px)] lg:shrink-0"
+                style={{
+                  backgroundColor: "hsl(var(--think-bg))",
+                  borderColor: "hsl(var(--think-accent))",
+                  boxShadow: "0 0 10px hsl(var(--think-accent) / 0.2), 5px 5px 0 hsl(var(--think-accent) / 0.25)",
+                }}
+              >
+                <div className="mx-auto flex w-full justify-center lg:justify-start">
+                  <IconCloud
+                    images={thinkTechstackIconImageUrls}
+                    labels={thinkTechstackIconLabels}
+                    onSelectIndex={setTechstackSelectedIndex}
+                  />
+                </div>
+              </article>
+              {/* Right: selected logo (center) + name, stars, usage */}
+              <article
+                className="flex min-h-[256px] w-full flex-1 flex-col border-[3px] px-2.5 py-3 sm:px-4 sm:py-4"
+                style={{
+                  backgroundColor: "hsl(var(--think-bg))",
+                  borderColor: "hsl(var(--think-accent))",
+                  boxShadow: "0 0 10px hsl(var(--think-accent) / 0.2), 5px 5px 0 hsl(var(--think-accent) / 0.25)",
+                }}
+              >
+                <TechstackDetailPanel
+                  selectedIndex={techstackSelectedIndex}
+                  labels={thinkTechstackIconLabels}
+                  xp={thinkTechstackIconXp}
+                  usage={thinkTechstackIconUsage}
+                  imageUrls={thinkTechstackIconImageUrls}
+                />
+              </article>
+            </div>
+          </section>
+
           {/* Education Timeline */}
           <section className="mb-8 md:mb-12">
             <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
@@ -414,31 +459,6 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                         {skill}
                       </span>
                     ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          {/* Tools and Methods */}
-          <section className="mb-8 md:mb-12">
-            <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
-              TOOLS & METHODS
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {thinkTools.map((tool) => (
-                <article key={tool.name} className="p-4 border-4" style={{ backgroundColor: "hsl(var(--think-bg-alt))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 10px hsl(var(--think-accent) / 0.15), 4px 4px 0 hsl(var(--think-accent) / 0.2)" }}>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <p className="font-comic text-lg font-bold" style={{ color: "hsl(var(--think-fg))" }}>
-                      {tool.name}
-                    </p>
-                    <Badge variant="secondary">{tool.tier}</Badge>
-                  </div>
-                  <p className="text-xs font-content font-content-light mb-3" style={{ color: "hsl(var(--think-fg-muted))" }}>
-                    {tool.category}
-                  </p>
-                  <div className="h-2 border-2" style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))" }}>
-                    <div className="h-full" style={{ width: `${tool.level}%`, backgroundColor: "hsl(var(--think-accent))" }} />
                   </div>
                 </article>
               ))}

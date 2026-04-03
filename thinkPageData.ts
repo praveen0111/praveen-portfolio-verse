@@ -39,14 +39,12 @@ export const thinkMeta = {
  * Tool ids parallel to `thinkTechstackIconImageUrls` (uniform 512×512 PNG under `/public/logo-cloud/icons/`; a matching `.svg` wrapper lives beside each PNG for reuse).
  */
 export const thinkTechstackIconSlugs: string[] = [
-  "notion",
   "canva",
   "figma",
   "premierepro",
   "aftereffects",
   "photoshop",
   "xd",
-  "microsoftoffice",
   "powerpoint",
   "excel",
   "clickup",
@@ -62,14 +60,12 @@ export const thinkTechstackIconSlugs: string[] = [
 
 /** Human-readable names for icon cloud hover (same order as URLs / slugs). */
 export const thinkTechstackIconLabels: string[] = [
-  "Notion",
   "Canva",
   "Figma",
   "Adobe Premiere Pro",
   "Adobe After Effects",
   "Adobe Photoshop",
   "Adobe XD",
-  "Microsoft Office",
   "PowerPoint",
   "Excel",
   "ClickUp",
@@ -91,7 +87,7 @@ export const thinkTechstackIconImageUrls: string[] = thinkTechstackIconSlugs.map
 export type ThinkTechstackXpStars = 1 | 2 | 3 | 4 | 5;
 
 export const thinkTechstackIconXp: ThinkTechstackXpStars[] = [
-  5, 4, 5, 5, 4, 4, 4, 5, 5, 4, 4, 4, 3, 4, 5, 5, 4, 5, 5,
+  4, 5, 5, 4, 4, 4, 5, 4, 4, 4, 3, 4, 5, 5, 4, 5, 5,
 ];
 
 /**
@@ -99,14 +95,12 @@ export const thinkTechstackIconXp: ThinkTechstackXpStars[] = [
  * Edit freely; shown on desktop when hovering the cloud.
  */
 export const thinkTechstackIconUsage: string[] = [
-  "I run roadmaps, PRDs, and stakeholder wikis in Notion so strategy and execution stay in one living workspace.",
   "Quick social and pitch visuals: Canva keeps brand-consistent layouts fast when I don’t need a full design file.",
   "Figma is where I prototype flows, hand off specs, and align with design on UX before anything ships.",
   "Premiere is my timeline for narrative cuts, dialogue, and delivery—especially for creative and campaign pieces.",
   "After Effects for motion titles, simple compositing, and polish that sells the story without over-building.",
   "Photoshop for still retouching, key art tweaks, and asset cleanup when pixels matter.",
   "XD when I need lightweight prototypes or legacy handoffs tied to older Adobe-centric workflows.",
-  "Office is the default for decks, docs, and collaboration in corporate and academic settings—fast and universal.",
   "PowerPoint for storytelling decks: narrative arc, clear asks, and exec-ready visuals.",
   "Excel for models, budgets, and data sanity checks when decisions need a spreadsheet backbone.",
   "ClickUp for sprint hygiene: tasks, owners, and visibility across product and marketing workstreams.",
@@ -130,7 +124,7 @@ export const thinkManifesto = {
 export const thinkCV = {
   label: "Resume / Curriculum Vitae",
   buttonText: "Download CV",
-  // Replace "#" with your actual hosted PDF link e.g. Google Drive, Notion, etc.
+  // Replace "#" with your actual hosted PDF link e.g. Google Drive, etc.
   link: "#",
 };
 
@@ -163,7 +157,7 @@ export const thinkExperience = [
     description:
       "Designing UI/UX for AR Smart Glasses with hand gesture and voice control. Collaborating on display and interaction systems for early-stage XR hardware.",
     tools: ["Figma", "Unity", "Blender"],
-    // Replace "#" with LinkedIn post, Notion case study, Google Drive, etc.
+    // Replace "#" with LinkedIn post, Google Drive, etc.
     link: "#",
     linkLabel: "Case Study — Coming Soon",
   },
@@ -173,7 +167,7 @@ export const thinkExperience = [
     period: "May – Jul 2025",
     description:
       "Built social media calendars, copywriting, and video scripts for TAFE and DahNAY. Experimented with 3D modelling and AI-based design workflows.",
-    tools: ["Notion", "Canva", "Adobe Suite"],
+    tools: ["Canva", "Adobe Suite"],
     link: "#",
     linkLabel: "View Work — Coming Soon",
   },

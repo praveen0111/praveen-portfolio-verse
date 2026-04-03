@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
@@ -287,8 +287,13 @@ const projectImages: Record<string, string[]> = {
   "TAMIZH Product Concept": ["/Create/Tamizh/Poster.webp", "/Create/Tamizh/Scene1.webp", "/Create/Tamizh/Scene2.webp"],
 };
 
+/** Fixed close (×) — comic tile chrome */
+const POPUP_CLOSE_BTN =
+  "flex h-11 w-11 shrink-0 items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg))] font-comic font-bold leading-none text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] transition-[transform,box-shadow,filter] duration-150 touch-manipulation hover:brightness-110 active:translate-y-px active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110 md:h-12 md:w-12";
+
 /** Full-screen popup carousel only. Grid cards stay `aspect-video`. */
-function popupCarouselAspectRatio(projectTitle: string): "4 / 3" | "16 / 9" {
+function popupCarouselAspectRatio(projectTitle: string): "4 / 3" | "16 / 9" | "21 / 9" {
+  if (projectTitle === "Penance") return "21 / 9";
   const fourByThree = new Set([
     "Thiruttu Dhum",
     "Policy Bazaar × Sathyeah",
@@ -403,16 +408,6 @@ function PopupImageCarousel({
     return () => window.clearInterval(intervalId);
   }, [images.length]);
 
-  const goPrev = () => {
-    if (images.length < 2) return;
-    setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const goNext = () => {
-    if (images.length < 2) return;
-    setSelectedIndex((prev) => (prev + 1) % images.length);
-  };
-
   return (
     <div className="relative w-full h-full">
       <div className="absolute inset-0 overflow-hidden">
@@ -432,53 +427,30 @@ function PopupImageCarousel({
       </div>
 
       {images.length > 1 && (
-        <>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              goPrev();
-            }}
-            className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-20 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg-alt))] shadow-[3px_3px_0_hsl(var(--creative-accent))] opacity-90 touch-manipulation transition-[transform,box-shadow,filter,opacity] duration-150 hover:opacity-100 hover:brightness-110 hover:shadow-[4px_4px_0_hsl(var(--creative-accent))] hover:scale-[1.04] active:scale-[0.96] active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110"
-            aria-label="Previous"
-          >
-            <ChevronLeft className="w-6 h-6 text-[hsl(var(--creative-accent))]" strokeWidth={3} />
-          </button>
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              goNext();
-            }}
-            className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-20 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg-alt))] shadow-[3px_3px_0_hsl(var(--creative-accent))] opacity-90 touch-manipulation transition-[transform,box-shadow,filter,opacity] duration-150 hover:opacity-100 hover:brightness-110 hover:shadow-[4px_4px_0_hsl(var(--creative-accent))] hover:scale-[1.04] active:scale-[0.96] active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110"
-            aria-label="Next"
-          >
-            <ChevronRight className="w-6 h-6 text-[hsl(var(--creative-accent))]" strokeWidth={3} />
-          </button>
-
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2 items-center">
-            {images.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectedIndex(i);
-                }}
-                className={`min-h-[12px] min-w-[12px] rounded-full border-2 ${
+        <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 sm:gap-2">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedIndex(i);
+              }}
+              className="flex h-11 min-h-[44px] min-w-[44px] items-center justify-center touch-manipulation rounded-full p-2"
+              aria-label={`Image ${i + 1} of ${images.length}`}
+              aria-current={i === selectedIndex ? "true" : undefined}
+            >
+              <span
+                className={`h-2.5 w-2.5 shrink-0 rounded-full border-2 transition-[transform,background-color,border-color] duration-150 ${
                   i === selectedIndex
-                    ? "bg-[hsl(var(--creative-accent))] border-[hsl(var(--creative-accent))]"
-                    : "bg-white/15 border-white/15 hover:bg-white/25 hover:border-white/25 active:bg-white/25 active:border-white/25"
+                    ? "scale-110 border-[hsl(var(--creative-accent))] bg-[hsl(var(--creative-accent))]"
+                    : "border-white/40 bg-white/15 hover:scale-110 hover:border-white/60 hover:bg-white/30 active:bg-white/25"
                 }`}
-                aria-label={`Go to slide ${i + 1}`}
               />
-            ))}
-          </div>
-        </>
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );
@@ -544,9 +516,9 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
 
   const popupCarouselLayout = useMemo(() => {
     const ar = popupCarouselAspectRatio(popupProjectTitle ?? "");
-    const aw = ar === "4 / 3" ? 4 : 16;
-    const ah = ar === "4 / 3" ? 3 : 9;
-    return { ar, aw, ah };
+    const dims =
+      ar === "4 / 3" ? { aw: 4, ah: 3 } : ar === "21 / 9" ? { aw: 21, ah: 9 } : { aw: 16, ah: 9 };
+    return { ar, aw: dims.aw, ah: dims.ah };
   }, [popupProjectTitle]);
 
   const popupIndexInFiltered = useMemo(() => {
@@ -574,7 +546,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
     setPopupInitialIndex(cardCarouselIndices[next.title] ?? 0);
   }, [popupIndexInFiltered, filteredProjects, cardCarouselIndices]);
 
-  const canPopupProjectNavigate = filteredProjects.length > 0;
+  const canPopupProjectNavigate = filteredProjects.length > 1;
 
   return (
     <div
@@ -814,7 +786,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
             </div>
             <button
               type="button"
-              className="fixed z-[250] flex h-11 w-11 md:h-12 md:w-12 shrink-0 items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg))] font-comic text-xl leading-none text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] transition-[transform,box-shadow] duration-150 touch-manipulation active:translate-y-px active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110 md:text-2xl"
+              className={cn(POPUP_CLOSE_BTN, "fixed z-[250] text-xl md:text-2xl")}
               style={{
                 top: "max(0.75rem, env(safe-area-inset-top, 0px))",
                 right: "max(1rem, env(safe-area-inset-right, 0px))",
@@ -824,8 +796,65 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
             >
               ×
             </button>
+
+            <div
+              className="fixed top-1/2 z-[250] -translate-y-1/2"
+              style={{ left: "max(0.75rem, env(safe-area-inset-left, 0px))" }}
+            >
+              <button
+                type="button"
+                disabled={!canPopupProjectNavigate}
+                className={cn(
+                  "flex min-h-[44px] min-w-[44px] items-center justify-center border-0 bg-transparent p-2 font-comic text-2xl font-bold leading-none text-[hsl(var(--creative-accent))] shadow-none transition-opacity duration-150 md:text-3xl",
+                  canPopupProjectNavigate
+                    ? "touch-manipulation hover:opacity-80 active:opacity-70"
+                    : "cursor-not-allowed opacity-35",
+                )}
+                aria-label="Previous project"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handlePopupProjectPrev();
+                }}
+              >
+                {"<<"}
+              </button>
+            </div>
+
+            <div
+              className="fixed top-1/2 z-[250] -translate-y-1/2"
+              style={{ right: "max(0.75rem, env(safe-area-inset-right, 0px))" }}
+            >
+              <button
+                type="button"
+                disabled={!canPopupProjectNavigate}
+                className={cn(
+                  "flex min-h-[44px] min-w-[44px] items-center justify-center border-0 bg-transparent p-2 font-comic text-2xl font-bold leading-none text-[hsl(var(--creative-accent))] shadow-none transition-opacity duration-150 md:text-3xl",
+                  canPopupProjectNavigate
+                    ? "touch-manipulation hover:opacity-80 active:opacity-70"
+                    : "cursor-not-allowed opacity-35",
+                )}
+                aria-label="Next project"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handlePopupProjectNext();
+                }}
+              >
+                {">>"}
+              </button>
+            </div>
+
             <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-              <div className="flex min-h-[100dvh] w-full flex-col pt-14 md:pt-16">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={popupProject.title}
+                  className="flex min-h-[100dvh] w-full flex-col pt-14 md:pt-16"
+                  initial={{ opacity: 0, scale: 0.92, filter: "blur(14px)" }}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, scale: 1.06, filter: "blur(12px)" }}
+                  transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                >
 
               {/* Title + synopsis + WATCH NOW */}
               <div className="flex-none px-4 md:px-6 pt-4 md:pt-6">
@@ -869,66 +898,22 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                 </div>
               </div>
 
-              {/* Image carousel — project << >> loop; carousel box unchanged (buttons overlay sides) */}
+              {/* Image carousel — dots only; « » are fixed like close (outside this block) */}
               <div className="flex-none px-4 md:px-6 pt-5 md:pt-6 pb-4">
-                <div className="relative w-full">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handlePopupProjectPrev();
-                    }}
-                    disabled={!canPopupProjectNavigate}
-                    aria-label="Previous project"
-                    className={cn(
-                      "absolute left-0 top-1/2 z-30 -translate-y-1/2 select-none touch-manipulation border-4 px-2 py-2 sm:px-3 sm:py-3 font-comic text-lg sm:text-xl md:text-2xl font-bold leading-none transition-[transform,box-shadow,filter,opacity] duration-150",
-                      canPopupProjectNavigate
-                        ? "cursor-pointer bg-[hsl(var(--creative-bg-alt))] text-[hsl(var(--creative-accent))] shadow-[3px_3px_0_hsl(var(--creative-accent))] hover:brightness-110 hover:shadow-[4px_4px_0_hsl(var(--creative-accent))] hover:scale-[1.03] active:scale-[0.96] active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110"
-                        : "cursor-not-allowed opacity-40",
-                    )}
-                    style={{
-                      borderColor: "hsl(var(--creative-accent))",
-                    }}
-                  >
-                    {"<<"}
-                  </button>
-                  <div
-                    className="mx-auto border-4 max-h-[52vh] md:max-h-[58vh] w-[min(100%,calc(52vh*var(--pc-ar-w)/var(--pc-ar-h)))] md:w-[min(100%,calc(58vh*var(--pc-ar-w)/var(--pc-ar-h)))]"
-                    style={{
-                      borderColor: "hsl(var(--creative-accent))",
-                      aspectRatio: popupCarouselLayout.ar,
-                      ["--pc-ar-w" as string]: popupCarouselLayout.aw,
-                      ["--pc-ar-h" as string]: popupCarouselLayout.ah,
-                    }}
-                  >
-                    <PopupImageCarousel
-                      key={popupProject.title}
-                      images={popupImages}
-                      initialIndex={popupInitialIndex}
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handlePopupProjectNext();
-                    }}
-                    disabled={!canPopupProjectNavigate}
-                    aria-label="Next project"
-                    className={cn(
-                      "absolute right-0 top-1/2 z-30 -translate-y-1/2 select-none touch-manipulation border-4 px-2 py-2 sm:px-3 sm:py-3 font-comic text-lg sm:text-xl md:text-2xl font-bold leading-none transition-[transform,box-shadow,filter,opacity] duration-150",
-                      canPopupProjectNavigate
-                        ? "cursor-pointer bg-[hsl(var(--creative-bg-alt))] text-[hsl(var(--creative-accent))] shadow-[3px_3px_0_hsl(var(--creative-accent))] hover:brightness-110 hover:shadow-[4px_4px_0_hsl(var(--creative-accent))] hover:scale-[1.03] active:scale-[0.96] active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110"
-                        : "cursor-not-allowed opacity-40",
-                    )}
-                    style={{
-                      borderColor: "hsl(var(--creative-accent))",
-                    }}
-                  >
-                    {">>"}
-                  </button>
+                <div
+                  className="mx-auto border-4 max-h-[52vh] md:max-h-[58vh] w-[min(100%,calc(52vh*var(--pc-ar-w)/var(--pc-ar-h)))] md:w-[min(100%,calc(58vh*var(--pc-ar-w)/var(--pc-ar-h)))]"
+                  style={{
+                    borderColor: "hsl(var(--creative-accent))",
+                    aspectRatio: popupCarouselLayout.ar,
+                    ["--pc-ar-w" as string]: popupCarouselLayout.aw,
+                    ["--pc-ar-h" as string]: popupCarouselLayout.ah,
+                  }}
+                >
+                  <PopupImageCarousel
+                    key={popupProject.title}
+                    images={popupImages}
+                    initialIndex={popupInitialIndex}
+                  />
                 </div>
               </div>
 
@@ -1031,7 +1016,8 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                   </p>
                 </div>
               </footer>
-              </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
             </>
           ) : null}

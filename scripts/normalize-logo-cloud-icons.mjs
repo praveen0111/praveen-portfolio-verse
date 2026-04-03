@@ -15,14 +15,12 @@ const SIZE = 512;
 
 /** [slug, sourceFilename] — same order as thinkTechstackIconSlugs */
 const entries = [
-  ["notion", "icons8-notion-96.png"],
   ["canva", "icons8-canva-512.png"],
   ["figma", "figma.png"],
   ["premierepro", "premiere-pro.png"],
   ["aftereffects", "after-effects.png"],
   ["photoshop", "photoshop.png"],
   ["xd", "xd.png"],
-  ["microsoftoffice", "icons8-ms-office-512.png"],
   ["powerpoint", "icons8-powerpoint-512.png"],
   ["excel", "excel.png"],
   ["clickup", "icons8-clickup-512.png"],

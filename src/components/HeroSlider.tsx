@@ -522,10 +522,12 @@ const HeroSlider = ({
           setIsDragging(true);
         }}
       >
+        {/* Mobile: horizontal stroke (top/bottom split); desktop: vertical bar between left/right panels */}
         <ComicInkStrokeBar orientation={isMobile ? "horizontal" : "vertical"} />
-        
-        <div 
+
+        <div
           data-smooth-cursor="slider-pe-button"
+          data-pe-slider-axis={isMobile ? "vertical" : "horizontal"}
           className={`relative z-10 flex shrink-0 items-center justify-center rounded-full bg-black border-0 overflow-visible ${
             isMobile ? "h-14 w-14 sm:h-16 sm:w-16" : "h-16 w-16"
           }`}

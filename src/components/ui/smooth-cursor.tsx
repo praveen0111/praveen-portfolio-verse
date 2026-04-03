@@ -19,16 +19,21 @@ export interface SmoothCursorProps {
 
 const DESKTOP_POINTER_QUERY = "(any-hover: hover) and (any-pointer: fine)";
 const TEXT_INPUT_SELECTOR = "input, textarea, select, [contenteditable='true']";
-/** HeroSlider P.E. knob only — arrow cursor when pointer is over this element */
+/** HeroSlider P.E. knob only — ↔ on desktop (ew-resize), ↑↓ on mobile (ns-resize) */
 const SLIDER_PE_BUTTON_SELECTOR = '[data-smooth-cursor="slider-pe-button"]';
+
+type PeSliderCursorVariant = "default" | "arrowH" | "arrowV";
 
 function isTrackablePointer(pointerType: string) {
   return pointerType !== "touch";
 }
 
-function isHoveringPeSliderButton(clientX: number, clientY: number): boolean {
+function peSliderCursorVariant(clientX: number, clientY: number): PeSliderCursorVariant {
   const under = document.elementFromPoint(clientX, clientY);
-  return under instanceof Element && !!under.closest(SLIDER_PE_BUTTON_SELECTOR);
+  if (!(under instanceof Element)) return "default";
+  const knob = under.closest(SLIDER_PE_BUTTON_SELECTOR);
+  if (!knob) return "default";
+  return knob.getAttribute("data-pe-slider-axis") === "vertical" ? "arrowV" : "arrowH";
 }
 
 const DefaultCursorSVG: FC = () => {
@@ -93,6 +98,44 @@ const DefaultCursorSVG: FC = () => {
   );
 };
 
+const TwoPointedVerticalArrowSVG: FC = () => {
+  /** Vertical ↕ : shaft top–bottom, tips up/down (mobile hero slider / ns-resize). */
+  const border = "var(--smooth-cursor-border, #ffffff)";
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={28} height={50} viewBox="0 0 28 50" fill="none">
+      <path d="M14 18V32" stroke={border} strokeWidth={5} strokeLinecap="round" />
+      <path
+        d="M8 18L14 10L20 18"
+        stroke={border}
+        strokeWidth={5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8 32L14 40L20 32"
+        stroke={border}
+        strokeWidth={5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 16L10 12M14 16L18 12"
+        stroke="white"
+        strokeWidth={2.2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 34L10 38M14 34L18 38"
+        stroke="white"
+        strokeWidth={2.2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 const TwoPointedArrowSVG: FC = () => {
   /** Horizontal ↔ : shaft left–right, tips point outward (resize affordance). */
   const border = "var(--smooth-cursor-border, #ffffff)";
@@ -142,9 +185,9 @@ export function SmoothCursor({
 }: SmoothCursorProps) {
   const [isEnabled, setIsEnabled] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [cursorVariant, setCursorVariant] = useState<"default" | "arrow">("default");
+  const [cursorVariant, setCursorVariant] = useState<PeSliderCursorVariant>("default");
   const cursorSwapRef = useRef<HTMLDivElement | null>(null);
-  const cursorVariantRef = useRef<"default" | "arrow">("default");
+  const cursorVariantRef = useRef<PeSliderCursorVariant>("default");
 
   // No physics: direct updates from pointermove.
   const cursorX = useMotionValue(0);
@@ -194,8 +237,7 @@ export function SmoothCursor({
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
 
-      const nearSlider = isHoveringPeSliderButton(e.clientX, e.clientY);
-      const nextVariant = nearSlider ? "arrow" : "default";
+      const nextVariant = peSliderCursorVariant(e.clientX, e.clientY);
       if (cursorVariantRef.current !== nextVariant) {
         cursorVariantRef.current = nextVariant;
         cursorSwapRef.current?.setAttribute("data-variant", nextVariant);
@@ -257,7 +299,7 @@ export function SmoothCursor({
         data-variant="default"
         style={{
           transform:
-            cursorVariant === "arrow"
+            cursorVariant === "arrowH" || cursorVariant === "arrowV"
               ? `scale(${CURSOR_BASE_SCALE * ARROW_SIZE_MULT}) rotate(0deg)`
               : `scale(${CURSOR_BASE_SCALE}) rotate(${CURSOR_TILT_DEG}deg)`,
           transformOrigin: "center",
@@ -265,13 +307,22 @@ export function SmoothCursor({
         }}
       >
         <style>{`
-          [data-variant="arrow"] .smooth-cursor__default { opacity: 0; }
-          [data-variant="default"] .smooth-cursor__arrow { opacity: 0; }
-          .smooth-cursor__default, .smooth-cursor__arrow { transition: opacity 120ms linear; }
+          [data-variant="arrowH"] .smooth-cursor__default,
+          [data-variant="arrowV"] .smooth-cursor__default { opacity: 0; }
+          [data-variant="default"] .smooth-cursor__arrow-h,
+          [data-variant="default"] .smooth-cursor__arrow-v { opacity: 0; }
+          [data-variant="arrowH"] .smooth-cursor__arrow-h { opacity: 1; }
+          [data-variant="arrowH"] .smooth-cursor__arrow-v { opacity: 0; }
+          [data-variant="arrowV"] .smooth-cursor__arrow-v { opacity: 1; }
+          [data-variant="arrowV"] .smooth-cursor__arrow-h { opacity: 0; }
+          .smooth-cursor__default, .smooth-cursor__arrow-h, .smooth-cursor__arrow-v { transition: opacity 120ms linear; }
         `}</style>
         <span className="smooth-cursor__default">{cursor}</span>
-        <span className="smooth-cursor__arrow">
+        <span className="smooth-cursor__arrow-h">
           <TwoPointedArrowSVG />
+        </span>
+        <span className="smooth-cursor__arrow-v">
+          <TwoPointedVerticalArrowSVG />
         </span>
       </div>
     </motion.div>
