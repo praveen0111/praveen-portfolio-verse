@@ -220,10 +220,10 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                       {/*
                         overflow-x on the flex row breaks Motion layout projection; scroll lives on outer wrapper.
                       */}
-                      <div className="w-full max-w-full min-w-0 overflow-x-auto overflow-y-visible [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                      <div className="flex w-full max-w-full min-w-0 justify-center overflow-x-auto overflow-y-visible [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:justify-start">
                         <div
                           role="paragraph"
-                          className="m-0 flex w-max min-w-max max-w-none flex-row flex-nowrap items-center justify-center gap-x-[1ch] whitespace-nowrap text-base md:justify-start md:text-lg font-content font-content-medium leading-normal"
+                          className="m-0 mx-auto flex w-max min-w-max max-w-none flex-row flex-nowrap items-center justify-center gap-x-[1ch] whitespace-nowrap text-base md:mx-0 md:justify-start md:text-lg font-content font-content-medium leading-normal"
                           style={{ color: "hsl(var(--think-fg-muted))" }}
                         >
                           <RotatingText

@@ -391,7 +391,7 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
         {textEffect === 'decrypt' ? (
           <span
             className={cn(
-              'relative inline-grid min-h-[1.5em] w-max max-w-none shrink-0 grid-cols-1 grid-rows-1 justify-items-start whitespace-nowrap',
+              'relative inline-grid min-h-[1.5em] w-max max-w-none shrink-0 grid-cols-1 grid-rows-1 justify-items-center md:justify-items-start whitespace-nowrap',
               splitLevelClassName
             )}
             aria-hidden="true"
@@ -413,7 +413,7 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
         ) : textEffect === 'dissolve' ? (
           <span
             className={cn(
-              'relative inline-grid min-h-[1.5em] grid-cols-1 grid-rows-1 justify-items-start',
+              'relative inline-grid min-h-[1.5em] grid-cols-1 grid-rows-1 justify-items-center md:justify-items-start',
               splitLevelClassName
             )}
             aria-hidden="true"

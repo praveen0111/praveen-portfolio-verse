@@ -27,7 +27,7 @@ export const thinkMeta = {
   subtitleRotationMs: 3600,
   /** Tailwind: outer “pill” around each rotating phrase (edit freely). */
   subtitleRotatingMainClassName:
-    "inline-flex w-max max-w-none shrink-0 flex-nowrap items-center justify-center overflow-hidden whitespace-nowrap px-0.5 sm:px-1 md:px-1 bg-cyan-300 text-black py-2 sm:py-2.5 md:py-3 rounded-lg leading-normal",
+    "inline-flex w-max max-w-none shrink-0 flex-nowrap items-center justify-center overflow-hidden whitespace-nowrap px-0.5 sm:px-1 md:justify-start md:pl-0 md:pr-1 bg-cyan-300 text-black py-2 sm:py-2.5 md:py-3 rounded-lg leading-normal",
   /** Clip vertical scroll; fixed min-height keeps the row visually one line. */
   subtitleRotatingSplitLevelClassName:
     "pb-1 pt-0.5",
