@@ -220,47 +220,77 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                       {/*
                         overflow-x on the flex row breaks Motion layout projection; scroll lives on outer wrapper.
                       */}
+                      {/*
+                        Mobile: default one horizontal row (nowrap + overflow-x) so pills stay on one line when possible.
+                        Very narrow (max-[360px]): two rows — role on row 1; between + intersection on row 2; all centered.
+                        `display: contents` on wrappers from 361px to md so three pills stay one flex row without duplicating rotators.
+                      */}
                       <div className="flex w-full max-w-full min-w-0 justify-center overflow-x-auto overflow-y-visible [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:justify-start">
                         <div
                           role="paragraph"
-                          className="m-0 mx-auto flex w-max min-w-max max-w-none flex-row flex-nowrap items-center justify-center gap-x-[1ch] whitespace-nowrap text-base md:mx-0 md:justify-start md:text-lg font-content font-content-medium leading-normal"
+                          className={cn(
+                            "m-0 mx-auto flex max-w-none items-center text-base font-content font-content-medium leading-normal md:mx-0 md:text-lg",
+                            /* Very narrow: stack two rows, full width, centered */
+                            "max-[360px]:w-full max-[360px]:min-w-0 max-[360px]:max-w-full max-[360px]:flex-col max-[360px]:justify-center max-[360px]:gap-y-2 max-[360px]:gap-x-0",
+                            /* Wider mobile / tablet: one scrollable line, min width = content */
+                            "min-[361px]:max-md:w-max min-[361px]:max-md:min-w-max min-[361px]:max-md:flex-row min-[361px]:max-md:flex-nowrap min-[361px]:max-md:justify-center min-[361px]:max-md:gap-x-[1ch]",
+                            /* Desktop */
+                            "md:w-max md:min-w-max md:flex-row md:flex-nowrap md:justify-start md:gap-x-[1ch]",
+                            "whitespace-nowrap"
+                          )}
                           style={{ color: "hsl(var(--think-fg-muted))" }}
                         >
-                          <RotatingText
-                            ref={subtitleRoleRotRef}
-                            texts={rolesForRotator}
-                            {...THINK_ROTATING_TEXT_SHARED}
-                            auto={false}
-                            loop
-                            mainClassName={thinkMeta.subtitleRotatingMainClassName}
-                            splitLevelClassName={thinkMeta.subtitleRotatingSplitLevelClassName}
-                            className="shrink-0 self-center"
-                            elementLevelClassName="leading-normal"
-                          />
-                          {hasSubtitleBetween ? (
+                          <div
+                            className={cn(
+                              "max-[360px]:flex max-[360px]:w-full max-[360px]:min-w-0 max-[360px]:justify-center",
+                              "min-[361px]:max-md:contents",
+                              "md:contents"
+                            )}
+                          >
                             <RotatingText
-                              ref={subtitleBetweenRotRef}
-                              texts={betweenTextsForRotator}
+                              ref={subtitleRoleRotRef}
+                              texts={rolesForRotator}
                               {...THINK_ROTATING_TEXT_SHARED}
                               auto={false}
                               loop
                               mainClassName={thinkMeta.subtitleRotatingMainClassName}
                               splitLevelClassName={thinkMeta.subtitleRotatingSplitLevelClassName}
-                              className="shrink-0 self-center whitespace-pre"
+                              className="shrink-0 self-center"
                               elementLevelClassName="leading-normal"
                             />
-                          ) : null}
-                          <RotatingText
-                            ref={subtitleIntersectionRotRef}
-                            texts={intersectionForRotator}
-                            {...THINK_ROTATING_TEXT_SHARED}
-                            auto={false}
-                            loop
-                            mainClassName={thinkMeta.subtitleRotatingMainClassName}
-                            splitLevelClassName={thinkMeta.subtitleRotatingSplitLevelClassName}
-                            className="shrink-0 self-center"
-                            elementLevelClassName="leading-normal"
-                          />
+                          </div>
+                          <div
+                            className={cn(
+                              "flex max-[360px]:w-full max-[360px]:min-w-0 max-[360px]:flex-row max-[360px]:flex-nowrap max-[360px]:items-center max-[360px]:justify-center max-[360px]:gap-x-[1ch]",
+                              "min-[361px]:max-md:contents",
+                              "md:contents"
+                            )}
+                          >
+                            {hasSubtitleBetween ? (
+                              <RotatingText
+                                ref={subtitleBetweenRotRef}
+                                texts={betweenTextsForRotator}
+                                {...THINK_ROTATING_TEXT_SHARED}
+                                auto={false}
+                                loop
+                                mainClassName={thinkMeta.subtitleRotatingMainClassName}
+                                splitLevelClassName={thinkMeta.subtitleRotatingSplitLevelClassName}
+                                className="shrink-0 self-center whitespace-pre"
+                                elementLevelClassName="leading-normal"
+                              />
+                            ) : null}
+                            <RotatingText
+                              ref={subtitleIntersectionRotRef}
+                              texts={intersectionForRotator}
+                              {...THINK_ROTATING_TEXT_SHARED}
+                              auto={false}
+                              loop
+                              mainClassName={thinkMeta.subtitleRotatingMainClassName}
+                              splitLevelClassName={thinkMeta.subtitleRotatingSplitLevelClassName}
+                              className="shrink-0 self-center"
+                              elementLevelClassName="leading-normal"
+                            />
+                          </div>
                         </div>
                       </div>
                     </LayoutGroup>

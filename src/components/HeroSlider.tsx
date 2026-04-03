@@ -485,7 +485,7 @@ const HeroSlider = ({
         </button>
       </div>
 
-      {/* Divider with fluid movement - min 44px touch area on mobile (above THINK/CREATE hit areas) */}
+      {/* Divider with fluid movement - min 44px touch area on mobile (above THINK/CREATE hit areas). */}
       <div
         ref={dividerRef}
         className={cn(
@@ -525,6 +525,7 @@ const HeroSlider = ({
         <ComicInkStrokeBar orientation={isMobile ? "horizontal" : "vertical"} />
         
         <div 
+          data-smooth-cursor="slider-pe-button"
           className={`relative z-10 flex shrink-0 items-center justify-center rounded-full bg-black border-0 overflow-visible ${
             isMobile ? "h-14 w-14 sm:h-16 sm:w-16" : "h-16 w-16"
           }`}

@@ -123,6 +123,9 @@
     --input: 25 40% 25%;
     --ring: 25 100% 55%;
     --radius: 0;
+
+    /* SmoothCursor outline — updated per section in Index.tsx */
+    --smooth-cursor-border: #ffffff;
   }
 }
 
@@ -872,4 +875,20 @@ body {
 }
 .home-loading-dot:nth-child(5) {
   animation-delay: 0.48s;
+}
+
+/* Hide system cursor site-wide (pairs with SmoothCursor in App). */
+@layer base {
+  * {
+    cursor: none !important;
+  }
+}
+
+/* Contact page: keep text caret for form fields (overrides cursor: none). */
+@layer base {
+  [data-page="contact"] input,
+  [data-page="contact"] textarea,
+  [data-page="contact"] select {
+    cursor: text !important;
+  }
 }

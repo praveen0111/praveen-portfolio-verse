@@ -1,10 +1,11 @@
 import { type FC, useEffect, useRef, useState } from "react";
-import { motion, useSpring } from "motion/react";
+import { motion, useMotionValue } from "motion/react";
 
-interface Position {
-  x: number;
-  y: number;
-}
+/** Fixed visual tilt for the default pointer (degrees). Arrow variant stays untilted. */
+const CURSOR_TILT_DEG = -45;
+const CURSOR_BASE_SCALE = 0.5;
+/** Arrow is 30% larger than the default cursor at the same base. */
+const ARROW_SIZE_MULT = 1.3;
 
 export interface SmoothCursorProps {
   cursor?: React.ReactNode;
@@ -17,9 +18,17 @@ export interface SmoothCursorProps {
 }
 
 const DESKTOP_POINTER_QUERY = "(any-hover: hover) and (any-pointer: fine)";
+const TEXT_INPUT_SELECTOR = "input, textarea, select, [contenteditable='true']";
+/** HeroSlider P.E. knob only — arrow cursor when pointer is over this element */
+const SLIDER_PE_BUTTON_SELECTOR = '[data-smooth-cursor="slider-pe-button"]';
 
 function isTrackablePointer(pointerType: string) {
   return pointerType !== "touch";
+}
+
+function isHoveringPeSliderButton(clientX: number, clientY: number): boolean {
+  const under = document.elementFromPoint(clientX, clientY);
+  return under instanceof Element && !!under.closest(SLIDER_PE_BUTTON_SELECTOR);
 }
 
 const DefaultCursorSVG: FC = () => {
@@ -39,7 +48,7 @@ const DefaultCursorSVG: FC = () => {
         />
         <path
           d="M43.7146 40.6933L28.5431 6.34306C27.3556 3.65428 23.5772 3.69516 22.3668 6.32755L6.57226 40.6778C5.3134 43.4156 7.97238 46.298 10.803 45.2549L24.7662 40.109C25.0221 40.0147 25.2999 40.0156 25.5494 40.1082L39.4193 45.254C42.2261 46.2953 44.9254 43.4347 43.7146 40.6933Z"
-          stroke="white"
+          stroke="var(--smooth-cursor-border, #ffffff)"
           strokeWidth={2.25825}
         />
       </g>
@@ -84,6 +93,44 @@ const DefaultCursorSVG: FC = () => {
   );
 };
 
+const TwoPointedArrowSVG: FC = () => {
+  /** Horizontal ↔ : shaft left–right, tips point outward (resize affordance). */
+  const border = "var(--smooth-cursor-border, #ffffff)";
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={50} height={28} viewBox="0 0 50 28" fill="none">
+      <path d="M18 14H32" stroke={border} strokeWidth={5} strokeLinecap="round" />
+      <path
+        d="M18 8L10 14L18 20"
+        stroke={border}
+        strokeWidth={5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M32 8L40 14L32 20"
+        stroke={border}
+        strokeWidth={5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 14L12 10M16 14L12 18"
+        stroke="white"
+        strokeWidth={2.2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M34 14L38 10M34 14L38 18"
+        stroke="white"
+        strokeWidth={2.2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 export function SmoothCursor({
   cursor = <DefaultCursorSVG />,
   springConfig = {
@@ -93,26 +140,15 @@ export function SmoothCursor({
     restDelta: 0.001,
   },
 }: SmoothCursorProps) {
-  const lastMousePos = useRef<Position>({ x: 0, y: 0 });
-  const velocity = useRef<Position>({ x: 0, y: 0 });
-  const lastUpdateTime = useRef(Date.now());
-  const previousAngle = useRef(0);
-  const accumulatedRotation = useRef(0);
   const [isEnabled, setIsEnabled] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [cursorVariant, setCursorVariant] = useState<"default" | "arrow">("default");
+  const cursorSwapRef = useRef<HTMLDivElement | null>(null);
+  const cursorVariantRef = useRef<"default" | "arrow">("default");
 
-  const cursorX = useSpring(0, springConfig);
-  const cursorY = useSpring(0, springConfig);
-  const rotation = useSpring(0, {
-    ...springConfig,
-    damping: 60,
-    stiffness: 300,
-  });
-  const scale = useSpring(1, {
-    ...springConfig,
-    stiffness: 500,
-    damping: 35,
-  });
+  // No physics: direct updates from pointermove.
+  const cursorX = useMotionValue(0);
+  const cursorY = useMotionValue(0);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(DESKTOP_POINTER_QUERY);
@@ -139,61 +175,31 @@ export function SmoothCursor({
       return;
     }
 
-    let timeout: ReturnType<typeof setTimeout> | null = null;
-
-    const updateVelocity = (currentPos: Position) => {
-      const currentTime = Date.now();
-      const deltaTime = currentTime - lastUpdateTime.current;
-
-      if (deltaTime > 0) {
-        velocity.current = {
-          x: (currentPos.x - lastMousePos.current.x) / deltaTime,
-          y: (currentPos.y - lastMousePos.current.y) / deltaTime,
-        };
-      }
-
-      lastUpdateTime.current = currentTime;
-      lastMousePos.current = currentPos;
-    };
-
     const smoothPointerMove = (e: PointerEvent) => {
       if (!isTrackablePointer(e.pointerType)) {
         return;
       }
 
+      const target = e.target;
+      if (target instanceof Element) {
+        // Hide smooth cursor over text inputs so the caret shows normally.
+        if (target.closest(TEXT_INPUT_SELECTOR)) {
+          setIsVisible(false);
+          return;
+        }
+      }
+
       setIsVisible(true);
 
-      const currentPos = { x: e.clientX, y: e.clientY };
-      updateVelocity(currentPos);
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
 
-      const speed = Math.sqrt(
-        Math.pow(velocity.current.x, 2) + Math.pow(velocity.current.y, 2),
-      );
-
-      cursorX.set(currentPos.x);
-      cursorY.set(currentPos.y);
-
-      if (speed > 0.1) {
-        const currentAngle =
-          Math.atan2(velocity.current.y, velocity.current.x) * (180 / Math.PI) +
-          90;
-
-        let angleDiff = currentAngle - previousAngle.current;
-        if (angleDiff > 180) angleDiff -= 360;
-        if (angleDiff < -180) angleDiff += 360;
-        accumulatedRotation.current += angleDiff;
-        rotation.set(accumulatedRotation.current);
-        previousAngle.current = currentAngle;
-
-        scale.set(0.95);
-
-        if (timeout !== null) {
-          clearTimeout(timeout);
-        }
-
-        timeout = setTimeout(() => {
-          scale.set(1);
-        }, 150);
+      const nearSlider = isHoveringPeSliderButton(e.clientX, e.clientY);
+      const nextVariant = nearSlider ? "arrow" : "default";
+      if (cursorVariantRef.current !== nextVariant) {
+        cursorVariantRef.current = nextVariant;
+        cursorSwapRef.current?.setAttribute("data-variant", nextVariant);
+        setCursorVariant(nextVariant);
       }
     };
 
@@ -220,11 +226,8 @@ export function SmoothCursor({
       window.removeEventListener("pointermove", throttledPointerMove);
       document.body.style.cursor = "auto";
       if (rafId) cancelAnimationFrame(rafId);
-      if (timeout !== null) {
-        clearTimeout(timeout);
-      }
     };
-  }, [cursorX, cursorY, rotation, scale, isEnabled]);
+  }, [cursorX, cursorY, isEnabled]);
 
   if (!isEnabled) {
     return null;
@@ -238,9 +241,7 @@ export function SmoothCursor({
         top: cursorY,
         translateX: "-50%",
         translateY: "-50%",
-        rotate: rotation,
-        scale: scale,
-        zIndex: 100,
+        zIndex: 99999,
         pointerEvents: "none",
         willChange: "transform",
         opacity: isVisible ? 1 : 0,
@@ -251,7 +252,28 @@ export function SmoothCursor({
         duration: 0.15,
       }}
     >
-      {cursor}
+      <div
+        ref={cursorSwapRef}
+        data-variant="default"
+        style={{
+          transform:
+            cursorVariant === "arrow"
+              ? `scale(${CURSOR_BASE_SCALE * ARROW_SIZE_MULT}) rotate(0deg)`
+              : `scale(${CURSOR_BASE_SCALE}) rotate(${CURSOR_TILT_DEG}deg)`,
+          transformOrigin: "center",
+          transition: "transform 140ms ease-out",
+        }}
+      >
+        <style>{`
+          [data-variant="arrow"] .smooth-cursor__default { opacity: 0; }
+          [data-variant="default"] .smooth-cursor__arrow { opacity: 0; }
+          .smooth-cursor__default, .smooth-cursor__arrow { transition: opacity 120ms linear; }
+        `}</style>
+        <span className="smooth-cursor__default">{cursor}</span>
+        <span className="smooth-cursor__arrow">
+          <TwoPointedArrowSVG />
+        </span>
+      </div>
     </motion.div>
   );
 }

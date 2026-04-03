@@ -126,6 +126,7 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
 
   return (
     <div
+      data-page="contact"
       className="relative flex min-h-screen min-h-screen-mobile flex-col overflow-x-hidden bg-black"
       style={{
         /* Solid black: avoid bg-energy-dark radial gradients (they anchor to page height and cause a mid-scroll seam). */
