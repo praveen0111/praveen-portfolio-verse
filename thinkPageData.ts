@@ -15,13 +15,12 @@ export const thinkMeta = {
   subtitleRotatingBetween: [
     "writing",
     "building",
-    "working on",
     "crafting",
     "developing",
     "shaping",
     "designing",
   ],
-  subtitleRotatingRoles: ["Product & Marketing Strategist", "Filmmaker", "Engineer"],
+  subtitleRotatingRoles: ["Product strategist", "Marketing strategist", "Filmmaker", "Engineer"],
   subtitleRotatingIntersection: ["strategies", "stories", "systems"],
   /** ms between phrase changes — all three hero rotators tick together on this interval. */
   subtitleRotationMs: 3600,
