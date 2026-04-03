@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { Dialog, DialogClose, DialogContent } from "./ui/dialog";
+import { Dialog, DialogContent } from "./ui/dialog";
 import ComicParticles from "./ComicParticles";
 import DotGrid from "./DotGrid";
 
@@ -800,34 +800,35 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
         </div>
       </footer>
 
-      {/* Full-Screen Popup */}
+      {/* Full-Screen Popup — DialogContent must stay mounted while open; close is fixed + explicit so Radix Close / scroll stacking cannot swallow taps */}
       <Dialog open={isPopupOpen} onOpenChange={handleOpenChange}>
-        {popupProject && (
-          <DialogContent
-            showClose={false}
-            className="fixed inset-0 z-[100] flex h-screen max-h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 bg-transparent p-0 shadow-none sm:rounded-none"
-            style={{ backgroundColor: "hsl(var(--creative-bg-alt))" }}
-          >
+        <DialogContent
+          showClose={false}
+          className="fixed inset-0 z-[100] flex h-screen max-h-[100dvh] w-screen max-w-none translate-x-0 translate-y-0 flex-col gap-0 overflow-hidden border-0 bg-transparent p-0 shadow-none sm:rounded-none"
+          style={{ backgroundColor: "hsl(var(--creative-bg-alt))" }}
+        >
+          {popupProject ? (
+            <>
             <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
               <DotGrid variant="create" />
             </div>
+            <button
+              type="button"
+              className="fixed z-[250] flex h-11 w-11 md:h-12 md:w-12 shrink-0 items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg))] font-comic text-xl leading-none text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] transition-[transform,box-shadow] duration-150 touch-manipulation active:translate-y-px active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110 md:text-2xl"
+              style={{
+                top: "max(0.75rem, env(safe-area-inset-top, 0px))",
+                right: "max(1rem, env(safe-area-inset-right, 0px))",
+              }}
+              aria-label="Close"
+              onClick={() => handleOpenChange(false)}
+            >
+              ×
+            </button>
             <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-              <div className="flex min-h-[100dvh] w-full flex-col">
-              <DialogClose asChild>
-                <button
-                  type="button"
-                  className="absolute top-2 right-4 z-[200] w-7 h-7 md:w-8 md:h-8 border-4 border-black bg-[hsl(var(--creative-bg))] text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] flex items-center justify-center font-comic text-xl md:text-2xl leading-none touch-manipulation transition-[transform,box-shadow] duration-150 active:translate-y-px active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110"
-                  aria-label="Close"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                >
-                  ×
-                </button>
-              </DialogClose>
+              <div className="flex min-h-[100dvh] w-full flex-col pt-14 md:pt-16">
 
               {/* Title + synopsis + WATCH NOW */}
-              <div className="flex-none px-4 md:px-6 pt-10 md:pt-12">
+              <div className="flex-none px-4 md:px-6 pt-4 md:pt-6">
                 <div
                   className="border-4 p-3 md:p-4"
                   style={{
@@ -1032,8 +1033,9 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
               </footer>
               </div>
             </div>
-          </DialogContent>
-        )}
+            </>
+          ) : null}
+        </DialogContent>
       </Dialog>
     </div>
   );
