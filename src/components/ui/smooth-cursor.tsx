@@ -275,10 +275,6 @@ export function SmoothCursor({
     return null;
   }
 
-  /** Default diamond is centered on the pointer; the visible “tip” sits below center — shift up so clicks line up with what you see. */
-  const tipAlignTranslateY =
-    cursorVariant === "arrowH" || cursorVariant === "arrowV" ? "-50%" : "calc(-50% - 14px)";
-
   return (
     <motion.div
       style={{
@@ -286,7 +282,7 @@ export function SmoothCursor({
         left: cursorX,
         top: cursorY,
         translateX: "-50%",
-        translateY: tipAlignTranslateY,
+        translateY: "-50%",
         zIndex: 99999,
         pointerEvents: "none",
         willChange: "transform",

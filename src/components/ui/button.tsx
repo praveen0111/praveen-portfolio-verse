@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "relative isolate inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm font-bold uppercase tracking-wide ring-offset-background touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 transition-all duration-200 overflow-visible before:pointer-events-auto before:absolute before:-inset-3 before:z-0 before:content-[''] disabled:before:content-none",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm font-bold uppercase tracking-wide ring-offset-background touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 transition-all duration-200",
   {
     variants: {
       variant: {
@@ -23,10 +23,10 @@ const buttonVariants = cva(
           "text-primary underline-offset-4 hover:underline hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)] active:underline active:drop-shadow-[0_0_8px_hsl(var(--primary)/0.5)]",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-none px-3",
-        lg: "h-11 rounded-none px-8",
-        icon: "h-10 w-10 before:-inset-1.5",
+        default: "h-11 min-h-11 px-5 py-2",
+        sm: "h-10 min-h-10 rounded-none px-4",
+        lg: "h-12 min-h-12 rounded-none px-10",
+        icon: "h-11 min-h-11 w-11 min-w-11",
       },
     },
     defaultVariants: {

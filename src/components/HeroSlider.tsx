@@ -384,13 +384,13 @@ const HeroSlider = ({
           aria-disabled={navigationLocked}
           aria-label="Go to Think"
           className={cn(
-            "absolute z-10 select-none touch-manipulation transition-transform duration-150",
+            "absolute z-10 flex select-none touch-manipulation transition-transform duration-150 items-center justify-center p-6 min-[400px]:p-8 md:p-12",
             navigationLocked
               ? "pointer-events-none cursor-not-allowed opacity-60"
               : "group pointer-events-auto cursor-pointer active:scale-[0.98]",
             isMobile ? MOBILE_THINK_BUTTON_CLASS : "left-1/2 top-24 -translate-x-1/2 md:top-28",
           )}
-          style={{ background: "none", border: "none", padding: 0 }}
+          style={{ background: "none", border: "none" }}
         >
           <span
             className={cn(
@@ -439,7 +439,7 @@ const HeroSlider = ({
           aria-disabled={navigationLocked}
           aria-label="Go to Creative"
           className={cn(
-            "absolute z-10 select-none touch-manipulation transition-transform duration-150",
+            "absolute z-10 flex select-none touch-manipulation transition-transform duration-150 items-center justify-center p-6 min-[400px]:p-8 md:p-12",
             navigationLocked
               ? "pointer-events-none cursor-not-allowed opacity-60"
               : "group pointer-events-auto cursor-pointer active:scale-[0.98]",
@@ -447,7 +447,7 @@ const HeroSlider = ({
               ? MOBILE_CREATE_BUTTON_CLASS
               : "left-[20%] top-24 -translate-x-1/2 md:top-28",
           )}
-          style={{ background: "none", border: "none", padding: 0 }}
+          style={{ background: "none", border: "none" }}
         >
           <span
             className={cn(
@@ -485,12 +485,12 @@ const HeroSlider = ({
         </button>
       </div>
 
-      {/* Divider with fluid movement - min 44px touch area on mobile (above THINK/CREATE hit areas). */}
+      {/* Divider with fluid movement — wider grab strip + larger knob for easier hover/drag. */}
       <div
         ref={dividerRef}
         className={cn(
           "absolute z-[50] flex items-center justify-center touch-none",
-          isMobile ? "left-0 right-0 min-h-[44px]" : "top-0 bottom-0 min-w-[44px]",
+          isMobile ? "left-0 right-0 min-h-[56px]" : "top-0 bottom-0 min-w-[56px]",
           navigationLocked
             ? "pointer-events-none cursor-not-allowed opacity-70"
             : isMobile
@@ -501,12 +501,12 @@ const HeroSlider = ({
           ? {
               top: `${sliderPosition}%`,
               transform: "translateY(-50%)",
-              height: "44px",
+              height: "56px",
             }
           : {
               left: `${sliderPosition}%`,
               transform: "translateX(-50%)",
-              width: "44px",
+              width: "56px",
             }
         }
         onMouseDown={() => {
@@ -529,7 +529,7 @@ const HeroSlider = ({
           data-smooth-cursor="slider-pe-button"
           data-pe-slider-axis={isMobile ? "vertical" : "horizontal"}
           className={`relative z-10 flex shrink-0 items-center justify-center rounded-full bg-black border-0 overflow-visible ${
-            isMobile ? "h-14 w-14 sm:h-16 sm:w-16" : "h-16 w-16"
+            isMobile ? "h-[4.25rem] w-[4.25rem] sm:h-[4.5rem] sm:w-[4.5rem]" : "h-[4.5rem] w-[4.5rem]"
           }`}
           style={{
             boxShadow: "2.4px 3.2px 0 0 rgba(0, 0, 0, 0.4)",

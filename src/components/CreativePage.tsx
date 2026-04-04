@@ -289,7 +289,7 @@ const projectImages: Record<string, string[]> = {
 
 /** Fixed close (×) — comic tile chrome */
 const POPUP_CLOSE_BTN =
-  "flex h-11 w-11 shrink-0 items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg))] font-comic font-bold leading-none text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] transition-[transform,box-shadow,filter] duration-150 touch-manipulation hover:brightness-110 active:translate-y-px active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110 md:h-12 md:w-12";
+  "flex h-14 w-14 min-h-14 min-w-14 shrink-0 items-center justify-center border-4 border-black bg-[hsl(var(--creative-bg))] font-comic font-bold leading-none text-white shadow-[4px_4px_0_hsl(var(--creative-accent))] transition-[transform,box-shadow,filter] duration-150 touch-manipulation hover:brightness-110 active:translate-y-px active:shadow-[2px_2px_0_hsl(var(--creative-accent))] active:brightness-110 md:h-[3.75rem] md:w-[3.75rem] md:min-h-[3.75rem] md:min-w-[3.75rem]";
 
 /** Full-screen popup carousel only. Grid cards stay `aspect-video`. */
 function popupCarouselAspectRatio(projectTitle: string): "4 / 3" | "16 / 9" | "21 / 9" {
@@ -370,13 +370,17 @@ function PosterCarousel({
                 e.preventDefault();
                 setSelectedIndex(i);
               }}
-              className={`min-h-[12px] min-w-[12px] rounded-full border-2 ${
-                i === selectedIndex
-                  ? "bg-[hsl(var(--creative-accent))] border-[hsl(var(--creative-accent))]"
-                  : "bg-white/15 border-white/15 hover:bg-white/25 hover:border-white/25 active:bg-white/25 active:border-white/25"
-              }`}
+              className="flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-full border-0 bg-transparent p-0"
               aria-label={`Go to slide ${i + 1}`}
-            />
+            >
+              <span
+                className={`h-2.5 w-2.5 shrink-0 rounded-full border-2 ${
+                  i === selectedIndex
+                    ? "border-[hsl(var(--creative-accent))] bg-[hsl(var(--creative-accent))]"
+                    : "border-white/15 bg-white/15 hover:border-white/25 hover:bg-white/25 active:border-white/25 active:bg-white/25"
+                }`}
+              />
+            </button>
           ))}
         </div>
       )}
@@ -437,7 +441,7 @@ function PopupImageCarousel({
                 e.stopPropagation();
                 setSelectedIndex(i);
               }}
-              className="flex h-11 min-h-[44px] min-w-[44px] items-center justify-center touch-manipulation rounded-full p-2"
+              className="flex h-12 min-h-12 min-w-12 items-center justify-center touch-manipulation rounded-full p-2 sm:h-14 sm:min-h-14 sm:min-w-14"
               aria-label={`Image ${i + 1} of ${images.length}`}
               aria-current={i === selectedIndex ? "true" : undefined}
             >
@@ -648,7 +652,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                       key={f.token}
                       type="button"
                       onClick={() => setSelectedFilterToken(f.token)}
-                      className="border-4 font-comic text-sm md:text-base font-bold px-4 py-2 touch-manipulation transition-transform duration-200 hover:scale-[1.06] hover:brightness-110 active:scale-[1.06] active:brightness-110"
+                      className="min-h-11 border-4 font-comic text-sm md:text-base font-bold px-5 py-3 touch-manipulation transition-transform duration-200 hover:scale-[1.06] hover:brightness-110 active:scale-[1.06] active:brightness-110"
                       style={{
                         backgroundColor: isActive ? "hsl(var(--creative-accent))" : "hsl(var(--creative-bg-alt))",
                         color: isActive ? "hsl(var(--creative-bg))" : "hsl(var(--creative-fg-muted))",
@@ -668,7 +672,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
               <Button
                 type="button"
                 onClick={() => setSelectedFilterToken(null)}
-                className="border-4 font-comic text-sm md:text-base font-bold px-4 py-2"
+                className="min-h-11 border-4 font-comic text-sm md:text-base font-bold px-6 py-3"
                 style={{
                   backgroundColor: "hsl(var(--accent))",
                   color: "hsl(var(--accent-foreground))",
@@ -805,7 +809,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                 type="button"
                 disabled={!canPopupProjectNavigate}
                 className={cn(
-                  "flex min-h-[44px] min-w-[44px] items-center justify-center border-0 bg-transparent p-2 font-comic text-2xl font-bold leading-none text-[hsl(var(--creative-accent))] shadow-none transition-opacity duration-150 md:text-3xl",
+                  "flex min-h-14 min-w-14 items-center justify-center border-0 bg-transparent p-3 font-comic text-2xl font-bold leading-none text-[hsl(var(--creative-accent))] shadow-none transition-opacity duration-150 md:min-h-16 md:min-w-16 md:p-4 md:text-3xl",
                   canPopupProjectNavigate
                     ? "touch-manipulation hover:opacity-80 active:opacity-70"
                     : "cursor-not-allowed opacity-35",
@@ -829,7 +833,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                 type="button"
                 disabled={!canPopupProjectNavigate}
                 className={cn(
-                  "flex min-h-[44px] min-w-[44px] items-center justify-center border-0 bg-transparent p-2 font-comic text-2xl font-bold leading-none text-[hsl(var(--creative-accent))] shadow-none transition-opacity duration-150 md:text-3xl",
+                  "flex min-h-14 min-w-14 items-center justify-center border-0 bg-transparent p-3 font-comic text-2xl font-bold leading-none text-[hsl(var(--creative-accent))] shadow-none transition-opacity duration-150 md:min-h-16 md:min-w-16 md:p-4 md:text-3xl",
                   canPopupProjectNavigate
                     ? "touch-manipulation hover:opacity-80 active:opacity-70"
                     : "cursor-not-allowed opacity-35",
@@ -874,7 +878,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
                     {popupProject.link !== "#" && (
                       <Button
                         type="button"
-                        className="border-4 font-comic text-sm md:text-base font-bold px-5 py-2"
+                        className="min-h-11 border-4 font-comic text-sm md:text-base font-bold px-6 py-3"
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();

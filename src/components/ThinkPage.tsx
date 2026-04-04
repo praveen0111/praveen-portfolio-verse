@@ -505,11 +505,11 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
               href={thinkCV.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex"
+              className="inline-flex touch-manipulation rounded-sm p-2"
               aria-label={thinkCV.buttonText}
             >
               <Button
-                className="border-4 px-5 py-3 font-comic text-base md:text-lg font-bold"
+                className="min-h-12 border-4 px-8 py-4 font-comic text-base md:text-lg font-bold"
                 style={{
                   backgroundColor: "hsl(var(--think-accent))",
                   color: "hsl(var(--think-fg))",

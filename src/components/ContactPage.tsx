@@ -348,7 +348,7 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
                 <Button
                   type="submit"
                   disabled={submitting}
-                  className="border-4 px-8 py-3 font-comic text-lg font-bold disabled:opacity-60"
+                  className="min-h-12 border-4 px-10 py-4 font-comic text-lg font-bold touch-manipulation disabled:opacity-60"
                   style={{
                     backgroundColor: "hsl(var(--accent))",
                     color: "hsl(var(--accent-foreground))",
@@ -385,7 +385,7 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
           <DialogFooter className="sm:justify-center">
             <Button
               type="button"
-              className="border-4 px-10 py-3 font-comic text-lg font-bold"
+              className="min-h-12 border-4 px-12 py-4 font-comic text-lg font-bold touch-manipulation"
               style={{
                 backgroundColor: "hsl(var(--accent))",
                 color: "hsl(var(--accent-foreground))",
