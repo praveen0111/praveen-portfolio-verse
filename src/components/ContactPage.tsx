@@ -410,7 +410,7 @@ const ContactPage = ({ onGoHome, onSwitchToCreative, onSwitchToThink }: ContactP
       >
         <div className="container mx-auto px-6">
           <p className="text-sm md:text-base font-content font-content-medium" style={{ color: "hsl(var(--muted-foreground))" }}>
-            &copy; 2026 PRAVEEN ELANCHEZHIAN. ALL RIGHTS RESERVED.
+            &copy; 2026 PRAVEEN ELANCHEZHIAN
           </p>
         </div>
       </footer>

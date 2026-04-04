@@ -8,8 +8,13 @@ function starFill(value: number, index: number): number {
 }
 
 function XpStars({ value, centered }: { value: ThinkTechstackXpStars; centered?: boolean }) {
-  const accent = "fill-[hsl(var(--think-accent))] stroke-black text-[hsl(var(--think-accent))]";
-  const muted = "fill-transparent stroke-[hsl(var(--think-fg-muted))] opacity-50";
+  /** Same outer stroke on every slot (painted last) so filled/empty/half share one footprint. */
+  const outlineStar =
+    "pointer-events-none absolute inset-0 z-[2] h-5 w-5 sm:h-6 sm:w-6 fill-transparent stroke-[hsl(var(--think-fg-muted))]/60";
+  const interiorStar =
+    "pointer-events-none absolute inset-0 z-0 h-5 w-5 sm:h-6 sm:w-6 fill-[hsl(var(--think-fg-muted))]/25 stroke-none";
+  const fillStar =
+    "pointer-events-none h-5 w-5 sm:h-6 sm:w-6 fill-[hsl(var(--think-accent))] stroke-none text-[hsl(var(--think-accent))]";
 
   return (
     <div
@@ -30,12 +35,13 @@ function XpStars({ value, centered }: { value: ThinkTechstackXpStars; centered?:
           const fill = starFill(value, i);
           return (
             <div key={i} className="relative h-5 w-5 shrink-0 sm:h-6 sm:w-6">
-              <Star className={cn("pointer-events-none absolute inset-0 h-5 w-5 sm:h-6 sm:w-6", muted)} strokeWidth={2} aria-hidden />
+              <Star className={interiorStar} strokeWidth={0} aria-hidden />
               {fill > 0 ? (
-                <div className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
-                  <Star className={cn("pointer-events-none h-5 w-5 sm:h-6 sm:w-6", accent)} strokeWidth={2} aria-hidden />
+                <div className="absolute inset-0 z-[1] overflow-hidden" style={{ width: `${fill * 100}%` }}>
+                  <Star className={fillStar} strokeWidth={0} aria-hidden />
                 </div>
               ) : null}
+              <Star className={outlineStar} strokeWidth={1.5} aria-hidden />
             </div>
           );
         })}

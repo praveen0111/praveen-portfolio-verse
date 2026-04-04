@@ -322,10 +322,10 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
             <h2 className="mb-2.5 border-[3px] p-3 font-comic text-2xl sm:p-3.5 sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 13px hsl(var(--think-accent) / 0.4), 5px 5px 0 hsl(var(--think-accent) / 0.5)" }}>
               TECHSTACK
             </h2>
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch lg:gap-4">
-              {/* Left: icon cloud only */}
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-[2fr_3fr] lg:items-stretch lg:gap-4">
+              {/* Left: icon cloud (~40% width on lg) */}
               <article
-                className="flex w-full flex-col justify-center border-[3px] px-2.5 py-3 sm:px-3 sm:py-4 lg:max-w-[min(448px,43%)] lg:min-w-[min(100%,272px)] lg:shrink-0"
+                className="flex min-w-0 w-full flex-col justify-center border-[3px] px-2.5 py-3 sm:px-3 sm:py-4"
                 style={{
                   backgroundColor: "hsl(var(--think-bg))",
                   borderColor: "hsl(var(--think-accent))",
@@ -342,7 +342,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
               </article>
               {/* Right: selected logo (center) + name, stars, usage */}
               <article
-                className="flex min-h-[256px] w-full flex-1 flex-col border-[3px] px-2.5 py-3 sm:px-4 sm:py-4"
+                className="flex min-h-[256px] min-w-0 w-full flex-col border-[3px] px-2.5 py-3 sm:px-4 sm:py-4"
                 style={{
                   backgroundColor: "hsl(var(--think-bg))",
                   borderColor: "hsl(var(--think-accent))",
@@ -532,7 +532,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
       >
         <div className="container mx-auto px-4 md:px-6">
 <p className="text-sm md:text-base font-content font-content-medium" style={{ color: "hsl(var(--think-fg-muted))" }}>
-          &copy; 2026 PRAVEEN ELANCHEZHIAN. ALL RIGHTS RESERVED.
+          &copy; 2026 PRAVEEN ELANCHEZHIAN
         </p>
         </div>
       </footer>

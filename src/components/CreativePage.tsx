@@ -767,7 +767,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
       >
         <div className="container mx-auto px-4 md:px-6">
           <p className="text-sm md:text-base font-content font-content-medium" style={{ color: "hsl(var(--creative-fg-muted))" }}>
-            &copy; 2026 PRAVEEN ELANCHEZHIAN. ALL RIGHTS RESERVED.
+            &copy; 2026 PRAVEEN ELANCHEZHIAN
           </p>
         </div>
       </footer>
@@ -1012,7 +1012,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
               >
                 <div className="container mx-auto px-4 md:px-6">
                   <p className="text-sm md:text-base font-content font-content-medium" style={{ color: "hsl(var(--creative-fg-muted))" }}>
-                    &copy; 2026 PRAVEEN ELANCHEZHIAN. ALL RIGHTS RESERVED.
+                    &copy; 2026 PRAVEEN ELANCHEZHIAN
                   </p>
                 </div>
               </footer>
