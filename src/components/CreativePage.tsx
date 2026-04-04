@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent } from "./ui/dialog";
+import { LineShadowText } from "./ui/line-shadow-text";
 import ComicParticles from "./ComicParticles";
 import DotGrid from "./DotGrid";
 
@@ -612,7 +613,14 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
       >
         <div className="container mx-auto px-4 md:px-6">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-comic font-bold mb-4" style={{ color: "hsl(var(--creative-fg))" }}>
-            I Create <span style={{ color: "hsl(var(--creative-accent))" }}>Cinematic</span> PROJECTS
+            I Create{" "}
+            <LineShadowText
+              shadowColor="hsl(0 0% 0%)"
+              className="font-comic font-bold text-[hsl(var(--creative-accent))]"
+            >
+              Cinematic
+            </LineShadowText>{" "}
+            PROJECTS
           </h1>
         </div>
       </header>
