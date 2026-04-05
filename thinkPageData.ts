@@ -126,9 +126,8 @@ export const thinkManifesto = {
 
 export const thinkCV = {
   label: "Resume / Curriculum Vitae",
-  buttonText: "Download CV",
-  // Replace "#" with your actual hosted PDF link e.g. Google Drive, etc.
-  link: "#",
+  buttonText: "View CV",
+  link: "https://drive.google.com/file/d/12nRGmoS-YVs98bTF15XWLH0NQoPi_LOW/view?usp=sharing",
 };
 
 // ─── EDUCATION ──────────────────────────────────────────────
