@@ -47,9 +47,9 @@ const THINK_ROTATING_TEXT_SHARED = {
   randomizeOrder: true,
 };
 
-/** Matches Experience “View Deck” chip (Bangers, orange fill, black text). */
+/** Matches Experience / project CTAs: scales with viewport; stays within block without overlapping copy. */
 const THINK_PROJECT_CTA_CLASSNAME =
-  "inline-flex items-center justify-center border-[0.15rem] px-[0.9rem] py-[0.3rem] font-comic text-[1.05rem] font-bold leading-tight text-center transition-[box-shadow,filter] duration-200 ease-out hover:brightness-110 shadow-[0_0_12px_hsl(var(--think-accent)/0.45),4px_4px_0_hsl(var(--think-accent)/0.55)] hover:shadow-[0_0_26px_hsl(var(--think-accent)/0.65),0_0_46px_hsl(var(--think-accent)/0.2),6px_6px_0_hsl(var(--think-accent)/0.5)]";
+  "inline-flex min-w-0 max-w-full items-center justify-center border-[0.15rem] px-[clamp(0.45rem,1.5vw+0.2rem,0.9rem)] py-[clamp(0.18rem,0.35vw+0.1rem,0.3rem)] font-comic text-[clamp(0.9rem,0.336rem+2.4vw,1.26rem)] font-bold leading-snug text-center text-balance whitespace-normal transition-[box-shadow,filter] duration-200 ease-out hover:brightness-110 shadow-[0_0_12px_hsl(var(--think-accent)/0.45),4px_4px_0_hsl(var(--think-accent)/0.55)] hover:shadow-[0_0_26px_hsl(var(--think-accent)/0.65),0_0_46px_hsl(var(--think-accent)/0.2),6px_6px_0_hsl(var(--think-accent)/0.5)]";
 
 const THINK_PROJECT_CTA_STYLE: CSSProperties = {
   backgroundColor: "hsl(var(--think-accent))",
@@ -492,7 +492,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                 const Wrapper = wrapCardInLink ? "a" : "div";
 
                 const toolsRow = (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex min-w-0 flex-wrap gap-2">
                     {project.tools.map((tool) => (
                       <span
                         key={tool}
@@ -523,10 +523,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                     className="block"
                   >
                     <article
-                      className={cn(
-                        "border-4 p-6 md:p-8",
-                        showViewDeck && "relative",
-                      )}
+                      className="border-4 p-6 md:p-8 min-w-0"
                       style={{
                         backgroundColor: "hsl(var(--think-bg))",
                         borderColor: "hsl(var(--think-accent))",
@@ -571,18 +568,17 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                       </p>
                       {toolsRow}
                       {showViewDeck && (
-                        <a
-                          href={project.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={cn(
-                            "absolute bottom-5 right-5 z-10 md:bottom-8 md:right-8",
-                            THINK_PROJECT_CTA_CLASSNAME,
-                          )}
-                          style={THINK_PROJECT_CTA_STYLE}
-                        >
-                          View Deck
-                        </a>
+                        <div className="mt-4 flex min-w-0 justify-center md:mt-5 md:justify-end">
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={THINK_PROJECT_CTA_CLASSNAME}
+                            style={THINK_PROJECT_CTA_STYLE}
+                          >
+                            View Deck
+                          </a>
+                        </div>
                       )}
                     </article>
                   </Wrapper>
@@ -609,7 +605,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                 return (
                 <article
                   key={`${proj.title}-${idx}`}
-                  className="p-6 md:p-8 border-4"
+                  className="min-w-0 border-4 p-6 md:p-8"
                   style={{
                     backgroundColor: "hsl(var(--think-bg))",
                     borderColor: "hsl(var(--think-accent))",
@@ -632,7 +628,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                     </span>
                   </div>
                   {hasProjectCtas ? (
-                    <div className="flex flex-col gap-3 md:flex-row md:items-end md:gap-5">
+                    <div className="flex min-w-0 flex-col gap-3 md:flex-row md:items-end md:gap-5">
                       <div className="min-w-0 flex-1">
                         <p
                           className="text-lg md:text-xl font-content font-content-bold mb-2 leading-snug"
@@ -649,14 +645,17 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                           ))}
                         </ul>
                       </div>
-                      <div className="flex shrink-0 flex-col items-end gap-3 self-end -translate-y-1 md:-translate-y-1.5">
+                      <div className="flex w-full min-w-0 shrink-0 flex-row flex-wrap content-center justify-center gap-x-2 gap-y-2 self-center md:w-auto md:max-w-[min(100%,20rem)] md:flex-col md:items-end md:justify-end md:gap-3 md:self-end">
                         {projectCtas.map((cta) => (
                           <a
                             key={cta.label}
                             href={cta.href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={THINK_PROJECT_CTA_CLASSNAME}
+                            className={cn(
+                              THINK_PROJECT_CTA_CLASSNAME,
+                              "shrink basis-[min(100%,11rem)] sm:basis-auto",
+                            )}
                             style={THINK_PROJECT_CTA_STYLE}
                           >
                             {cta.label}
@@ -762,16 +761,20 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
               aria-label={thinkCV.buttonText}
             >
               <Button
-                className="min-h-12 border-4 px-8 py-4 font-comic text-base md:text-lg font-bold"
+                className={cn(
+                  "min-h-12 border-4 px-8 py-4 font-comic text-base md:text-lg font-bold text-black",
+                  "transition-[transform,box-shadow] duration-200 ease-out",
+                  "hover:-translate-y-0.5 hover:shadow-[0_0_28px_hsl(var(--think-accent)/0.6),6px_6px_0_hsl(var(--think-accent)/0.5)]",
+                  "active:translate-y-0 active:shadow-[0_0_16px_hsl(var(--think-accent)/0.45),4px_4px_0_hsl(var(--think-accent)/0.25)]",
+                )}
                 style={{
                   backgroundColor: "hsl(var(--think-accent))",
-                  color: "hsl(var(--think-fg))",
                   borderColor: "hsl(var(--think-glow))",
                   boxShadow: "0 0 16px hsl(var(--think-accent) / 0.45), 4px 4px 0 hsl(var(--think-accent) / 0.25)",
                 }}
               >
                 {thinkCV.buttonText}
-                <ExternalLink className="w-4 h-4 ml-2" />
+                <ExternalLink className="w-4 h-4 ml-2 shrink-0 text-black" aria-hidden />
               </Button>
             </a>
           </div>

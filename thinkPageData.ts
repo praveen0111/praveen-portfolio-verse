@@ -173,7 +173,7 @@ export const thinkExperience = [
     tools: ["Canva", "Adobe Suite", "Excel", "Basecamp"],
     link: "https://madarthintern.my.canva.site/",
     linkLabel: "Summer internship summary",
-    /** Renders a bottom-right “View Deck” chip (same sizing as tool tags); card is not wrapped in a link. */
+    /** Renders a “View Deck” chip below tool tags (centered on small screens, right-aligned from md up); in-flow so it never overlaps content. */
     viewDeck: true,
   },
   {
