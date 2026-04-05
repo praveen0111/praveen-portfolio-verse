@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Button } from "./ui/button";
 import { LineShadowText } from "./ui/line-shadow-text";
-import { LayoutGroup } from "motion/react";
-import { ExternalLink } from "lucide-react";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import { ChevronDown, ExternalLink } from "lucide-react";
 import ComicParticles from "./ComicParticles";
 import DotGrid from "./DotGrid";
 import RotatingText, { type RotatingTextRef } from "./RotatingText";
@@ -14,7 +14,7 @@ import {
   thinkCV,
   thinkEducation,
   thinkExperience,
-  thinkSkills,
+  thinkProjects,
   thinkCertifications,
   thinkTechstackIconImageUrls,
   thinkTechstackIconLabels,
@@ -46,6 +46,109 @@ const THINK_ROTATING_TEXT_SHARED = {
   /** Each tick picks a random phrase (not the same as current when possible). */
   randomizeOrder: true,
 };
+
+/** Matches Experience “View Deck” chip (Bangers, orange fill, black text). */
+const THINK_PROJECT_CTA_CLASSNAME =
+  "inline-flex items-center justify-center border-[0.15rem] px-[0.9rem] py-[0.3rem] font-comic text-[1.05rem] font-bold leading-tight text-center transition-[box-shadow,filter] duration-200 ease-out hover:brightness-110 shadow-[0_0_12px_hsl(var(--think-accent)/0.45),4px_4px_0_hsl(var(--think-accent)/0.55)] hover:shadow-[0_0_26px_hsl(var(--think-accent)/0.65),0_0_46px_hsl(var(--think-accent)/0.2),6px_6px_0_hsl(var(--think-accent)/0.5)]";
+
+const THINK_PROJECT_CTA_STYLE: CSSProperties = {
+  backgroundColor: "hsl(var(--think-accent))",
+  color: "#000000",
+  borderColor: "hsl(var(--think-glow))",
+};
+
+const THINK_BLOCK_HEADER_STYLE: CSSProperties = {
+  backgroundColor: "hsl(var(--think-accent))",
+  color: "hsl(var(--think-fg))",
+  borderColor: "hsl(var(--think-glow))",
+  boxShadow:
+    "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)",
+};
+
+/** Near-instant open/close; keeps a hint of motion without lag. */
+const THINK_COLLAPSE_PANEL_TRANSITION = {
+  duration: 0.09,
+  ease: "easeOut" as const,
+};
+
+function ThinkCollapsibleBlock({
+  id,
+  title,
+  expanded,
+  onToggle,
+  sectionClassName,
+  panelClassName,
+  children,
+}: {
+  id: string;
+  title: string;
+  expanded: boolean;
+  onToggle: () => void;
+  sectionClassName?: string;
+  panelClassName?: string;
+  children: ReactNode;
+}) {
+  const panelId = `${id}-panel`;
+  const toggleId = `${id}-toggle`;
+  return (
+    <section
+      className={cn("mb-8 md:mb-12", sectionClassName)}
+      aria-label={title}
+    >
+      <h2 className="mb-4 m-0 font-comic text-2xl sm:text-3xl md:text-4xl font-bold">
+        <motion.button
+          type="button"
+          id={toggleId}
+          onClick={onToggle}
+          className="flex w-full items-center justify-between gap-3 p-4 border-4 text-left transition-[filter] duration-200 hover:brightness-105"
+          style={THINK_BLOCK_HEADER_STYLE}
+          aria-expanded={expanded}
+          aria-controls={panelId}
+          whileTap={{ scale: 0.996 }}
+          transition={{ duration: 0.08, ease: "easeOut" }}
+        >
+          {title}
+          <ChevronDown
+            className={cn(
+              "h-7 w-7 shrink-0 transition-transform duration-100 ease-out md:h-8 md:w-8",
+              expanded && "rotate-180",
+            )}
+            aria-hidden
+          />
+        </motion.button>
+      </h2>
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key={panelId}
+            id={panelId}
+            className={cn(panelClassName, "origin-top")}
+            role="region"
+            aria-labelledby={toggleId}
+            initial={{
+              opacity: 0,
+              scale: 0.995,
+              filter: "blur(4px)",
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              filter: "blur(0px)",
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.998,
+              filter: "blur(3px)",
+            }}
+            transition={THINK_COLLAPSE_PANEL_TRANSITION}
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
 
 /**
  * ============================================
@@ -97,6 +200,16 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
   const subtitleBetweenRotRef = useRef<RotatingTextRef>(null);
   const subtitleIntersectionRotRef = useRef<RotatingTextRef>(null);
   const [techstackSelectedIndex, setTechstackSelectedIndex] = useState<number | null>(null);
+  const [thinkSectionsOpen, setThinkSectionsOpen] = useState({
+    techstack: true,
+    experience: true,
+    projects: true,
+    education: true,
+    certifications: true,
+  });
+  const toggleThinkSection = (key: keyof typeof thinkSectionsOpen) => {
+    setThinkSectionsOpen((s) => ({ ...s, [key]: !s[key] }));
+  };
   const subtitleRotationMs = thinkMeta.subtitleRotationMs ?? 3600;
   const subtitleShouldAutoRotate =
     hasRotatingSubtitle &&
@@ -173,7 +286,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
       {/* Main Content - Long Scroll Academic Narrative */}
       <main className="relative z-10 py-8 md:py-12">
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          {/* Hero / Identity */}
+          {/* Hero / Identity — primary panel (no collapsible wrapper) */}
           <div
             className="mb-8 md:mb-12 p-6 md:p-10 border-4"
             style={{
@@ -318,10 +431,13 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
           </div>
 
           {/* Tech stack — Magic UI icon cloud (Simple Icons) */}
-          <section className="mb-5 md:mb-8" aria-label="Tech stack">
-            <h2 className="mb-2.5 border-[3px] p-3 font-comic text-2xl sm:p-3.5 sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 13px hsl(var(--think-accent) / 0.4), 5px 5px 0 hsl(var(--think-accent) / 0.5)" }}>
-              TECHSTACK
-            </h2>
+          <ThinkCollapsibleBlock
+            id="think-techstack"
+            title="TECHSTACK"
+            expanded={thinkSectionsOpen.techstack}
+            onToggle={() => toggleThinkSection("techstack")}
+            sectionClassName="mb-5 md:mb-8"
+          >
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-[2fr_3fr] lg:items-stretch lg:gap-4">
               {/* Left: icon cloud (~40% width on lg) */}
               <article
@@ -358,13 +474,227 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                 />
               </article>
             </div>
-          </section>
+          </ThinkCollapsibleBlock>
+
+          {/* Applied Academic Experience */}
+          <ThinkCollapsibleBlock
+            id="think-experience"
+            title="Experience"
+            expanded={thinkSectionsOpen.experience}
+            onToggle={() => toggleThinkSection("experience")}
+          >
+            <div className="space-y-4">
+              {thinkExperience.map((project, idx) => {
+                const hasRealLink = Boolean(project.link && project.link !== "#");
+                const showViewDeck =
+                  "viewDeck" in project && Boolean(project.viewDeck) && hasRealLink;
+                const wrapCardInLink = hasRealLink && !showViewDeck;
+                const Wrapper = wrapCardInLink ? "a" : "div";
+
+                const toolsRow = (
+                  <div className="flex flex-wrap gap-2">
+                    {project.tools.map((tool) => (
+                      <span
+                        key={tool}
+                        className="px-3 py-1 border-2 font-content text-sm font-content-medium"
+                        style={{
+                          backgroundColor: "hsl(var(--think-bg-alt))",
+                          color: "hsl(var(--think-fg))",
+                          borderColor: "hsl(var(--think-accent))",
+                        }}
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                );
+
+                return (
+                  <Wrapper
+                    key={`${project.role}-${idx}`}
+                    {...(wrapCardInLink
+                      ? {
+                          href: project.link,
+                          target: "_blank",
+                          rel: "noopener noreferrer",
+                          "aria-label": `View ${project.role}`,
+                        }
+                      : {})}
+                    className="block"
+                  >
+                    <article
+                      className={cn(
+                        "border-4 p-6 md:p-8",
+                        showViewDeck && "relative",
+                      )}
+                      style={{
+                        backgroundColor: "hsl(var(--think-bg))",
+                        borderColor: "hsl(var(--think-accent))",
+                        boxShadow:
+                          "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)",
+                      }}
+                    >
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
+                        <h3
+                          className="text-xl md:text-2xl font-comic font-bold flex items-center gap-2"
+                          style={{ color: "hsl(var(--think-fg))" }}
+                        >
+                          {showViewDeck ? (
+                            project.role
+                          ) : (
+                            <>
+                              {project.role}
+                              {hasRealLink && (
+                                <ExternalLink className="h-5 w-5 shrink-0" aria-hidden />
+                              )}
+                            </>
+                          )}
+                        </h3>
+                        <span
+                          className="font-content text-base font-content-medium whitespace-nowrap"
+                          style={{ color: "hsl(var(--think-fg-muted))" }}
+                        >
+                          {project.period}
+                        </span>
+                      </div>
+                      <p
+                        className="mb-3 font-content text-lg font-content-bold md:text-xl"
+                        style={{ color: "hsl(var(--think-accent))" }}
+                      >
+                        {project.company}
+                      </p>
+                      <p
+                        className="mb-4 font-content text-base font-content-medium"
+                        style={{ color: "hsl(var(--think-fg-muted))" }}
+                      >
+                        {project.description}
+                      </p>
+                      {toolsRow}
+                      {showViewDeck && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={cn(
+                            "absolute bottom-5 right-5 z-10 md:bottom-8 md:right-8",
+                            THINK_PROJECT_CTA_CLASSNAME,
+                          )}
+                          style={THINK_PROJECT_CTA_STYLE}
+                        >
+                          View Deck
+                        </a>
+                      )}
+                    </article>
+                  </Wrapper>
+                );
+              })}
+            </div>
+          </ThinkCollapsibleBlock>
+
+          {/* Projects */}
+          <ThinkCollapsibleBlock
+            id="think-projects"
+            title="Projects"
+            expanded={thinkSectionsOpen.projects}
+            onToggle={() => toggleThinkSection("projects")}
+          >
+            <div className="space-y-4">
+              {thinkProjects.map((proj, idx) => {
+                const projectCtas =
+                  "ctaLinks" in proj && Array.isArray(proj.ctaLinks)
+                    ? proj.ctaLinks
+                    : [];
+                const hasProjectCtas = projectCtas.length > 0;
+
+                return (
+                <article
+                  key={`${proj.title}-${idx}`}
+                  className="p-6 md:p-8 border-4"
+                  style={{
+                    backgroundColor: "hsl(var(--think-bg))",
+                    borderColor: "hsl(var(--think-accent))",
+                    boxShadow:
+                      "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)",
+                  }}
+                >
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1.5 mb-2">
+                    <h3
+                      className="text-xl md:text-2xl font-comic font-bold leading-tight"
+                      style={{ color: "hsl(var(--think-fg))" }}
+                    >
+                      {proj.title}
+                    </h3>
+                    <span
+                      className="text-base font-content font-content-medium whitespace-nowrap shrink-0"
+                      style={{ color: "hsl(var(--think-fg-muted))" }}
+                    >
+                      {proj.period}
+                    </span>
+                  </div>
+                  {hasProjectCtas ? (
+                    <div className="flex flex-col gap-3 md:flex-row md:items-end md:gap-5">
+                      <div className="min-w-0 flex-1">
+                        <p
+                          className="text-lg md:text-xl font-content font-content-bold mb-2 leading-snug"
+                          style={{ color: "hsl(var(--think-accent))" }}
+                        >
+                          {proj.kind}
+                        </p>
+                        <ul
+                          className="list-disc space-y-1.5 pl-5 font-content text-base font-content-medium leading-snug m-0"
+                          style={{ color: "hsl(var(--think-fg-muted))" }}
+                        >
+                          {proj.highlights.map((line, hi) => (
+                            <li key={`${idx}-${hi}`}>{line}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="flex shrink-0 flex-col items-end gap-3 self-end -translate-y-1 md:-translate-y-1.5">
+                        {projectCtas.map((cta) => (
+                          <a
+                            key={cta.label}
+                            href={cta.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={THINK_PROJECT_CTA_CLASSNAME}
+                            style={THINK_PROJECT_CTA_STYLE}
+                          >
+                            {cta.label}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p
+                        className="text-lg md:text-xl font-content font-content-bold mb-2 leading-snug"
+                        style={{ color: "hsl(var(--think-accent))" }}
+                      >
+                        {proj.kind}
+                      </p>
+                      <ul
+                        className="list-disc space-y-1.5 pl-5 font-content text-base font-content-medium leading-snug m-0"
+                        style={{ color: "hsl(var(--think-fg-muted))" }}
+                      >
+                        {proj.highlights.map((line, hi) => (
+                          <li key={`${idx}-${hi}`}>{line}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </article>
+                );
+              })}
+            </div>
+          </ThinkCollapsibleBlock>
 
           {/* Education Timeline */}
-          <section className="mb-8 md:mb-12">
-            <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
-              EDUCATION JOURNEY
-            </h2>
+          <ThinkCollapsibleBlock
+            id="think-education"
+            title="EDUCATION JOURNEY"
+            expanded={thinkSectionsOpen.education}
+            onToggle={() => toggleThinkSection("education")}
+          >
             <div className="space-y-4">
               {thinkEducation.map((edu, idx) => (
                 <article key={`${edu.institution}-${idx}`} className="p-6 md:p-8 border-4" style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)" }}>
@@ -380,7 +710,9 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                     {edu.institution}
                   </p>
                   <p className="text-sm md:text-base font-content font-content-medium mb-2" style={{ color: "hsl(var(--think-fg))" }}>
-                    Focus: {edu.focus}
+                    {"focusLine" in edu && edu.focusLine
+                      ? edu.focusLine
+                      : `Focus: ${edu.focus}`}
                   </p>
                   <p className="text-base font-content font-content-medium" style={{ color: "hsl(var(--think-fg-muted))" }}>
                     {edu.description}
@@ -388,89 +720,16 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                 </article>
               ))}
             </div>
-          </section>
-
-          {/* Applied Academic Experience */}
-          <section className="mb-8 md:mb-12">
-            <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
-              APPLIED LEARNING: EXPERIENCE & PROJECTS
-            </h2>
-            <div className="space-y-4">
-              {thinkExperience.map((project, idx) => {
-                const hasLink = project.link && project.link !== "#";
-                const Wrapper = hasLink ? "a" : "div";
-                return (
-                  <Wrapper
-                    key={`${project.role}-${idx}`}
-                    {...(hasLink
-                      ? {
-                          href: project.link,
-                          target: "_blank",
-                          rel: "noopener noreferrer",
-                          "aria-label": `View ${project.role}`,
-                        }
-                      : {})}
-                    className="block"
-                  >
-                    <article className="p-6 md:p-8 border-4" style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)" }}>
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
-                        <h3 className="text-xl md:text-2xl font-comic font-bold flex items-center gap-2" style={{ color: "hsl(var(--think-fg))" }}>
-                          {project.role}
-                          {hasLink && <ExternalLink className="w-5 h-5" />}
-                        </h3>
-                        <span className="text-base font-content font-content-medium whitespace-nowrap" style={{ color: "hsl(var(--think-fg-muted))" }}>
-                          {project.period}
-                        </span>
-                      </div>
-                      <p className="text-lg md:text-xl font-content font-content-bold mb-3" style={{ color: "hsl(var(--think-accent))" }}>
-                        {project.company}
-                      </p>
-                      <p className="text-base font-content font-content-medium mb-4" style={{ color: "hsl(var(--think-fg-muted))" }}>
-                        {project.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {project.tools.map((tool) => (
-                          <span key={tool} className="px-3 py-1 border-2 font-content text-sm font-content-medium" style={{ backgroundColor: "hsl(var(--think-bg-alt))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-accent))" }}>
-                            {tool}
-                          </span>
-                        ))}
-                      </div>
-                    </article>
-                  </Wrapper>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* Skill Domains */}
-          <section className="mb-8 md:mb-12">
-            <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
-              SKILL DOMAINS
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {thinkSkills.map((skillGroup) => (
-                <article key={skillGroup.group} className="p-6 border-4" style={{ backgroundColor: "hsl(var(--think-bg))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 12px hsl(var(--think-accent) / 0.2), 6px 6px 0 hsl(var(--think-accent) / 0.25)" }}>
-                  <h3 className="font-comic text-2xl font-bold mb-4" style={{ color: "hsl(var(--think-accent))" }}>
-                    {skillGroup.group}
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {skillGroup.items.map((skill) => (
-                      <span key={skill} className="px-3 py-2 border-2 font-content text-sm font-content-medium" style={{ backgroundColor: "hsl(var(--think-bg-alt))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-accent))" }}>
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+          </ThinkCollapsibleBlock>
 
           {/* Certifications (optional) */}
           {thinkCertifications.length > 0 && (
-            <section className="mb-8 md:mb-12">
-              <h2 className="mb-4 p-4 border-4 font-comic text-2xl sm:text-3xl md:text-4xl font-bold" style={{ backgroundColor: "hsl(var(--think-accent))", color: "hsl(var(--think-fg))", borderColor: "hsl(var(--think-glow))", boxShadow: "0 0 16px hsl(var(--think-accent) / 0.4), 6px 6px 0 hsl(var(--think-accent) / 0.5)" }}>
-                CERTIFICATIONS
-              </h2>
+            <ThinkCollapsibleBlock
+              id="think-certifications"
+              title="CERTIFICATIONS"
+              expanded={thinkSectionsOpen.certifications}
+              onToggle={() => toggleThinkSection("certifications")}
+            >
               <div className="space-y-3">
                 {thinkCertifications.map((cert, idx) => (
                   <a
@@ -490,17 +749,11 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                   </a>
                 ))}
               </div>
-            </section>
+            </ThinkCollapsibleBlock>
           )}
 
-          {/* CV CTA */}
-          <section className="mb-6 md:mb-8 p-6 md:p-8 border-4 text-center" style={{ backgroundColor: "hsl(var(--think-bg-alt))", borderColor: "hsl(var(--think-accent))", boxShadow: "0 0 14px hsl(var(--think-accent) / 0.25), 6px 6px 0 hsl(var(--think-accent) / 0.25)" }}>
-            <h2 className="font-comic text-2xl md:text-3xl mb-3" style={{ color: "hsl(var(--think-accent))" }}>
-              {thinkCV.label.toUpperCase()}
-            </h2>
-            <p className="text-sm md:text-base mb-5 font-content font-content-medium" style={{ color: "hsl(var(--think-fg-muted))" }}>
-              Download the full academic and professional profile.
-            </p>
+          {/* Resume — lone CTA at end of main column (no panel / dropdown) */}
+          <div className="mt-8 md:mt-10 mb-2 flex justify-center">
             <a
               href={thinkCV.link}
               target="_blank"
@@ -521,7 +774,7 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                 <ExternalLink className="w-4 h-4 ml-2" />
               </Button>
             </a>
-          </section>
+          </div>
         </div>
       </main>
 

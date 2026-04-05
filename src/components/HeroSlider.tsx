@@ -526,8 +526,6 @@ const HeroSlider = ({
         <ComicInkStrokeBar orientation={isMobile ? "horizontal" : "vertical"} />
 
         <div
-          data-smooth-cursor="slider-pe-button"
-          data-pe-slider-axis={isMobile ? "vertical" : "horizontal"}
           className={`relative z-10 flex shrink-0 items-center justify-center rounded-full bg-black border-0 overflow-visible ${
             isMobile ? "h-[4.25rem] w-[4.25rem] sm:h-[4.5rem] sm:w-[4.5rem]" : "h-[4.5rem] w-[4.5rem]"
           }`}

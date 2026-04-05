@@ -137,9 +137,9 @@ export const thinkEducation = [
     institution: "NIT Trichy",
     degree: "Master of Business Administration (MBA)",
     period: "2024 – 2026",
-    focus: "Product Management & Marketing Strategy",
+    focusLine: "Major in Marketing, Business Analysis & IT Consulting",
     description:
-      "Specialising in the intersection of technology, marketing, and product design — with applied work in AR/XR and brand communication.",
+      "Specialising in the intersection of technology, marketing, and strategies — with applied work in brand communication.",
   },
   {
     institution: "Loyola ICAM College of Engineering and Technology, Chennai",
@@ -147,19 +147,19 @@ export const thinkEducation = [
     period: "2020 – 2024",
     focus: "Technical Foundation",
     description:
-      "Strong grounding in systems thinking, signal processing, and hardware — the engineering lens I bring to every product decision.",
+      "Strong grounding in systems thinking, IoT, emerging technologies and hardware — the engineering lens I bring to every decision.",
   },
 ];
 
 // ─── EXPERIENCE ─────────────────────────────────────────────
 export const thinkExperience = [
   {
-    role: "Product Design Engineer & Consultant — AR Smart Glass",
-    company: "Tamizh",
+    role: "Management Consultant",
+    company: "Tamizh Research and Development Pvt. Ltd.",
     period: "Jul 2024 – Present",
     description:
-      "Designing UI/UX for AR Smart Glasses with hand gesture and voice control. Collaborating on display and interaction systems for early-stage XR hardware.",
-    tools: ["Figma", "Unity", "Blender"],
+      "Consulted on strategy and execution while the team builds next-generation AR smart glasses — clarifying priorities with people and process management, keeping delivery honest when hardware, software, and partnerships move in parallel, and turning fuzzy goals into workable plans. Set up and ran project rhythm in ClickUp and Zoho suite for ownership, milestones, reviews; so choices stay tied to roadmaps.",
+    tools: ["Zoho Suite", "ClickUp", "Strategy", "Project management"],
     // Replace "#" with LinkedIn post, Google Drive, etc.
     link: "#",
     linkLabel: "Case Study — Coming Soon",
@@ -167,42 +167,77 @@ export const thinkExperience = [
   {
     role: "Summer Intern — Brand-Aligned Marketing Strategies",
     company: "Madarth",
-    period: "May – Jul 2025",
+    period: "May 2025 – Jul 2025",
     description:
       "Built social media calendars, copywriting, and video scripts for TAFE and DahNAY. Experimented with 3D modelling and AI-based design workflows.",
-    tools: ["Canva", "Adobe Suite"],
+    tools: ["Canva", "Adobe Suite", "Excel", "Basecamp"],
+    link: "https://madarthintern.my.canva.site/",
+    linkLabel: "Summer internship summary",
+    /** Renders a bottom-right “View Deck” chip (same sizing as tool tags); card is not wrapped in a link. */
+    viewDeck: true,
+  },
+  {
+    role: "Product Design Intern",
+    company: "Tamizh Research and Development Pvt. Ltd.",
+    period: "Jul 2023 – Jan 2024",
+    description:
+      "Conducted market research on AR smart glasses and translated findings into cross-functional briefs. Managed prototyping documentation, iterative design tracking, and brand asset development so outputs met team quality standards and process compliance.",
+    tools: ["Market research", "Prototyping", "Documentation", "Brand assets"],
     link: "#",
-    linkLabel: "View Work — Coming Soon",
+    linkLabel: "Portfolio / case study — coming soon",
   },
 ];
 
-// ─── SKILLS ─────────────────────────────────────────────────
-export const thinkSkills = [
+// ─── PROJECTS ───────────────────────────────────────────────
+export const thinkProjects = [
   {
-    group: "Product & Strategy",
-    items: [
-      "Product Management",
-      "Go-to-Market Strategy",
-      "User Research",
-      "Competitive Analysis",
+    title: "MBA Connect – Application Framework",
+    kind: "Academic Project - NIT Trichy",
+    period: "Aug 2025 – Oct 2025",
+    highlights: [
+      "Contributed to the project plan for MBA Connect, a data-driven placement and networking platform.",
+      "Designed module scope, 90-day Gantt schedule, resource allocation matrix, and performed COCOMO-based effort and schedule estimation.",
+    ],
+    ctaLinks: [
+      {
+        label: "Figma Design",
+        href: "https://www.figma.com/proto/nL8bRdTpxkrFDsdcVzIVYm/MBA-Connect_SPM?page-id=0%3A1&node-id=19-3&viewport=679%2C344%2C0.3&t=8bZKcZM5MwSphX88-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=19%3A3",
+      },
+      {
+        label: "View Doc",
+        href: "https://drive.google.com/file/d/1eU4DDYrM2M4Z_61TpD2eoLQ0mmOBfJ7K/view?usp=drive_link",
+      },
     ],
   },
   {
-    group: "Design & UX",
-    items: ["UI/UX Design", "Wireframing", "Prototyping", "Design Systems"],
-  },
-  {
-    group: "Marketing",
-    items: [
-      "Brand Strategy",
-      "Content Marketing",
-      "Social Media",
-      "Campaign Management",
+    title: "Tactile Feedback – Haptic VR Gloves",
+    kind: "Academic Project",
+    period: "Feb 2024 – May 2024",
+    highlights: [
+      "Managed end-to-end execution: research, design, prototyping, risk tracking, and documentation; supported internal review to ensure project quality compliance.",
+      "Documented project outcomes and improvement recommendations; supported internal review processes to minimize risk and ensure compliance with project standards.",
+    ],
+    ctaLinks: [
+      {
+        label: "View Doc",
+        href: "https://drive.google.com/file/d/1UxsLQZiHQ303ScSmnwXR7Qbd2fWDqZs9/view",
+      },
     ],
   },
   {
-    group: "Technical",
-    items: ["Data Analysis", "SQL Basics", "A/B Testing", "Agile Methodologies"],
+    title: "BeakHen – BLE Tracker",
+    kind: "Academic Project",
+    period: "Nov 2022 – Dec 2022",
+    highlights: [
+      "Built a BLE-based item tracker (BeakHen) on ESP32 with 3D-printed prototype.",
+      "Conducted competitive benchmarking against Apple AirTag and Samsung SmartTag, pricing and B2C market strategy, positioning as a low-cost, open-ecosystem alternative.",
+    ],
+    ctaLinks: [
+      {
+        label: "View Doc",
+        href: "https://drive.google.com/file/d/1fXaiAgQPYZHzA_FdM0rM5U78uMGRgALf/view?usp=sharing",
+      },
+    ],
   },
 ];
 

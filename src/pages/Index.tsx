@@ -146,20 +146,6 @@ const Index = () => {
     };
   }, [isHome]);
 
-  /** SmoothCursor border: contact = yellow accent, creative = red, think = orange, home = white */
-  useEffect(() => {
-    const borderByView: Record<PageView, string> = {
-      home: "#ffffff",
-      creative: "hsl(var(--neon-red))",
-      think: "hsl(var(--think-accent))",
-      contact: "hsl(var(--accent))",
-    };
-    document.documentElement.style.setProperty(
-      "--smooth-cursor-border",
-      borderByView[currentView],
-    );
-  }, [currentView]);
-
   return (
     <main
       className={cn(
