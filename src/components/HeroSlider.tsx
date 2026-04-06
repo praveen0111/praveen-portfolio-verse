@@ -3,6 +3,7 @@ import ComicParticles from "./ComicParticles";
 import { ComicInkStrokeBar } from "./ComicInkStrokeBar";
 import { ComicPopHeadlinePlate } from "./ComicPopHeadlinePlate";
 import { cn } from "@/lib/utils";
+import { publicUrl } from "@/lib/publicUrl";
 
 function ComicKnobMicroStrokes() {
   const rawId = useId().replace(/:/g, "");
@@ -97,8 +98,8 @@ const HeroSlider = ({
   const [knobRotateDeg, setKnobRotateDeg] = useState(0);
 
   // Asset paths
-  const thinkBackground = "/images/think-background.webp";
-  const creativeBackground = "/images/creative-background.webp";
+  const thinkBackground = publicUrl("/images/think-background.webp");
+  const creativeBackground = publicUrl("/images/creative-background.webp");
 
   useEffect(() => {
     introLockedRef.current = introLocked;

@@ -4,6 +4,8 @@
 // Feed this into Cursor alongside ThinkPage.tsx
 // ============================================================
 
+import { publicUrl } from "./src/lib/publicUrl";
+
 export const thinkMeta = {
   /** Each string is one stacked line; use one entry for a single-line name. */
   name: ["Praveen Elanchezhian"],
@@ -32,7 +34,7 @@ export const thinkMeta = {
     "pb-1 pt-0.5",
   /** Optional accent lines below subtitle; omit or use [] to hide. */
   heroCaptionLines: [] as string[],
-  profileImage: "/images/PE.webp",
+  profileImage: publicUrl("/images/PE.webp"),
 };
 
 /**
@@ -82,7 +84,8 @@ export const thinkTechstackIconLabels: string[] = [
 /** Bump when any raster under `/logo-cloud/icons/` changes so the canvas cloud reloads images (same path is otherwise cached). */
 const LOGO_CLOUD_ICONS_VERSION = "20260406-stack";
 
-const logoIcon = (slug: string) => `/logo-cloud/icons/${slug}.png?v=${LOGO_CLOUD_ICONS_VERSION}`;
+const logoIcon = (slug: string) =>
+  publicUrl(`/logo-cloud/icons/${slug}.png?v=${LOGO_CLOUD_ICONS_VERSION}`);
 
 export const thinkTechstackIconImageUrls: string[] = thinkTechstackIconSlugs.map(logoIcon);
 

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
+import { publicUrl as pu } from "@/lib/publicUrl";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent } from "./ui/dialog";
 import { LineShadowText } from "./ui/line-shadow-text";
@@ -258,34 +259,38 @@ const FILTER_BAR = [
   { label: "Creative Producer", token: "creativepro" },
 ] as const;
 
-const DEFAULT_IMAGES = ["/Create/atom/poster.webp", "/Create/atom/scene1.webp", "/Create/atom/scene2.webp"];
+const DEFAULT_IMAGES = [
+  pu("/Create/atom/poster.webp"),
+  pu("/Create/atom/scene1.webp"),
+  pu("/Create/atom/scene2.webp"),
+];
 
 const projectImages: Record<string, string[]> = {
-  Penance: ["/Create/penance/poster.webp", "/Create/penance/scene1.webp", "/Create/penance/scene2.webp"],
-  GR3Y: ["/Create/gr3y/poster.webp", "/Create/gr3y/scene1.webp", "/Create/gr3y/scene2.webp"],
-  STRANGERS: ["/Create/strangers/poster.webp", "/Create/strangers/scene1.webp", "/Create/strangers/scene2.webp"],
-  "Thiruttu Dhum": ["/Create/thiruttu/poster.webp", "/Create/thiruttu/scene1.webp", "/Create/thiruttu/scene2.webp"],
-  "Policy Bazaar × Sathyeah": ["/Create/policy/poster.webp", "/Create/policy/scene1.webp", "/Create/policy/scene2.webp"],
-  "English Partner × Sathyeah": ["/Create/english/poster.webp", "/Create/english/scene1.webp", "/Create/english/scene2.webp"],
-  Eggsistence: ["/Create/egg/poster.webp", "/Create/egg/scene1.webp", "/Create/egg/scene2.webp"],
+  Penance: [pu("/Create/penance/poster.webp"), pu("/Create/penance/scene1.webp"), pu("/Create/penance/scene2.webp")],
+  GR3Y: [pu("/Create/gr3y/poster.webp"), pu("/Create/gr3y/scene1.webp"), pu("/Create/gr3y/scene2.webp")],
+  STRANGERS: [pu("/Create/strangers/poster.webp"), pu("/Create/strangers/scene1.webp"), pu("/Create/strangers/scene2.webp")],
+  "Thiruttu Dhum": [pu("/Create/thiruttu/poster.webp"), pu("/Create/thiruttu/scene1.webp"), pu("/Create/thiruttu/scene2.webp")],
+  "Policy Bazaar × Sathyeah": [pu("/Create/policy/poster.webp"), pu("/Create/policy/scene1.webp"), pu("/Create/policy/scene2.webp")],
+  "English Partner × Sathyeah": [pu("/Create/english/poster.webp"), pu("/Create/english/scene1.webp"), pu("/Create/english/scene2.webp")],
+  Eggsistence: [pu("/Create/egg/poster.webp"), pu("/Create/egg/scene1.webp"), pu("/Create/egg/scene2.webp")],
   "Nisadya 1-DTG": [
-    "/Create/nisadya1dtg/poster.webp",
-    "/Create/nisadya1dtg/scene1.webp",
-    "/Create/nisadya1dtg/scene2.webp",
+    pu("/Create/nisadya1dtg/poster.webp"),
+    pu("/Create/nisadya1dtg/scene1.webp"),
+    pu("/Create/nisadya1dtg/scene2.webp"),
   ],
   "Nisadya Date Reveal": [
-    "/Create/nisadyadatereveal/poster.webp",
-    "/Create/nisadyadatereveal/scene1.webp",
-    "/Create/nisadyadatereveal/scene2.webp",
+    pu("/Create/nisadyadatereveal/poster.webp"),
+    pu("/Create/nisadyadatereveal/scene1.webp"),
+    pu("/Create/nisadyadatereveal/scene2.webp"),
   ],
-  "LICET's FABLAB": ["/Create/fablab/poster.webp", "/Create/fablab/scene1.webp", "/Create/fablab/scene2.webp"],
-  "ATOM – Campus Partner": ["/Create/atom/poster.webp", "/Create/atom/scene1.webp", "/Create/atom/scene2.webp"],
+  "LICET's FABLAB": [pu("/Create/fablab/poster.webp"), pu("/Create/fablab/scene1.webp"), pu("/Create/fablab/scene2.webp")],
+  "ATOM – Campus Partner": [pu("/Create/atom/poster.webp"), pu("/Create/atom/scene1.webp"), pu("/Create/atom/scene2.webp")],
   "Dumb, Dumber & Dumbest": [
-    "/Create/dumbdumber/poster.webp",
-    "/Create/dumbdumber/scene1.webp",
-    "/Create/dumbdumber/scene2.webp",
+    pu("/Create/dumbdumber/poster.webp"),
+    pu("/Create/dumbdumber/scene1.webp"),
+    pu("/Create/dumbdumber/scene2.webp"),
   ],
-  "TAMIZH Product Concept": ["/Create/Tamizh/Poster.webp", "/Create/Tamizh/Scene1.webp", "/Create/Tamizh/Scene2.webp"],
+  "TAMIZH Product Concept": [pu("/Create/Tamizh/Poster.webp"), pu("/Create/Tamizh/Scene1.webp"), pu("/Create/Tamizh/Scene2.webp")],
 };
 
 /** Fixed close (×) — comic tile chrome */

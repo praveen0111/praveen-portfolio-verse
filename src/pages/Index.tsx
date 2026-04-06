@@ -1,5 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { publicUrl } from "@/lib/publicUrl";
 import HeroSlider from "@/components/HeroSlider";
 import PageTransition from "@/components/PageTransition";
 import ClickSpark from "@/components/ClickSpark";
@@ -14,8 +15,8 @@ type PageView = "home" | "creative" | "think" | "contact";
 const PAGE_ORDER: PageView[] = ["home", "creative", "think", "contact"];
 
 const HERO_PRELOAD_IMAGES = [
-  "/images/think-background.webp",
-  "/images/creative-background.webp",
+  publicUrl("/images/think-background.webp"),
+  publicUrl("/images/creative-background.webp"),
 ] as const;
 
 function preloadImage(src: string): Promise<void> {
