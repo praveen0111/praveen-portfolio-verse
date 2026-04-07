@@ -31,6 +31,9 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          # GitHub Pages project URL: https://<user>.github.io/praveen-portfolio-verse/
+          VITE_BASE_PATH: /praveen-portfolio-verse
         run: npm run build
 
       # GitHub Pages returns 404 for unknown paths; copy index for client-side router refreshes.

@@ -3,12 +3,21 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 // https://vitejs.dev/config/
-// Production: GitHub Pages project site at https://<user>.github.io/praveen-portfolio-verse/
-// Development: base "/" so `npm run dev` works at localhost without the subpath.
-const GITHUB_PAGES_BASE = "/praveen-portfolio-verse/";
+//
+// `base` must match where the app is hosted:
+// - Vercel (default): leave VITE_BASE_PATH unset → "/"
+// - GitHub Pages project site: CI sets VITE_BASE_PATH=/praveen-portfolio-verse
+// - Dev server: always "/"
+function viteBase(mode: string): string {
+  if (mode === "development") return "/";
+  const raw = process.env.VITE_BASE_PATH?.trim();
+  if (!raw) return "/";
+  const withLeading = raw.startsWith("/") ? raw : `/${raw}`;
+  return withLeading.endsWith("/") ? withLeading : `${withLeading}/`;
+}
 
 export default defineConfig(({ mode }) => ({
-  base: mode === "production" ? GITHUB_PAGES_BASE : "/",
+  base: viteBase(mode),
   server: {
     host: "::",
     port: 8080,
