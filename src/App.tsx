@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Analytics } from "@vercel/analytics/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -42,6 +43,7 @@ function App() {
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <Analytics />
       <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "") || undefined}>
         <Routes>
           <Route path="/" element={<Index />} />
