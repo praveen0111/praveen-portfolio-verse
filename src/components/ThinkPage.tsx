@@ -3,7 +3,6 @@ import { Button } from "./ui/button";
 import { LineShadowText } from "./ui/line-shadow-text";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { ChevronDown, ExternalLink } from "lucide-react";
-import ComicParticles from "./ComicParticles";
 import DotGrid from "./DotGrid";
 import RotatingText, { type RotatingTextRef } from "./RotatingText";
 import { cn } from "@/lib/utils";
@@ -252,12 +251,13 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
 
   return (
     <div
-      className="relative min-h-screen min-h-screen-mobile overflow-x-hidden bg-energy-think"
-      style={{ backgroundColor: "hsl(var(--think-bg))" }}
+      className="relative min-h-screen min-h-screen-mobile overflow-x-hidden"
+      style={{
+        /* Solid base only — no .bg-energy-think gradients (they vary down the page and make the dot grid look uneven). */
+        backgroundColor: "hsl(var(--think-bg))",
+      }}
     >
       <DotGrid variant="think" />
-      {/* Comic Particles */}
-      <ComicParticles mode="think" />
       
       {/* Navigation - flat text-based, dark overlay, hover color shift + glow */}
       <nav className="relative z-10 py-4 md:py-6 border-b-4" style={{ backgroundColor: "hsl(var(--think-bg-alt))", borderColor: "hsl(var(--think-accent))" }}>

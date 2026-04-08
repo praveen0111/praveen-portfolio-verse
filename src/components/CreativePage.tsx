@@ -799,7 +799,7 @@ const CreativePage = ({ onGoHome, onSwitchToThink, onNavigateToContact }: Creati
           {popupProject ? (
             <>
             <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
-              <DotGrid variant="create" />
+              <DotGrid variant="create" baseFillVar="--creative-bg-alt" />
             </div>
             <button
               type="button"

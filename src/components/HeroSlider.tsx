@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import ComicParticles from "./ComicParticles";
 import { ComicInkStrokeBar } from "./ComicInkStrokeBar";
 import { ComicPopHeadlinePlate } from "./ComicPopHeadlinePlate";
+import CircularText from "./CircularText";
 import { cn } from "@/lib/utils";
 import { publicUrl } from "@/lib/publicUrl";
 
@@ -540,6 +541,12 @@ const HeroSlider = ({
               : "transform 0.22s ease-out",
           }}
         >
+          <CircularText
+            text="SLIDE*TO*EXPLORE*"
+            onHover="speedUp"
+            spinDuration={20}
+            className="z-[5] opacity-95"
+          />
           <ComicKnobMicroStrokes />
           <span
             className="relative z-10 font-comic text-white leading-none select-none text-[26px] tracking-wide inline-flex h-[22px] w-9 items-center justify-center"

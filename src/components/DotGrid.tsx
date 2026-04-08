@@ -14,6 +14,13 @@ const VARIANT_CSS_VAR: Record<DotGridVariant, string> = {
   contact: "--accent",
 };
 
+/** Opaque canvas base (HSL components) so dots are not tinted by page gradients; avoids mid-page “seams”. */
+const DEFAULT_BASE_FILL_VAR: Record<DotGridVariant, string> = {
+  think: "--think-bg",
+  create: "--creative-duotone-bg",
+  contact: "--think-bg",
+};
+
 function parseHslComponents(value: string): { h: number; s: number; l: number } | null {
   const t = value.trim();
   const m = /^([\d.]+)\s+([\d.]+%)\s+([\d.]+%)$/.exec(t);
@@ -23,6 +30,8 @@ function parseHslComponents(value: string): { h: number; s: number; l: number } 
 
 export interface DotGridProps {
   variant: DotGridVariant;
+  /** Override CSS variable name (HSL components) for opaque fill under dots; e.g. `--creative-bg-alt` in a dialog. */
+  baseFillVar?: string;
   /** Max distance (px) from cursor where dots react; beyond this, no effect. */
   proximity?: number;
   /** Falloff scale (px) for `(1 - dist / shockRadius)` inside the proximity zone. */
@@ -40,6 +49,7 @@ export interface DotGridProps {
  */
 const DotGrid = ({
   variant,
+  baseFillVar,
   proximity = 150,
   shockRadius = 300,
   shockStrength = 10,
@@ -58,6 +68,12 @@ const DotGrid = ({
     const parsed = parseHslComponents(raw);
     if (parsed) hslRef.current = parsed;
   }, [variant]);
+
+  const resolveBaseFill = useCallback(() => {
+    const name = baseFillVar ?? DEFAULT_BASE_FILL_VAR[variant];
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return raw ? `hsl(${raw})` : "hsl(0 0% 0%)";
+  }, [variant, baseFillVar]);
 
   useEffect(() => {
     readAccentHsl();
@@ -88,7 +104,8 @@ const DotGrid = ({
       const my = mouseRef.current.y;
       const str = state.value;
 
-      ctx.clearRect(0, 0, w, hPx);
+      ctx.fillStyle = resolveBaseFill();
+      ctx.fillRect(0, 0, w, hPx);
 
       for (let cy = GRID_STEP_PX / 2; cy < hPx; cy += GRID_STEP_PX) {
         for (let cx = GRID_STEP_PX / 2; cx < w; cx += GRID_STEP_PX) {
@@ -145,7 +162,18 @@ const DotGrid = ({
       ro.disconnect();
       gsap.killTweensOf(state);
     };
-  }, [variant, proximity, shockRadius, shockStrength, resistance, returnDuration, dotOpacity, readAccentHsl]);
+  }, [
+    variant,
+    baseFillVar,
+    proximity,
+    shockRadius,
+    shockStrength,
+    resistance,
+    returnDuration,
+    dotOpacity,
+    readAccentHsl,
+    resolveBaseFill,
+  ]);
 
   return (
     <div ref={containerRef} className="dot-grid-layer" aria-hidden>
