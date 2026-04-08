@@ -87,6 +87,7 @@ export function TechstackDetailPanel({
               <img
                 src={imageUrls[selectedIndex!]}
                 alt={labels[selectedIndex!]}
+                decoding="async"
                 className="max-h-28 w-auto max-w-[min(160px,44vw)] object-contain sm:max-h-32 sm:max-w-[176px]"
                 style={{ filter: "drop-shadow(0 3px 10px hsl(var(--think-accent) / 0.25))" }}
               />

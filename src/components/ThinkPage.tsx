@@ -233,6 +233,23 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
     intersectionForRotator.length,
   ]);
 
+  /** Hint the browser to fetch the headshot early (Think is often lazy-loaded). */
+  useEffect(() => {
+    const href = thinkMeta.profileImage;
+    const id = "think-profile-image-preload";
+    if (document.getElementById(id)) return;
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "preload";
+    link.as = "image";
+    link.href = href;
+    link.setAttribute("fetchpriority", "high");
+    document.head.appendChild(link);
+    return () => {
+      link.remove();
+    };
+  }, []);
+
   return (
     <div
       className="relative min-h-screen min-h-screen-mobile overflow-x-hidden bg-energy-think"
@@ -303,7 +320,12 @@ const ThinkPage = ({ onGoHome, onSwitchToCreative, onNavigateToContact }: ThinkP
                 <img
                   src={thinkMeta.profileImage}
                   alt="Praveen Elanchezhian"
-                  className="w-full h-full object-cover"
+                  width={160}
+                  height={160}
+                  sizes="(max-width: 768px) 128px, 160px"
+                  decoding="async"
+                  fetchPriority="high"
+                  className="h-full w-full object-cover"
                 />
               </div>
               {hasIdentityText && (

@@ -58,8 +58,6 @@ function drawImageContain(
   ctx.drawImage(img, dx, dy, dw, dh);
 }
 
-const ICON_TEXTURE_PX = 192;
-
 const Z_NEAR = 200;
 const Z_SCALE_DIV = 300;
 
@@ -167,7 +165,8 @@ export function IconCloud({ images, labels, onSelectIndex }: IconCloudProps) {
       dprRef.current = dpr;
 
       const iconRadiusLogical = logical * ICON_SLOT_FRAC;
-      const tex = clamp(Math.round(iconRadiusLogical * 2 * dpr * 2.25), 128, 384);
+      /* Cap at 256px textures — enough for on-screen logos, less decode/GPU work than 384 */
+      const tex = clamp(Math.round(iconRadiusLogical * 2 * dpr * 2.25), 128, 256);
 
       setLogicalSize(logical);
       setTexturePx(tex);
@@ -186,32 +185,59 @@ export function IconCloud({ images, labels, onSelectIndex }: IconCloudProps) {
   useEffect(() => {
     if (!images?.length) return;
 
+    let cancelled = false;
     imagesLoadedRef.current = new Array(images.length).fill(false);
-    const r = texturePx / 2;
 
-    const newIconCanvases = images.map((src, index) => {
+    const newIconCanvases = images.map(() => {
       const offscreen = document.createElement("canvas");
       offscreen.width = texturePx;
       offscreen.height = texturePx;
-      const offCtx = offscreen.getContext("2d");
-
-      if (offCtx) {
-        const img = new Image();
-        img.decoding = "async";
-        img.src = src;
-        img.onload = () => {
-          offCtx.clearRect(0, 0, offscreen.width, offscreen.height);
-          drawImageContain(offCtx, img, 0, 0, texturePx, texturePx);
-          imagesLoadedRef.current[index] = true;
-        };
-        img.onerror = () => {
-          imagesLoadedRef.current[index] = false;
-        };
-      }
       return offscreen;
     });
 
     iconCanvasesRef.current = newIconCanvases;
+
+    /** Avoid firing every logo PNG at once (bandwidth + main-thread decode contention). */
+    const CONCURRENCY = 4;
+    let inflight = 0;
+    let nextIndex = 0;
+
+    const pump = () => {
+      while (!cancelled && inflight < CONCURRENCY && nextIndex < images.length) {
+        const index = nextIndex++;
+        inflight++;
+        const src = images[index];
+        const offscreen = newIconCanvases[index];
+        const offCtx = offscreen.getContext("2d");
+        if (!offCtx) {
+          inflight--;
+          continue;
+        }
+        const img = new Image();
+        img.decoding = "async";
+        img.onload = () => {
+          if (cancelled) return;
+          offCtx.clearRect(0, 0, offscreen.width, offscreen.height);
+          drawImageContain(offCtx, img, 0, 0, texturePx, texturePx);
+          imagesLoadedRef.current[index] = true;
+          inflight--;
+          pump();
+        };
+        img.onerror = () => {
+          if (cancelled) return;
+          imagesLoadedRef.current[index] = false;
+          inflight--;
+          pump();
+        };
+        img.src = src;
+      }
+    };
+
+    pump();
+
+    return () => {
+      cancelled = true;
+    };
   }, [images, texturePx]);
 
   useEffect(() => {
